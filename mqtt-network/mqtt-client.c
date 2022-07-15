@@ -278,14 +278,14 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			
 			sprintf(app_buffer, "report %d", temperature);
 			
-			/*if(watering){
+			//f(watering){
           
           //srand(time(0));
           temperature = (rand() % (upperTemp - temperature + 1)) + temperature;
           upperTemp = temperature + 2;
           lowerTemp = temperature - 2;
 
-      } else {
+      /*} else {
           
           //srand(time(0));
           temperature = (rand() % (temperature - lowerTemp + 1)) + lowerTemp;
