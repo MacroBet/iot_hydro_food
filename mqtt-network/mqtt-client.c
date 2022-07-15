@@ -120,9 +120,9 @@ PROCESS(mqtt_client_process, "MQTT Client");
 static int temperature = 25;
 //static int humidity = 50;
 //static int co2 = 1400;
-//static int upperTemp = 28;
-//static int lowerTemp = 23;
-//static bool watering = true;
+static int upperTemp = 28;
+static int lowerTemp = 23;
+static bool watering = true;
 
 
 
