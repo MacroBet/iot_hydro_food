@@ -124,6 +124,7 @@ static int temperature = 25;
 //static int co2 = 1400;
 static int upperTemp = 28;
 static int lowerTemp = 23;
+static int variation = 0;
 static bool watering = true;
 
 
@@ -278,12 +279,11 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			// Publish something
 		  sprintf(pub_topic, "%s", "status");
 			
-			sprintf(app_buffer, "report %d", temperature);
-			
 			if(watering){
           
-          //srand(time(0));
-          temperature ++;//(rand() % (upperTemp - temperature + 1)) + temperature;
+          srand(time(0));
+          variation = (rand() % (upperTemp - temperature + 1)) + temperature;
+          temperature = temperature + variation;
           upperTemp = temperature + 2;
           lowerTemp = temperature - 2;
 
@@ -295,7 +295,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           lowerTemp = temperature - 2;
           
       }*/
-
+      sprintf(app_buffer, "report %d", temperature);
       LOG_INFO("New value of temperature: %d\n", temperature);
       //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
