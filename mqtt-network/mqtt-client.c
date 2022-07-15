@@ -100,9 +100,9 @@ static char sub_topic[BUFFER_SIZE];
 static int temperature = 25;
 //static int humidity = 50;
 //static int co2 = 1400;
-static int upperTemp = 28;
-static int lowerTemp = 23;
-static bool watering = false;
+//static int upperTemp = 28;
+//static int lowerTemp = 23;
+//static bool watering = false;
 
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
