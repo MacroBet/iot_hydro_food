@@ -281,8 +281,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			
 			if(watering){
           
-          srand(time(0));
-          variation = (rand() % (upperTemp - temperature + 1)) + temperature;
+          variation = rand()%3;
           temperature = temperature + variation;
           upperTemp = temperature + 2;
           lowerTemp = temperature - 2;
