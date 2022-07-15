@@ -230,7 +230,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   state=STATE_INIT;
 				    
   // Initialize periodic timer to check the status 
-  etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
+  etimer_set(&periodic_timer, PUBLISH_INTERVAL);
 
   /* Main loop */
   while(1) {
@@ -304,7 +304,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 		
-		etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
+		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
       
     }
 
