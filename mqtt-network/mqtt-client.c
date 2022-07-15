@@ -98,8 +98,8 @@ static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
 static int temperature = 25;
-static int humidity = 50;
-static int co2 = 1400;
+//static int humidity = 50;
+//static int co2 = 1400;
 static int upperTemp = 28;
 static int lowerTemp = 23;
 static bool watering = false;
