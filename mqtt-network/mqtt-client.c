@@ -122,7 +122,7 @@ static int temperature = 25;
 //static int co2 = 1400;
 static int upperTemp = 28;
 static int lowerTemp = 23;
-static bool watering = true;
+//static bool watering = true;
 
 
 
