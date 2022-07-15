@@ -63,9 +63,8 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Defaukt config values
 #define DEFAULT_BROKER_PORT         1883
-#define DEFAULT_PUBLISH_INTERVAL    (3000 * CLOCK_SECOND)
-
-
+#define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
+#define PUBLISH_INTERVAL	    (5 * CLOCK_SECOND)
 // We assume that the broker does not require authentication
 
 
@@ -253,7 +252,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  memcpy(broker_address, broker_ip, strlen(broker_ip));
 			  
 			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
-						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
+						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
 		  }
