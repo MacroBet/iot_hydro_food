@@ -97,12 +97,6 @@ static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
-static int temperature = 25;
-//static int humidity = 50;
-//static int co2 = 1400;
-static int upperTemp = 28;
-static int lowerTemp = 23;
-static bool watering = false;
 
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
@@ -122,6 +116,13 @@ static struct mqtt_connection conn;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_client_process, "MQTT Client");
+
+static int temperature = 25;
+//static int humidity = 50;
+//static int co2 = 1400;
+static int upperTemp = 28;
+static int lowerTemp = 23;
+static bool watering = true;
 
 
 
@@ -284,14 +285,14 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           upperTemp = temperature + 2;
           lowerTemp = temperature - 2;
 
-        } else {
+      } else {
           
           //srand(time(0));
           temperature = (rand() % (temperature - lowerTemp + 1)) + lowerTemp;
           upperTemp = temperature + 2;
           lowerTemp = temperature - 2;
           
-        }
+      }
 
       LOG_INFO("New value of temperature: %d\n", temperature);
       //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
