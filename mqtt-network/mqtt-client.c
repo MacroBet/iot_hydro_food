@@ -98,11 +98,11 @@ static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
 static int temperature = 25;
-//static int humidity = 50;
-//static int co2 = 1400;
-//static int upperTemp = 28;
-//static int lowerTemp = 23;
-//static bool watering = false;
+static int humidity = 50;
+static int co2 = 1400;
+static int upperTemp = 28;
+static int lowerTemp = 23;
+static bool watering = false;
 
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
@@ -277,21 +277,21 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			
 			sprintf(app_buffer, "report %d", temperature);
 			
-			/*if(watering){
+			if(watering){
           
-          srand(time(0));
+          //srand(time(0));
           temperature = (rand() % (upperTemp - temperature + 1)) + temperature;
           upperTemp = temperature + 2;
           lowerTemp = temperature - 2;
 
         } else {
           
-          srand(time(0));
+          //srand(time(0));
           temperature = (rand() % (temperature - lowerTemp + 1)) + lowerTemp;
           upperTemp = temperature + 2;
           lowerTemp = temperature - 2;
           
-        }*/
+        }
 
       LOG_INFO("New value of temperature: %d\n", temperature);
       //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
