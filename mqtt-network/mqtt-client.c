@@ -63,7 +63,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Defaukt config values
 #define DEFAULT_BROKER_PORT         1883
-#define DEFAULT_PUBLISH_INTERVAL    (300 * CLOCK_SECOND)
+#define DEFAULT_PUBLISH_INTERVAL    (30000 * CLOCK_SECOND)
 
 
 // We assume that the broker does not require authentication
