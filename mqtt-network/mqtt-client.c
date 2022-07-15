@@ -277,7 +277,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			
 			sprintf(app_buffer, "report %d", temperature);
 			
-			if(watering){
+			/*if(watering){
           
           srand(time(0));
           temperature = (rand() % (upperTemp - temperature + 1)) + temperature;
@@ -291,7 +291,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           upperTemp = temperature + 2;
           lowerTemp = temperature - 2;
           
-        }
+        }*/
 
       LOG_INFO("New value of temperature: %d\n", temperature);
       //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
