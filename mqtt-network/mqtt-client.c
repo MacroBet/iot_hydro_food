@@ -41,7 +41,7 @@
 #include "dev/leds.h"
 #include "os/sys/log.h"
 #include "mqtt-client.h"
-#include <sys/node-id.h>
+//#include <sys/node-id.h>
 
 
 #include <string.h>
@@ -294,7 +294,8 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         }
 
 			LOG_INFO("New value of temperature: %d\n", temperature);
-      sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
+      //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
+      sprintf(app_buffer, "{\"temperature\": %d}",temperature);
 			mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
