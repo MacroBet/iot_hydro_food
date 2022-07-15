@@ -41,12 +41,9 @@
 #include "dev/leds.h"
 #include "os/sys/log.h"
 #include "mqtt-client.h"
-//#include <sys/node-id.h>
-
 
 #include <string.h>
 #include <strings.h>
-#include <time.h>
 /*---------------------------------------------------------------------------*/
 #define LOG_MODULE "mqtt-client"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
@@ -56,7 +53,7 @@
 #endif
 
 /*---------------------------------------------------------------------------*/
-/* MQTT broker address. (border router that is connected to the VM) */
+/* MQTT broker address. */
 #define MQTT_CLIENT_BROKER_IP_ADDR "fd00::1"
 
 static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
@@ -99,15 +96,10 @@ static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
-static int temperature = 25;
-//static int humidity = 50;
-//static int co2 = 1400;
-static int upperTemp = 28;
-static int lowerTemp = 23;
-static bool watering = false;
+static int value = 0;
 
 // Periodic timer to check the state of the MQTT client
-#define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)   //timer 
+#define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
 
 /*---------------------------------------------------------------------------*/
@@ -116,11 +108,11 @@ static struct etimer periodic_timer;
  * We will need to increase if we start publishing more data.
  */
 #define APP_BUFFER_SIZE 512
-static char app_buffer[APP_BUFFER_SIZE];  //to store data that arrive from the broker or send to the broker 
+static char app_buffer[APP_BUFFER_SIZE];
 /*---------------------------------------------------------------------------*/
-static struct mqtt_message *msg_ptr = 0;  //mqtt data structure to generate and send data or to recive message from the broker. Contains 3 fields
+static struct mqtt_message *msg_ptr = 0;
 
-static struct mqtt_connection conn;     //data structure for mqtt-connection and store the status of connection
+static struct mqtt_connection conn;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_client_process, "MQTT Client");
@@ -195,7 +187,6 @@ mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data)
   }
 }
 
-//check status of sensor if is up-running and so it can communicate with the rest of the network it will call in the while of main thread
 static bool
 have_connectivity(void)
 {
@@ -223,8 +214,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
                      linkaddr_node_addr.u8[2], linkaddr_node_addr.u8[5],
                      linkaddr_node_addr.u8[6], linkaddr_node_addr.u8[7]);
 
-  // Broker registration "param" &conn is the data structure for status of connection, pointer to application main process, mqtt event to hendle the event that append			 
-  // call from the system every time that an event occour, if the result is ok the client can start its operation, inizialize the data structure
+  // Broker registration					 
   mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event,
                   MAX_TCP_SEGMENT_SIZE);
 				  
@@ -252,7 +242,9 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  
 			  memcpy(broker_address, broker_ip, strlen(broker_ip));
 			  
-			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT, (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND, MQTT_CLEAN_SESSION_ON); //connection to the broker
+			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
+						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
+						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
 		  }
 		  
@@ -275,27 +267,12 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
-		    sprintf(pub_topic, "%s", "environment");
+		    sprintf(pub_topic, "%s", "status");
 			
-        if(watering){
-          
-          srand(time(0));
-          temperature = (rand() % (upperTemp - temperature + 1)) + temperature;
-          upperTemp = temperature + 2;
-          lowerTemp = temperature - 2;
-
-        } else {
-          
-          srand(time(0));
-          temperature = (rand() % (temperature - lowerTemp + 1)) + lowerTemp;
-          upperTemp = temperature + 2;
-          lowerTemp = temperature - 2;
-          
-        }
-
-			LOG_INFO("New value of temperature: %d\n", temperature);
-      //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
-      sprintf(app_buffer, "{\"temperature\": %d}",temperature);
+			sprintf(app_buffer, "report %d", value);
+			
+			value++;
+				
 			mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
