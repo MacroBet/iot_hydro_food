@@ -285,14 +285,12 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           upperTemp = temperature + 2;
           lowerTemp = temperature - 2;
 
-      } /*else {
+      }else {
           
-          //srand(time(0));
-          temperature = (rand() % (temperature - lowerTemp + 1)) + lowerTemp;
-          upperTemp = temperature + 2;
-          lowerTemp = temperature - 2;
+           variation = rand()%3;
+          temperature = temperature + variation;
           
-      }*/
+      }
       sprintf(app_buffer, "report %d", temperature);
       LOG_INFO("New value of temperature: %d\n", temperature);
       //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
