@@ -284,11 +284,11 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			if(watering){
           //r = random_rand() ;
           //varTemp = ((int) r) % 3;
-          temperature = varTemp;
+          temperature = temperature;
           //r1 = random_rand();
           //varHum = ((int) r1) % 3;
           //varHumum = r1%3;
-          humidity = varHum;
+          humidity = humidity;
          
 
       }else {
