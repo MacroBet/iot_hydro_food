@@ -123,8 +123,10 @@ PROCESS(mqtt_client_process, "MQTT Client");
 static int temperature = 25;
 static int humidity = 50;
 //static int co2 = 1400;
-//static int varTemp = 0;
-//static int varHum = 0;
+static int varTemp = 0;
+static int varHum = 0;
+unsigned short r1 = 0;
+unsigned short r = 0;
 static bool watering = true;
 
 
@@ -280,13 +282,13 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  sprintf(pub_topic, "%s", "status");
 			
 			if(watering){
-          unsigned short r = random_rand() ;
-          int vart = ((int) r) % 3;
-          temperature = vart;
-          unsigned short r1 = random_rand();
-          int varh = ((int) r1) % 3;
+          r = random_rand() ;
+          varTemp = ((int) r) % 3;
+          temperature = varTemp;
+          r1 = random_rand();
+          varHum = ((int) r1) % 3;
           //varHum = r1%3;
-          humidity = varh;
+          humidity = varHum;
          
 
       }else {
