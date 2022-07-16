@@ -291,9 +291,9 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       }else {
           
           //varTemp = rand()%3;
-          temperature = temperature - varTemp;
+          //temperature = temperature - varTemp;
          
-          humidity = humidity - varTemp;
+          //humidity = humidity - varTemp;
           
       }
   
