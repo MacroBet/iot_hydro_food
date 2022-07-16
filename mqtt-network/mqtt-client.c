@@ -280,11 +280,9 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  sprintf(pub_topic, "%s", "status");
 			
 			if(watering){
-          random_init(node_id);
           unsigned short r = random_rand() ;
           //varTemp = r%3;
           temperature += r;
-          random_init(node_id);
           unsigned short r1 = random_rand();
           //varHum = r1%3;
           humidity += r1;
