@@ -47,6 +47,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/node-id.h>
+
 /*---------------------------------------------------------------------------*/
 #define LOG_MODULE "mqtt-client"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
@@ -293,9 +295,9 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           humidity = humidity - varHum;
           
       }
-      sprintf(app_buffer, "temperature = %d C, %d" , temperature, humidity);
+  
       LOG_INFO("New val tem: %d\n", temperature);
-      //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
+      sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
