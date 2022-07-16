@@ -289,7 +289,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           temperature = varTemp;
           r1 = random_rand();
           varHum = ((int) r1) % 3;
-          humidity += varHum;
+          humidity = varHum;
          /* r2 = random_rand();
           varCo2 = ((int) r2) % 50;
           co2 += varCo2;*/
