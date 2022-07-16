@@ -110,7 +110,7 @@ static struct etimer periodic_timer;
  * The main MQTT buffers.
  * We will need to increase if we start publishing more data.
  */
-#define APP_BUFFER_SIZE 1024
+#define APP_BUFFER_SIZE 512
 static char app_buffer[APP_BUFFER_SIZE];
 /*---------------------------------------------------------------------------*/
 static struct mqtt_message *msg_ptr = 0;
@@ -297,7 +297,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       }
   
       LOG_INFO("New val tem: %d\n", temperature);
-      sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
+      sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d}", node_id, temperature, humidity);
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
