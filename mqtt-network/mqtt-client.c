@@ -281,9 +281,9 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			
 			if(watering){
 
-          varTemp = random_rand()%3;
+          varTemp = random_rand();
           temperature += varTemp;
-          varHum =  random_rand()%3;
+          varHum =  random_rand();
           humidity += varHum;
          
 
