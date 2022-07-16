@@ -125,10 +125,10 @@ static int humidity = 50;
 static int co2 = 1400;
 static int varTemp = 0;
 static int varHum = 0;
-static int varCo2 = 0;
+//static int varCo2 = 0;
 unsigned short r1 = 0;
 unsigned short r = 0;
-unsigned short r2 = 0;
+//unsigned short r2 = 0;
 static bool watering = true;
 
 
@@ -290,9 +290,9 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           r1 = random_rand();
           varHum = ((int) r1) % 3;
           humidity += varHum;
-          r2 = random_rand();
+         /* r2 = random_rand();
           varCo2 = ((int) r2) % 50;
-          co2 += varCo2;
+          co2 += varCo2;*/
 
 
       }else {
