@@ -293,7 +293,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           humidity = humidity - varHum;
           
       }
-      sprintf(app_buffer, "temperature = %d C \n , humidity = %d %%" , temperature, humidity);
+      sprintf(app_buffer, "temperature = %d C, \n %d" , temperature, humidity);
       LOG_INFO("New value of temperature: %d\n", temperature);
       LOG_INFO("New value of humdity: %d\n", humidity);
       //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
