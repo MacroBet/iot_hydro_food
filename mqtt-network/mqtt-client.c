@@ -124,7 +124,7 @@ static int temperature = 25;
 static int humidity = 50;
 //static int co2 = 1400;
 static int varTemp = 0;
-static int varHum = 0;
+//static int varHum = 0;
 static bool watering = true;
 
 
