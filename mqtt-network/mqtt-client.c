@@ -119,11 +119,10 @@ static struct mqtt_connection conn;
 PROCESS(mqtt_client_process, "MQTT Client");
 
 static int temperature = 25;
-//static int humidity = 50;
+static int humidity = 50;
 //static int co2 = 1400;
-static int upperTemp = 28;
-static int lowerTemp = 23;
-static int variation = 0;
+static int varTemp = 0;
+static int varHum = 0;
 static bool watering = true;
 
 
@@ -280,19 +279,23 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			
 			if(watering){
           
-          variation = rand()%3;
-          temperature = temperature + variation;
-          upperTemp = temperature + 2;
-          lowerTemp = temperature - 2;
+          varTemp = rand()%3;
+          temperature += varTemp;
+          varHum = rand()%3;
+          humidity += varHum;
+         
 
       }else {
           
-           variation = rand()%3;
-          temperature = temperature + variation;
+          variation = rand()%3;
+          temperature = temperature - varTemp;
+          varHum = rand()%3;
+          humidity = humidity - varHum;
           
       }
-      sprintf(app_buffer, "report %d", temperature);
+      sprintf(app_buffer, "temperature = %d C \n , humidity = %d %%" , temperature, humidity);
       LOG_INFO("New value of temperature: %d\n", temperature);
+      LOG_INFO("New value of humdity: %d\n", humidity);
       //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
