@@ -281,7 +281,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			// Publish something
 		  sprintf(pub_topic, "%s", "status");
 			
-			if(watering){
+			/*if(watering){
           //r = random_rand() ;
           //varTemp = ((int) r) % 3;
           temperature = temperature;
@@ -298,7 +298,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
          
           //humidity = humidity - varTemp;
           
-      }
+      }*/
   
       LOG_INFO("New val tem: %d\n", temperature);
       sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d}", node_id, temperature, humidity);
