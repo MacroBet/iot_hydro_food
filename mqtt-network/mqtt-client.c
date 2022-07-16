@@ -127,7 +127,7 @@ static int humidity = 50;
 //static int varHum = 0;
 //unsigned short r1 = 0;
 //unsigned short r = 0;
-static bool watering = true;
+//static bool watering = true;
 
 
 
