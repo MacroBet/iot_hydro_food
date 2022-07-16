@@ -122,7 +122,7 @@ PROCESS(mqtt_client_process, "MQTT Client");
 
 static int temperature = 25;
 static int humidity = 50;
-static int co2 = 1400;
+//static int co2 = 1400;
 static int varTemp = 0;
 static int varHum = 0;
 unsigned short r1 = 0;
@@ -301,7 +301,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       }
   
       LOG_INFO("New val tem: %d\n", temperature);
-      sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, , \"co2\": %d}", node_id, temperature, humidity, co2);
+      sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d}", node_id, temperature, humidity);
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
