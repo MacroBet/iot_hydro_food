@@ -282,11 +282,11 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			if(watering){
           unsigned short r = random_rand() ;
           int vart = (int) r;
-          temperature += r;
+          temperature += vart;
           unsigned short r1 = random_rand();
           int varh = (int) r1;
           //varHum = r1%3;
-          humidity += r1;
+          humidity += varh;
          
 
       }else {
