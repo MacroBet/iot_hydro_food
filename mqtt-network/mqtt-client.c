@@ -44,11 +44,6 @@
 
 #include <string.h>
 #include <strings.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <sys/node-id.h>
-
 /*---------------------------------------------------------------------------*/
 #define LOG_MODULE "mqtt-client"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
@@ -66,7 +61,8 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 // Defaukt config values
 #define DEFAULT_BROKER_PORT         1883
 #define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
-#define PUBLISH_INTERVAL	    (5 * CLOCK_SECOND)
+
+
 // We assume that the broker does not require authentication
 
 
@@ -100,6 +96,7 @@ static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
+static int value = 0;
 
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
@@ -119,15 +116,6 @@ static struct mqtt_connection conn;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_client_process, "MQTT Client");
-
-static int temperature = 25;
-static int humidity = 50;
-//static int co2 = 1400;
-//static int varTemp = 0;
-//static int varHum = 0;
-//unsigned short r1 = 0;
-//unsigned short r = 0;
-//static bool watering = true;
 
 
 
@@ -233,7 +221,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   state=STATE_INIT;
 				    
   // Initialize periodic timer to check the status 
-  etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+  etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
 
   /* Main loop */
   while(1) {
@@ -255,7 +243,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  memcpy(broker_address, broker_ip, strlen(broker_ip));
 			  
 			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
-						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
+						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
 		  }
@@ -279,30 +267,13 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
-		  sprintf(pub_topic, "%s", "status");
+		    sprintf(pub_topic, "%s", "status");
 			
-			/*if(watering){
-          //r = random_rand() ;
-          //varTemp = ((int) r) % 3;
-          temperature = temperature;
-          //r1 = random_rand();
-          //varHum = ((int) r1) % 3;
-          //varHumum = r1%3;
-          humidity = humidity;
-         
-
-      }else {
-          
-          //varTempemp = rand()%3;
-          //temperature = temperature - varTemp;
-         
-          //humidity = humidity - varTemp;
-          
-      }*/
-  
-      LOG_INFO("New val tem: %d\n", temperature);
-      sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d}", node_id, temperature, humidity);
-      mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
+			sprintf(app_buffer, "report %d", value);
+			
+			value++;
+				
+			mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
 		} else if ( state == STATE_DISCONNECTED ){
@@ -310,7 +281,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 		
-		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+		etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
       
     }
 
