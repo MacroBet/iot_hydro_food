@@ -64,7 +64,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 // Defaukt config values
 #define DEFAULT_BROKER_PORT         1883
 #define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
-#define PUBLISH_INTERVAL	    (10 * CLOCK_SECOND)
+#define PUBLISH_INTERVAL	    (5 * CLOCK_SECOND)
 // We assume that the broker does not require authentication
 
 
@@ -293,9 +293,9 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           humidity = humidity - varHum;
           
       }
-      sprintf(app_buffer, "temperature = %d C, \n %d" , temperature, humidity);
+      sprintf(app_buffer, "temperature = %d C" , temperature);
       LOG_INFO("New value of temperature: %d\n", temperature);
-      LOG_INFO("New value of humdity: %d\n", humidity);
+      //LOG_INFO("New value of humdity: %d\n", humidity);
       //sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d}", node_id, temperature);
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
