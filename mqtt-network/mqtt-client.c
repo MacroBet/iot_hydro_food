@@ -283,21 +283,21 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           
           varTemp = rand()%3;
           temperature += varTemp;
-          varHum = rand()%3;
-          humidity += varHum;
+          //varHum = rand()%3;
+          humidity += varTemp;
          
 
       }else {
           
           varTemp = rand()%3;
           temperature = temperature - varTemp;
-          varHum = rand()%3;
-          humidity = humidity - varHum;
+          //varHum = rand()%3;
+          humidity = humidity - varTemp;
           
       }
   
       LOG_INFO("New val tem: %d\n", temperature);
-      sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d}", node_id, temperature, 10);
+      sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d}", node_id, temperature, humidity);
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
