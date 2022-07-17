@@ -235,7 +235,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  			  
 		  if(state==STATE_INIT){
 			 if(have_connectivity()==true)  
-        printf("si")
+        printf("si");
 				 state = STATE_NET_OK;
 		  } 
 		  
