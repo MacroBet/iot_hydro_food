@@ -234,9 +234,10 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 	      ev == PROCESS_EVENT_POLL){
 			  			  
 		  if(state==STATE_INIT){
-			 if(have_connectivity()==true)  
+			 if(have_connectivity()==true) { 
         printf("si");
 				 state = STATE_NET_OK;
+       }
 		  } 
 		  
 		  if(state == STATE_NET_OK){
