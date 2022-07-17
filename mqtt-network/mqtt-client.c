@@ -41,6 +41,7 @@
 #include "dev/leds.h"
 #include "os/sys/log.h"
 #include "mqtt-client.h"
+#include "node-id.h"
 
 #include <string.h>
 #include <strings.h>
@@ -96,11 +97,12 @@ static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
-static int value = 0;
+static int aqi_value = 50;
 
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
+static int period = 0;
 
 /*---------------------------------------------------------------------------*/
 /*
@@ -126,11 +128,20 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
 {
   printf("Pub Handler: topic='%s' (len=%u), chunk_len=%u\n", topic,
           topic_len, chunk_len);
-
-  if(strcmp(topic, "actuator") == 0) {
+  if(strcmp((const char *)topic, "led")==0){
     printf("Received Actuator command\n");
-	printf("%s\n", chunk);
-    // Do something :)
+    if(strcmp((const char *)chunk, "good")==0){
+        leds_on(LEDS_GREEN);
+        printf("Air Quality is good\n");
+    }else if (strcmp((const char *)chunk, "moderate")==0){
+        leds_on(LEDS_YELLOW);
+        printf("Air Quality is moderate\n");
+    }else if (strcmp((const char *)chunk, "bad")==0){
+        leds_on(LEDS_RED);
+        printf("Air Quality is bad\n");
+    }else{
+        printf("UNKNOWN\n");
+    }
     return;
   }
 }
@@ -140,52 +151,50 @@ mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data)
 {
   switch(event) {
   case MQTT_EVENT_CONNECTED: {
-      
-      LOG_INFO("MQTT connection acquired\n");
-			state = STATE_CONNECTED;
-			break;
+    printf("Application has a MQTT connection\n");
+
+    state = STATE_CONNECTED;
+    break;
   }
   case MQTT_EVENT_DISCONNECTED: {
-      printf("MQTT connection disconnected. Reason: %u\n", *((mqtt_event_t *)data));
-			state = STATE_DISCONNECTED;
-			process_poll(&mqtt_client_process);
-			break;
+    printf("MQTT Disconnect. Reason %u\n", *((mqtt_event_t *)data));
+
+    state = STATE_DISCONNECTED;
+    process_poll(&mqtt_client_process);
+    break;
   }
   case MQTT_EVENT_PUBLISH: {
     msg_ptr = data;
-		pub_handler(msg_ptr->topic, strlen(msg_ptr->topic), msg_ptr->payload_chunk, msg_ptr->payload_length);
-		break;
+
+    pub_handler(msg_ptr->topic, strlen(msg_ptr->topic),
+                msg_ptr->payload_chunk, msg_ptr->payload_length);
+    break;
   }
-  case MQTT_EVENT_SUBACK: 
-		{
-			#if MQTT_311
-			mqtt_suback_event_t *suback_event = (mqtt_suback_event_t *)data;
-			if(suback_event->success) 
-			{
-				LOG_INFO("Application has subscribed to the topic\n");
-			} 
-			else 
-			{
-				LOG_ERR("Application failed to subscribe to topic (ret code %x)\n", suback_event->return_code);
-			}
-			#else
-			LOG_INFO("Application has subscribed to the topic\n");
-			#endif
-			break;
-		}
-		case MQTT_EVENT_UNSUBACK: 
-		{
-			LOG_INFO("Application is unsubscribed to topic successfully\n");
-			break;
-		}
-		case MQTT_EVENT_PUBACK: 
-		{
-			LOG_INFO("Publishing complete.\n");
-			break;
-		}
-		default:
-			LOG_INFO("Application got a unhandled MQTT event: %i\n", event);
-			break;
+  case MQTT_EVENT_SUBACK: {
+#if MQTT_311
+    mqtt_suback_event_t *suback_event = (mqtt_suback_event_t *)data;
+
+    if(suback_event->success) {
+      printf("Application is subscribed to topic successfully\n");
+    } else {
+      printf("Application failed to subscribe to topic (ret code %x)\n", suback_event->return_code);
+    }
+#else
+    printf("Application is subscribed to topic successfully\n");
+#endif
+    break;
+  }
+  case MQTT_EVENT_UNSUBACK: {
+    printf("Application is unsubscribed to topic successfully\n");
+    break;
+  }
+  case MQTT_EVENT_PUBACK: {
+    printf("Publishing complete.\n");
+    break;
+  }
+  default:
+    printf("Application got a unhandled MQTT event: %i\n", event);
+    break;
   }
 }
 
@@ -234,48 +243,44 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 	      ev == PROCESS_EVENT_POLL){
 			  			  
 		  if(state==STATE_INIT){
-			 if(have_connectivity()==true) { 
-        printf("si\n");
+			 if(have_connectivity()==true)  
 				 state = STATE_NET_OK;
-       }
 		  } 
 		  
 		  if(state == STATE_NET_OK){
 			  // Connect to MQTT server
-			  LOG_INFO("Connecting to MQTT server\n"); 
-			  	memcpy(broker_address, broker_ip, strlen(broker_ip));
+			  printf("Connecting!\n");
 			  
-			  	mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
+			  memcpy(broker_address, broker_ip, strlen(broker_ip));
+			  
+			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
 						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
-			  	state = STATE_CONNECTING;
+			  state = STATE_CONNECTING;
 		  }
 		  
 		  if(state==STATE_CONNECTED){
 		  
 			  // Subscribe to a topic
-			  strcpy(sub_topic,"actuator");
+			 /* strcpy(sub_topic,"led");
 
 			  status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 
-			  LOG_INFO("Subscribing!\n");
+			  printf("Subscribing!\n");
 			  if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
 				LOG_ERR("Tried to subscribe but command queue was full!\n");
 				PROCESS_EXIT();
-			  }
+			  }*/
 			  
 			  state = STATE_SUBSCRIBED;
 		  }
 
-			  
-		if(state == STATE_SUBSCRIBED){
+		if(state == STATE_SUBSCRIBED && (period%60==0)){
 			// Publish something
-		    sprintf(pub_topic, "%s", "status");
-			
-			sprintf(app_buffer, "report %d", value);
-			
-			value++;
-				
+		    /*sprintf(pub_topic, "%s", "aqi-info");
+			aqi_value = rand() % 300;
+			sprintf(app_buffer, "{\"node\": %d, \"aqi\": %d, \"timestamp\": %lu}", node_id, aqi_value, clock_seconds());
+							
 			mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
@@ -285,6 +290,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		}
 		
 		etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
+	    	period++;*/
       
     }
 
@@ -293,3 +299,4 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
+Footer
