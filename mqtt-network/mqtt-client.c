@@ -109,8 +109,8 @@ static int period = 0;
  * The main MQTT buffers.
  * We will need to increase if we start publishing more data.
  */
-//#define APP_BUFFER_SIZE 512
-//static char app_buffer[APP_BUFFER_SIZE];
+#define APP_BUFFER_SIZE 512
+static char app_buffer[APP_BUFFER_SIZE];
 /*---------------------------------------------------------------------------*/
 static struct mqtt_message *msg_ptr = 0;
 
@@ -262,7 +262,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  if(state==STATE_CONNECTED){
 		  
 			  // Subscribe to a topic
-			 /* strcpy(sub_topic,"led");
+			  strcpy(sub_topic,"actuator");
 
 			  status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 
@@ -270,18 +270,19 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
 				LOG_ERR("Tried to subscribe but command queue was full!\n");
 				PROCESS_EXIT();
-			  }*/
+			  }
+			  
+			  state = STATE_SUBSCRIBED;
 			  
 			  state = STATE_SUBSCRIBED;
 		  }
 
 		if(state == STATE_SUBSCRIBED && (period%60==0)){
 			// Publish something
-		    /*sprintf(pub_topic, "%s", "aqi-info");
-			aqi_value = rand() % 300;
-			sprintf(app_buffer, "{\"node\": %d, \"aqi\": %d, \"timestamp\": %lu}", node_id, aqi_value, clock_seconds());
-							
-			mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
+		    sprintf(pub_topic, "%s", "status");
+			
+			sprintf(app_buffer, "report %d", "ok");
+      mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
 		} else if ( state == STATE_DISCONNECTED ){
@@ -290,7 +291,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		}
 		
 		etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
-	    	period++;*/
       
     }
 
