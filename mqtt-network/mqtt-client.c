@@ -148,7 +148,7 @@ mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data)
   case MQTT_EVENT_DISCONNECTED: {
       printf("MQTT connection disconnected. Reason: %u\n", *((mqtt_event_t *)data));
 			state = STATE_DISCONNECTED;
-			process_poll(&process_for_temperature_sensor);
+			process_poll(&mqtt_client_process);
 			break;
   }
   case MQTT_EVENT_PUBLISH: {
