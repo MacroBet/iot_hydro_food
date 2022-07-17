@@ -109,8 +109,8 @@ static int period = 0;
  * The main MQTT buffers.
  * We will need to increase if we start publishing more data.
  */
-#define APP_BUFFER_SIZE 512
-static char app_buffer[APP_BUFFER_SIZE];
+//#define APP_BUFFER_SIZE 512
+//static char app_buffer[APP_BUFFER_SIZE];
 /*---------------------------------------------------------------------------*/
 static struct mqtt_message *msg_ptr = 0;
 
