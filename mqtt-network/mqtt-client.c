@@ -41,7 +41,9 @@
 #include "dev/leds.h"
 #include "os/sys/log.h"
 #include "mqtt-client.h"
+#include <sys/node-id.h>
 
+#include <time.h>
 #include <string.h>
 #include <strings.h>
 /*---------------------------------------------------------------------------*/
@@ -61,6 +63,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 // Defaukt config values
 #define DEFAULT_BROKER_PORT         1883
 #define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
+#define PUBLISH_INTERVAL	    (8 * CLOCK_SECOND)
 
 
 // We assume that the broker does not require authentication
@@ -117,6 +120,13 @@ static struct mqtt_connection conn;
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_client_process, "MQTT Client");
 
+static int temperature = 25;
+static int humidity = 50%;
+//static int co2 = 1400;
+static bool watering = false;
+unsigned short varTemp;
+unsigned short varHum;
+//unsigned short varCo2;
 
 
 /*---------------------------------------------------------------------------*/
@@ -221,7 +231,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   state=STATE_INIT;
 				    
   // Initialize periodic timer to check the status 
-  etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
+  etimer_set(&periodic_timer, PUBLISH_INTERVAL);
 
   /* Main loop */
   while(1) {
@@ -243,7 +253,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  memcpy(broker_address, broker_ip, strlen(broker_ip));
 			  
 			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
-						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
+						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
 		  }
@@ -267,21 +277,39 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
-		    sprintf(pub_topic, "%s", "status");
+		  sprintf(pub_topic, "%s", "status");
 			
-			sprintf(app_buffer, "report %d", value);
-			
-			value++;
+			if (watering) {
+					
+        varTemp = random_rand();
+        temperature -= (int) varTemp % 3;
+        varHum = random_rand();
+        humidity += (int) varHum % 3;
+
+
+
+				} else {
+
+          varTemp = random_rand();
+          temperature += (int) varTemp % 3;
+          varHum = random_rand();
+          humidity -= (int) varHum % 3;
+
+					
+				}
+
+				LOG_INFO("New values: %d, %d\n", temperature, humidity);
 				
-			mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
-               strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+				sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d}", node_id, temperature, humidity);
+				mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
+				strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");	
 		   // Recover from error
 		}
 		
-		etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
+		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
       
     }
 
