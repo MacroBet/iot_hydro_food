@@ -123,7 +123,7 @@ static int humidity = 50;
 static int co2 = 1400;
 static bool watering = false;
 static bool day = false;
-static bool openW = flase;
+static bool openW = false;
 unsigned short varTemp;
 unsigned short varHum;
 unsigned short varCo2;
