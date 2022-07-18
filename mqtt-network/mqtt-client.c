@@ -139,9 +139,66 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
 
   if(strcmp(topic, "actuator") == 0) {
     printf("Received Actuator command\n");
-	printf("%s\n", chunk);
-    // Do something :)
-    return;
+    if(strcmp((const char*) chunk, "wat-day-open") == 0) {
+
+        LOG_INFO("Start watering and open windows\n");
+        watering = true;
+        day = true;
+        openW = true;
+
+      } else if(strcmp((const char*) chunk, "notWat-day-open") == 0)  {
+        
+        LOG_INFO("Not watering and openC\n");	
+        watering = false;
+        day = true; 
+        openW = true;
+
+      }	else if(strcmp((const char*) chunk, "notWat-day-notOpen") == 0)  {
+        
+        LOG_INFO("Not watering and openC\n");	
+        watering = false;
+        day = true;
+        openW = false;
+
+      }	else if(strcmp((const char*) chunk, "wat-day-notOpen") == 0)  {
+        
+        LOG_INFO("Not watering and openC\n");	
+        watering = true;
+        day = true;
+        openW = false;
+        
+      }	else if(strcmp((const char*) chunk, "wat-night-open") == 0) {
+
+        LOG_INFO("Start watering and open windows\n");	
+        watering = true;
+        day = false;
+        openW = true;
+
+      } else if(strcmp((const char*) chunk, "notWat-night-open") == 0) {
+
+        LOG_INFO("Start watering and open windows\n");	
+        watering = false;
+        day = false;
+        openW = true;
+
+      }  else if(strcmp((const char*) chunk, "wat-night-notOpen") == 0) {
+
+        LOG_INFO("Start watering and open windows\n");	
+        watering = true;
+        day = false;
+        openW = false;
+
+      } else if(strcmp((const char*) chunk, "notWat-night-notOpen") == 0) {
+
+        LOG_INFO("Start watering and open windows\n");	
+        watering = false;
+        day = false;
+        openW = false;
+
+      } 
+    } else {
+      LOG_ERR("Topic not valid!\n");
+	
   }
 }
 /*---------------------------------------------------------------------------*/
