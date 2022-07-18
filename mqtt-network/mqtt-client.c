@@ -41,7 +41,6 @@
 #include "dev/leds.h"
 #include "os/sys/log.h"
 #include "mqtt-client.h"
-#include "node-id.h"
 
 #include <string.h>
 #include <strings.h>
@@ -97,11 +96,11 @@ static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
+static int value = 0;
 
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
-static int period = 0;
 
 /*---------------------------------------------------------------------------*/
 /*
@@ -127,20 +126,11 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
 {
   printf("Pub Handler: topic='%s' (len=%u), chunk_len=%u\n", topic,
           topic_len, chunk_len);
-  if(strcmp((const char *)topic, "led")==0){
+
+  if(strcmp(topic, "actuator") == 0) {
     printf("Received Actuator command\n");
-    if(strcmp((const char *)chunk, "good")==0){
-        leds_on(LEDS_GREEN);
-        printf("Air Quality is good\n");
-    }else if (strcmp((const char *)chunk, "moderate")==0){
-        leds_on(LEDS_YELLOW);
-        printf("Air Quality is moderate\n");
-    }else if (strcmp((const char *)chunk, "bad")==0){
-        leds_on(LEDS_RED);
-        printf("Air Quality is bad\n");
-    }else{
-        printf("UNKNOWN\n");
-    }
+	printf("%s\n", chunk);
+    // Do something :)
     return;
   }
 }
@@ -272,16 +262,18 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  }
 			  
 			  state = STATE_SUBSCRIBED;
-			  
-			  state = STATE_SUBSCRIBED;
 		  }
 
-		if(state == STATE_SUBSCRIBED && (period%60==0)){
+			  
+		if(state == STATE_SUBSCRIBED){
 			// Publish something
 		    sprintf(pub_topic, "%s", "status");
 			
-			sprintf(app_buffer, "report %d", 1);
-      mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
+			sprintf(app_buffer, "report %d", value);
+			
+			value++;
+				
+			mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
 		} else if ( state == STATE_DISCONNECTED ){
@@ -298,4 +290,3 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
-
