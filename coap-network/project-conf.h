@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, Swedish Institute of Computer Science.
+ * Copyright (c) 2010, Swedish Institute of Computer Science.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,30 +26,34 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * This file is part of the Contiki operating system.
- *
  */
 
-#include "contiki.h"
-#include "net/routing/routing.h"
-#include "net/netstack.h"
-#include "net/ipv6/simple-udp.h"
+#ifndef PROJECT_CONF_H_
+#define PROJECT_CONF_H_
 
-#include "sys/log.h"
-#define LOG_MODULE "App"
-#define LOG_LEVEL LOG_LEVEL_INFO
 
-#define UDP_CLIENT_PORT	8765
-#define UDP_SERVER_PORT	5678
+// Set the max response payload before enable fragmentation:
 
-PROCESS(udp_border_router, "UDP Border Router");
-AUTOSTART_PROCESSES(&udp_border_router);
+#undef REST_MAX_CHUNK_SIZE
+#define REST_MAX_CHUNK_SIZE    64
 
-PROCESS_THREAD(udp_border_router, ev, data){
-  PROCESS_BEGIN();
-#if BORDER_ROUTER_CONF_WEBSERVER
-  PROCESS_NAME(webserver_nogui_process);
-  process_start(&webserver_nogui_process, NULL);
-#endif /* BORDER_ROUTER_CONF_WEBSERVER */
-  PROCESS_END();
-}
+// Set the maximum number of CoAP concurrent transactions:
+
+#undef COAP_MAX_OPEN_TRANSACTIONS
+#define COAP_MAX_OPEN_TRANSACTIONS   4
+
+#undef NBR_TABLE_CONF_MAX_NEIGHBORS
+#define NBR_TABLE_CONF_MAX_NEIGHBORS     10
+
+#undef UIP_CONF_MAX_ROUTES
+#define UIP_CONF_MAX_ROUTES   10
+
+#undef UIP_CONF_BUFFER_SIZE
+#define UIP_CONF_BUFFER_SIZE    240
+
+
+#define LOG_LEVEL_APP LOG_LEVEL_DBG
+
+
+
+#endif /* PROJECT_CONF_H_ */
