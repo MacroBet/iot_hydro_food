@@ -119,7 +119,7 @@ static struct mqtt_connection conn;
 PROCESS(mqtt_client_process, "MQTT Client");
 
 static int temperature = 25;
-static int humidity = 50%;
+static int humidity = 50;
 //static int co2 = 1400;
 static bool watering = false;
 unsigned short varTemp;
