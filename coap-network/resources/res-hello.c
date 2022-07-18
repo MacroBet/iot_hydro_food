@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 201, RISE SICS
+ * Copyright (c) 2020, Carlo Vallati, University of Pisa
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,39 @@
  * SUCH DAMAGE.
  *
  * This file is part of the Contiki operating system.
- *
  */
 
-#include <stdio.h>
+
 #include <stdlib.h>
 #include <string.h>
-#include "contiki.h"
 #include "coap-engine.h"
 
-/* Log configuration */
-#include "sys/log.h"
-#define LOG_MODULE "App"
-#define LOG_LEVEL LOG_LEVEL_APP
+static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
-/* Declare and auto-start this file's process */
-PROCESS(contiki_ng_br_coap_server, "Contiki-NG Border Router and CoAP Server");
-AUTOSTART_PROCESSES(&contiki_ng_br_coap_server);
+/*
+ * A handler function named [resource name]_handler must be implemented for each RESOURCE.
+ * A buffer for the response payload is provided through the buffer pointer. Simple resources can ignore
+ * preferred_size and offset, but must respect the REST_MAX_CHUNK_SIZE limit for the buffer.
+ * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
+ */
+RESOURCE(res_hello,
+         "title=\"Hello world\";rt=\"Text\"",
+         res_get_handler,
+         res_get_handler,
+         NULL,
+         NULL);
 
-extern coap_resource_t res_myhouse;
-/*---------------------------------------------------------------------------*/
-PROCESS_THREAD(contiki_ng_br_coap_server, ev, data){
-  PROCESS_BEGIN();
+static void
+res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{
+  char const *const message = "Hello World!";
+  int length = 12; 
+ 
+  // Copy the response in the transmission buffer
+  memcpy(buffer, message, length);
 
-#if BORDER_ROUTER_CONF_WEBSERVER
-  PROCESS_NAME(webserver_nogui_process);
-  process_start(&webserver_nogui_process, NULL);
-#endif /* BORDER_ROUTER_CONF_WEBSERVER */
-
-  LOG_INFO("Contiki-NG Border Router started\n");
-  LOG_INFO("Starting Erbium Example Server\n");
-  coap_activate_resource(&res_myhouse, "casa");
-  PROCESS_END();
+  // Prepare the response
+  coap_set_header_content_format(response, TEXT_PLAIN); 
+  coap_set_header_etag(response, (uint8_t *)&length, 1);
+  coap_set_payload(response, buffer, length);
 }

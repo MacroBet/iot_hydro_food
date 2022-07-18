@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Institute for Pervasive Computing, ETH Zurich
+ * Copyright (c) 2020, Carlo Vallati, University of Pisa
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,16 +29,40 @@
  * This file is part of the Contiki operating system.
  */
 
-/**
- * \file
- *      Erbium (Er) example project configuration.
- * \author
- *      Matthias Kovatsch <kovatsch@inf.ethz.ch>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "contiki.h"
+#include "coap-engine.h"
+
+/* Log configuration */
+#include "sys/log.h"
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
+/*
+ * Resources to be activated need to be imported through the extern keyword.
+ * The build system automatically compiles the resources in the corresponding sub-directory.
  */
+extern coap_resource_t  res_hello; 
 
-#ifndef PROJECT_CONF_H_
-#define PROJECT_CONF_H_
+PROCESS(er_example_server, "Erbium Example Server");
+AUTOSTART_PROCESSES(&er_example_server);
 
-#define LOG_LEVEL_APP LOG_LEVEL_DBG
+PROCESS_THREAD(er_example_server, ev, data)
+{
+  PROCESS_BEGIN();
 
-#endif /* PROJECT_CONF_H_ */
+  PROCESS_PAUSE();
+
+  LOG_INFO("Starting Erbium Example Server\n");
+
+  coap_activate_resource(&res_hello, "hello");
+
+  while(1) {
+    PROCESS_WAIT_EVENT();
+
+  }                             
+
+  PROCESS_END();
+}
