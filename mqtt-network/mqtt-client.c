@@ -120,11 +120,13 @@ PROCESS(mqtt_client_process, "MQTT Client");
 
 static int temperature = 25;
 static int humidity = 50;
-//static int co2 = 1400;
+static int co2 = 1400;
 static bool watering = false;
+static bool day = false;
+static bool openW = flase;
 unsigned short varTemp;
 unsigned short varHum;
-//unsigned short varCo2;
+unsigned short varCo2;
 
 
 /*---------------------------------------------------------------------------*/
@@ -276,31 +278,104 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
 		  sprintf(pub_topic, "%s", "status");
-			
-			if (watering) {
+
+      if(day && openW) {
+
+        varCo2 = random_rand();
+        co2 -= (int) varCo2 % 100;
+        
+        if (watering) {
 					
-        varTemp = random_rand();
-        temperature -= (int) varTemp % 3;
-        varHum = random_rand();
-        humidity += (int) varHum % 3;
+          varTemp = random_rand();
+          temperature -= (int) varTemp % 1;
+          varHum = random_rand();
+          humidity += (int) varHum % 1;
+
+			  } else {
+
+          varTemp = random_rand();
+          temperature += (int) varTemp % 3;
+          varHum = random_rand();
+          humidity -= (int) varHum % 5;
+					
+			}
+
+      } else if(!day && openW) {
+
+        varCo2 = random_rand();
+        co2 -= (int) varCo2 % 50;
+        
+        if (watering) {
+					
+          varTemp = random_rand();
+          temperature -= (int) varTemp % 5;
+          varHum = random_rand();
+          humidity += (int) varHum % 6;
+
+			  } else {
+
+          varTemp = random_rand();
+          temperature += (int) varTemp % 2;
+          varHum = random_rand();
+          humidity -= (int) varHum % 2;
+					
+			}
 
 
+      } else if(day && !openW) {
 
-				} else {
+        varCo2 = random_rand();
+        co2 += (int) varCo2 % 50;
+
+        if (watering) {
+					
+          varTemp = random_rand();
+          temperature -= (int) varTemp % 3;
+          varHum = random_rand();
+          humidity += (int) varHum % 3;
+
+			  } else {
 
           varTemp = random_rand();
           temperature += (int) varTemp % 3;
           varHum = random_rand();
           humidity -= (int) varHum % 3;
-
 					
-				}
+			}
 
-				LOG_INFO("New values: %d, %d\n", temperature, humidity);
+
+      } else if(!day && !openW) {
+
+        varCo2 = random_rand();
+        co2 += (int) varCo2 % 100;
+
+        if (watering) {
+					
+          varTemp = random_rand();
+          temperature -= (int) varTemp % 2;
+          varHum = random_rand();
+          humidity += (int) varHum % 4;
+
+			  } else {
+
+          varTemp = random_rand();
+          temperature += (int) varTemp % 2;
+          varHum = random_rand();
+          humidity -= (int) varHum % 4;
+					
+			}
+
+      }
+
+
+
+			LOG_INFO("New values: %d, %d\n", temperature, humidity);
 				
-				sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d}", node_id, temperature, humidity);
-				mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
-				strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+			sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", 
+                                                      node_id, temperature, humidity, co2);
+			
+      mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
+			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");	
