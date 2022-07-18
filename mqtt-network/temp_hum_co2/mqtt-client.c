@@ -115,6 +115,8 @@ static struct mqtt_message *msg_ptr = 0;
 
 static struct mqtt_connection conn;
 
+mqtt_status_t status;
+char broker_address[CONFIG_IP_ADDR_STR_LEN];
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_client_process, "MQTT Client-temp-hum-co2");
 
@@ -270,9 +272,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
   PROCESS_BEGIN();
   
-  mqtt_status_t status;
-  char broker_address[CONFIG_IP_ADDR_STR_LEN];
-
   printf("MQTT Client Process\n");
 
   // Initialize the ClientID as MAC address
