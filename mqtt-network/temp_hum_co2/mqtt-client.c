@@ -424,9 +424,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
       }
 
-
-
-			LOG_INFO("New values: %d, %d\n", temperature, humidity);
+			LOG_INFO("New values: %d, %d, %d\n", temperature, humidity, co2);
 				
 			sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", 
                                                       node_id, temperature, humidity, co2);

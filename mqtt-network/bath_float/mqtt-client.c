@@ -118,16 +118,8 @@ static struct mqtt_connection conn;
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_client_process, "MQTT Client-bath-float");
 
-static int temperature = 25;
-static int humidity = 50;
-static int co2 = 1400;
-static bool watering = false;
-static bool day = false;
-static bool openW = false;
-unsigned short varTemp;
-unsigned short varHum;
-unsigned short varCo2;
-
+static int level = 50;
+static bool charge = false;
 
 /*---------------------------------------------------------------------------*/
 static void
@@ -139,63 +131,17 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
 
   if(strcmp(topic, "actuator") == 0) {
     printf("Received Actuator command\n");
-    if(strcmp((const char*) chunk, "wat-day-open") == 0) {
+    if(strcmp((const char*) chunk, "charge") == 0) {
 
         LOG_INFO("Start watering and open windows\n");
-        watering = true;
-        day = true;
-        openW = true;
+        charge = true;
 
-      } else if(strcmp((const char*) chunk, "notWat-day-open") == 0)  {
+      } else if(strcmp((const char*) chunk, "notCharge") == 0)  {
         
         LOG_INFO("Not watering and openC\n");	
-        watering = false;
-        day = true; 
-        openW = true;
+        charge = false
 
-      }	else if(strcmp((const char*) chunk, "notWat-day-notOpen") == 0)  {
-        
-        LOG_INFO("Not watering and openC\n");	
-        watering = false;
-        day = true;
-        openW = false;
-
-      }	else if(strcmp((const char*) chunk, "wat-day-notOpen") == 0)  {
-        
-        LOG_INFO("Not watering and openC\n");	
-        watering = true;
-        day = true;
-        openW = false;
-        
-      }	else if(strcmp((const char*) chunk, "wat-night-open") == 0) {
-
-        LOG_INFO("Start watering and open windows\n");	
-        watering = true;
-        day = false;
-        openW = true;
-
-      } else if(strcmp((const char*) chunk, "notWat-night-open") == 0) {
-
-        LOG_INFO("Start watering and open windows\n");	
-        watering = false;
-        day = false;
-        openW = true;
-
-      }  else if(strcmp((const char*) chunk, "wat-night-notOpen") == 0) {
-
-        LOG_INFO("Start watering and open windows\n");	
-        watering = true;
-        day = false;
-        openW = false;
-
-      } else if(strcmp((const char*) chunk, "notWat-night-notOpen") == 0) {
-
-        LOG_INFO("Start watering and open windows\n");	
-        watering = false;
-        day = false;
-        openW = false;
-
-      } 
+      }	
     } else {
       LOG_ERR("Topic not valid!\n");
 	
@@ -336,100 +282,14 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			// Publish something
 		  sprintf(pub_topic, "%s", "status");
 
-      if(day && openW) {
+      if(charge) {
+        level = 100;
+      } else
+        level = level;
 
-        varCo2 = random_rand();
-        co2 -= (int) varCo2 % 100;
-        
-        if (watering) {
-					
-          varTemp = random_rand();
-          temperature -= (int) varTemp % 2;
-          varHum = random_rand();
-          humidity += (int) varHum % 2;
-
-			  } else {
-
-          varTemp = random_rand();
-          temperature += (int) varTemp % 3;
-          varHum = random_rand();
-          humidity -= (int) varHum % 5;
-					
-			}
-
-      } else if(!day && openW) {
-
-        varCo2 = random_rand();
-        co2 -= (int) varCo2 % 50;
-        
-        if (watering) {
-					
-          varTemp = random_rand();
-          temperature -= (int) varTemp % 5;
-          varHum = random_rand();
-          humidity += (int) varHum % 6;
-
-			  } else {
-
-          varTemp = random_rand();
-          temperature += (int) varTemp % 2;
-          varHum = random_rand();
-          humidity -= (int) varHum % 2;
-					
-			}
-
-
-      } else if(day && !openW) {
-
-        varCo2 = random_rand();
-        co2 += (int) varCo2 % 50;
-
-        if (watering) {
-					
-          varTemp = random_rand();
-          temperature -= (int) varTemp % 3;
-          varHum = random_rand();
-          humidity += (int) varHum % 3;
-
-			  } else {
-
-          varTemp = random_rand();
-          temperature += (int) varTemp % 3;
-          varHum = random_rand();
-          humidity -= (int) varHum % 3;
-					
-			}
-
-
-      } else if(!day && !openW) {
-
-        varCo2 = random_rand();
-        co2 += (int) varCo2 % 100;
-
-        if (watering) {
-					
-          varTemp = random_rand();
-          temperature -= (int) varTemp % 2;
-          varHum = random_rand();
-          humidity += (int) varHum % 4;
-
-			  } else {
-
-          varTemp = random_rand();
-          temperature += (int) varTemp % 2;
-          varHum = random_rand();
-          humidity -= (int) varHum % 4;
-					
-			}
-
-      }
-
-
-
-			LOG_INFO("New values: %d, %d\n", temperature, humidity);
+			LOG_INFO("New values: %d\n", level);
 				
-			sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", 
-                                                      node_id, temperature, humidity, co2);
+			sprintf(app_buffer, "{\"node\": %d, \"level\": %d}", node_id, level);
 			
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
