@@ -1,7 +1,7 @@
 CONTIKI_PROJECT = client
 all: $(CONTIKI_PROJECT)
 CFLAGS += -DPROJECT_CONF_H=\"project-conf.h\"
-CONTIKI = ../../..
+CONTIKI = ../../../..
 
 # Include optional target-specific module
 include $(CONTIKI)/Makefile.identify-target
