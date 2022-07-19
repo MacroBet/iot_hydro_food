@@ -1,8 +1,6 @@
-# from mqttNetwork import MqttClient
+from mqttNetwork import MqttClient
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-
-#     client = MqttClient()
+    client = MqttClient()
     
-import paho.mqtt.client as mqtt
