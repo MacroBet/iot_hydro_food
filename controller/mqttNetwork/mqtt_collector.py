@@ -21,5 +21,6 @@ class MqttClient:
         try:
             self.client.connect("127.0.0.1", 1883, 60)
         except Exception as e:
+            print("dio porco")
             print(str(e))
         self.client.loop_forever()
