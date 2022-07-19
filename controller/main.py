@@ -1,4 +1,4 @@
-from maqtt_collector import MqttClient
+from mqtt_collector import MqttClient
 
 if __name__ == "__main__":
 
