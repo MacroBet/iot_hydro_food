@@ -9,9 +9,11 @@ import paho.mqtt.client as mqtt
  
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
+    print("recive")
     client.subscribe("status")
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
+    print("send")
     print(msg.topic+" "+str(msg.payload))
 
 client = mqtt.Client()
