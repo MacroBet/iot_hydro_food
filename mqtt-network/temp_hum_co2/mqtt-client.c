@@ -67,7 +67,15 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 
 // We assume that the broker does not require authentication
-
+static int temperature = 25;
+static int humidity = 50;
+static int co2 = 1400;
+static bool watering = false;
+static bool day = false;
+static bool openW = false;
+unsigned short varTemp;
+unsigned short varHum;
+unsigned short varCo2;
 
 /*---------------------------------------------------------------------------*/
 /* Various states */
@@ -119,17 +127,6 @@ mqtt_status_t status;
 char broker_address[CONFIG_IP_ADDR_STR_LEN];
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_client_process, "MQTT Client-temp-hum-co2");
-
-static int temperature = 25;
-static int humidity = 50;
-static int co2 = 1400;
-static bool watering = false;
-static bool day = false;
-static bool openW = false;
-unsigned short varTemp;
-unsigned short varHum;
-unsigned short varCo2;
-
 
 /*---------------------------------------------------------------------------*/
 static void
