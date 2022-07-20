@@ -33,7 +33,7 @@ def checkCommand(command, client):
             
     elif command == "!change values of thresholds":
            print("......")
-    elif command == "!check values sensors co2":
+    elif command == "!change value co2":
 
         while 1:
             client.co2Max = input("Insert new Max value for co2: ")
@@ -49,7 +49,7 @@ def checkCommand(command, client):
                 print("Insert new value\n")
                 continue
 
-    elif command == "!check values sensors humidity":
+    elif command == "!change value humidity":
           
            while 1:
             client.co2Max = input("Insert new Max value for humidity: ")
@@ -65,7 +65,7 @@ def checkCommand(command, client):
                 print("Insert new value\n")
                 continue
 
-    elif command == "!check values sensors temperature":
+    elif command == "!change value temperature":
             
             while 1:
                 client.co2Max = input("Insert new Max value for temperature: ")
@@ -91,9 +91,9 @@ def showInfo():
 
     print("check log of sensors ---> check message that the sensord send to the application \n"\
           "change values of threshold ---> change value of temperature humidity and Co2 that has been setted at the start\n"\
-          "check values sensors co2 ---> chack only the values of Co2\n"\
-          "check values sensors humidity ---> check only the values of humidity\n"\
-          "check values sensors temperature ---> check only the values of temperature\n"\
+          "change value co2 ---> chack only the values of Co2\n"\
+          "change value humidity ---> check only the values of humidity\n"\
+          "change value temperature ---> check only the values of temperature\n"\
           "list of commands ---> show the commands that can be promted\n")
 
 
@@ -130,7 +130,7 @@ if __name__ == "__main__":
         answer = input(">")
         answer = answer.lower()
         if(answer == "yes" or answer == "y"):
-            print("Welcome\n")
+            print("\nWelcome\n")
             break
         elif(answer == "no" or answer == "n"):
             print("Insert new value\n")
@@ -150,7 +150,7 @@ if __name__ == "__main__":
     client.co2Min = co2Min
     thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
     thread.start()
-    
+
     time.sleep(5)
     print("System is running--->\n ")
     while 1:
