@@ -30,7 +30,7 @@ def on_message(client, userdata, msg):
     db = Database()
     connection = db.connect_db()
     cursor = connection.cursor()
-    sql = "INSERT INTO `data` (`node_id`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s, %s)"
+    sql = "INSERT INTO `data` (`node_id`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
     cursor.execute(sql, (node_id, timestamp, temperature, humidity, co2))
     connection.commit()
 
