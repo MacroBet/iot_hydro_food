@@ -13,7 +13,7 @@ class Database:
         else:
             self.connection = pymysql.connect(host="localhost",
                                               user='root',
-                                              password="root",
+                                              password="mypass123",
                                               database="iot",
                                               cursorclass=pymysql.cursors.DictCursor)
             return self.connection
