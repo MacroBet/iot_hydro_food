@@ -1,4 +1,5 @@
 
+import threading
 from mqttNetwork.mqtt_collector import MqttClient
 import paho.mqtt.client as mqtt
 
@@ -13,12 +14,12 @@ def listOfcommands():
           "!List of commands\n"\
           "!Info commands\n\n")
 
-def checkCommand(command):
+def checkCommand(command, client):
    
     if command == "!info commands":
            showInfo()
     elif command == "!check log of sensors":
-            print("......")
+            print(client.message)
     elif command == "!change values of thresholds":
            print("......")
     elif command == "!check values sensors co2":
@@ -47,7 +48,8 @@ def showInfo():
 if __name__ == "__main__":
 
     client = MqttClient()
-    client.mqtt_client()
+    thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
+    thread.start()
     print("Define tresholds for the parameters Temperature, Humidity, Co2 :\n")
     tempMax = input("TRESHOLD MAX TEMPERATURE  (default value 35C) : ")
     if tempMax == "":
@@ -76,6 +78,6 @@ if __name__ == "__main__":
     while 1:
         command = input(">")
         command = command.lower()
-        checkCommand(command)
+        checkCommand(command, client)
         
 

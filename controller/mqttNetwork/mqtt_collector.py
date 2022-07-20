@@ -1,10 +1,14 @@
+from email import message
 import paho.mqtt.client as mqtt
 from datetime import datetime
 from mqttNetwork.dataBase import Database
 import json
 from pydoc import cli
 
+
 class MqttClient:
+
+    message = ""
 
     def on_connect(client, userdata, flags, rc):
         print("Connected with result code "+str(rc))
@@ -14,6 +18,7 @@ class MqttClient:
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
         print("msg topic: " + str(msg.payload))
+        message = str(msg.payload)
         data = json.loads(msg.payload)
         node_id = data["node"]
         temperature = data["temperature"]
