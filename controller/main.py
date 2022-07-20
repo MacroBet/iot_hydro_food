@@ -1,6 +1,6 @@
 import json
 from pydoc import cli
-from controller.mqttNetwork.dataBase import Database
+from mqttNetwork.dataBase import Database
 from mqttNetwork.mqtt_collector import MqttClient
 import paho.mqtt.client as mqtt
 from datetime import datetime
