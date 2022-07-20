@@ -150,6 +150,7 @@ if __name__ == "__main__":
     client.co2Min = co2Min
     thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
     thread.start()
+    
     time.sleep(5)
     print("System is running--->\n ")
     while 1:
