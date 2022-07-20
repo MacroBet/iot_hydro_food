@@ -27,7 +27,7 @@ def checkCommand(command, client):
                 if(mex != client.message):
                     print(client.message)
         except KeyboardInterrupt:
-         pass
+         return
             
     elif command == "!change values of thresholds":
            print("......")
