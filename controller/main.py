@@ -24,7 +24,7 @@ def checkCommand(command, client):
         print(client.message)
         try:
             while True:
-                if(mex != client.message):
+                if(mex == client.message):
                     print(client.message)
         except KeyboardInterrupt:
          return
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         humMax = 80 
     humMin = input("TRESHOLD MIN HUMIDITY %  (default value 30%) : ")
     if humMin == "":
-        humMin = 350 
+        humMin = 35 
     co2Max = input("TRESHOLD MAX CO2  (default value 2000ppm) : ")
     if co2Max == "": 
         co2Max = 2000
@@ -84,6 +84,12 @@ if __name__ == "__main__":
     time.sleep(5)
     
     client = MqttClient()
+    client.tempMax = tempMax
+    client.tempMin = tempMin
+    client.humMax = humMax
+    client.humMin = humMin
+    client.co2Max = co2Max
+    client.co2Min = co2Min
     thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
     thread.start()
     time.sleep(5)

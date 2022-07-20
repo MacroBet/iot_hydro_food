@@ -9,6 +9,12 @@ from pydoc import cli
 class MqttClient:
 
     message = "dio povero"
+    tempMax = 35
+    tempMin = 20
+    humMax = 80
+    humMin = 35
+    co2Max = 2000
+    co2Min = 1000
 
     def on_connect(self, client, userdata, flags, rc):
         print("****** Connected with result code "+str(rc) + "******\n")
