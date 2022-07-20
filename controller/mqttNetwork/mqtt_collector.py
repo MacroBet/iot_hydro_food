@@ -1,19 +1,36 @@
 import paho.mqtt.client as mqtt
-
+from datetime import datetime
+from mqttNetwork.dataBase import Database
+import json
+from pydoc import cli
 
 class MqttClient:
 
-    # The callback for when the client receives a CONNACK response from the server.
     def on_connect(client, userdata, flags, rc):
         print("Connected with result code "+str(rc))
+        print("recive")
         client.subscribe("status")
 
     # The callback for when a PUBLISH message is received from the server.
-    def on_message(client, userdata, msg):
-        print(msg.topic+" "+str(msg.payload))
+    def on_message(self, client, userdata, msg):
+        print("msg topic: " + str(msg.payload))
+        data = json.loads(msg.payload)
+        node_id = data["node"]
+        temperature = data["temperature"]
+        humidity = data["humidity"]
+        co2 = data["co2"]
+        dt = datetime.now()
+        timestamp = datetime.timestamp(dt)
+        cursor = self.connection.cursor()
+        sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
+        cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
+        self.connection.commit()
+
+
     
     def mqtt_client(self):
-        
+        self.db = Database()
+        self.connection = self.db.connect_db()
         print("Mqtt client starting")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
@@ -21,6 +38,6 @@ class MqttClient:
         try:
             self.client.connect("127.0.0.1", 1883, 60)
         except Exception as e:
-            print("dio porco")
+            
             print(str(e))
         self.client.loop_forever()

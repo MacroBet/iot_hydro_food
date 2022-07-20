@@ -1,43 +1,81 @@
-import json
-from pydoc import cli
-from mqttNetwork.dataBase import Database
+
 from mqttNetwork.mqtt_collector import MqttClient
 import paho.mqtt.client as mqtt
-from datetime import datetime
+
+def listOfcommands():
+
+    print("AVAILABLE COMMANDS--->\n")
+    print("!Check values sensors Temperature\n"\
+          "!Check values sensors Humidity\n"\
+          "!Check values sensors Co2\n"\
+          "!Change values of thresholds\n"
+          "!Check log of sensors\n"\
+          "!List of commands\n"\
+          "!Info commands\n\n")
+
+def checkCommand(command):
+   
+    if command == "!info commands":
+           showInfo()
+    elif command == "!check log of sensors":
+            print("......")
+    elif command == "!change values of thresholds":
+           print("......")
+    elif command == "!check values sensors co2":
+            print("......")
+    elif command == "!check values sensors humidity":
+           print("......")
+    elif command == "!check values sensors temperature":
+            print("......")
+    elif command == "!list of commands":
+            listOfcommands()
+    else:
+        print("Command not found")
+        listOfcommands()
+
+def showInfo():
+
+    print("check log of sensors ---> check message that the sensord send to the application \n"\
+          "change values of threshold ---> change value of temperature humidity and Co2 that has been setted at the start\n"\
+          "check values sensors co2 ---> chack only the values of Co2\n"\
+          "check values sensors humidity ---> check only the values of humidity\n"\
+          "check values sensors temperature ---> check only the values of temperature\n"\
+          "list of commands ---> show the commands that can be promted\n")
 
 
 
+if __name__ == "__main__":
 
-# if __name__ == "__main__":
+    client = MqttClient()
+    client.mqtt_client()
+    print("Define tresholds for the parameters Temperature, Humidity, Co2 :\n")
+    tempMax = input("TRESHOLD MAX TEMPERATURE  (default value 35C) : ")
+    if tempMax == "":
+        tempMax =  35 
+    tempMin = input("TRESHOLD MIN TEMPERATURE  (default value 20C) : ")
+    if tempMin == "":
+        tempMin = 20 
+    humMax = input("TRESHOLD MAX HUMIDITY %  (defalut value 80%) : ")
+    if humMax == "":
+        humMax = 80 
+    humMin = input("TRESHOLD MIN HUMIDITY %  (default value 30%) : ")
+    if humMin == "":
+        humMin = 350 
+    co2Max = input("TRESHOLD MAX CO2  (default value 2000ppm) : ")
+    if co2Max == "": 
+        co2Max = 2000
+    co2Min = input("TRESHOLD MIN CO2  (default value 1000ppm) : ")
+    if co2Min == "":
+        co2Min = 1000
+    print("Values for tresholds: \n Max Temperature = " + str(tempMax) + ",\n Min Temperature = " + str(tempMin) + " ,\n Max Humidity = " + str(humMax) + ",\n Min Humidity = " + str(humMin) +",\
+                \n Max Co2 = "+ str(co2Max) +", \n Min Co2 = "+ str(co2Min)+"\n\n")
+    
+    listOfcommands()
 
-#     client = MqttClient()
-#     client.mqtt_client()
- 
-def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
-    print("recive")
-    client.subscribe("status")
-# The callback for when a PUBLISH message is received from the server.
-def on_message(client, userdata, msg):
-    print("msg topic: " + str(msg.payload))
-    data = json.loads(msg.payload)
-    node_id = data["node"]
-    temperature = data["temperature"]
-    humidity = data["humidity"]
-    co2 = data["co2"]
-    dt = datetime.now()
-    timestamp = datetime.timestamp(dt)
-    db = Database()
-    connection = db.connect_db()
-    cursor = connection.cursor()
-    sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
-    cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
-    connection.commit()
 
+    while 1:
+        command = input(">")
+        command = command.lower()
+        checkCommand(command)
+        
 
-client = mqtt.Client()
-client.on_connect= on_connect
-client.on_message= on_message
-client.connect("127.0.0.1", 1883, 60)
-client.publish("alert", payload="ciao")
-client.loop_forever()
