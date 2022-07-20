@@ -79,9 +79,9 @@ if __name__ == "__main__":
     thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
     thread.start()
     time.sleep(5)
-    print("System is running--->")
+    print("System is running--->\n ")
     while 1:
-        command = input(">")
+        command = input("COMMAND>")
         command = command.lower()
         checkCommand(command, client)
         
