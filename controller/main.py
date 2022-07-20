@@ -21,7 +21,7 @@ def checkCommand(command, client):
            showInfo()
     elif command == "!check log of sensors":
         mex = client.message
-       
+        print(client.message)
         while 1 :
             try:
                 if(mex != client.message):
