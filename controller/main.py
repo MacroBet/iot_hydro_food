@@ -1,5 +1,6 @@
 
 import threading
+import time
 from mqttNetwork.mqtt_collector import MqttClient
 import paho.mqtt.client as mqtt
 
@@ -47,9 +48,6 @@ def showInfo():
 
 if __name__ == "__main__":
 
-    client = MqttClient()
-    thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
-    thread.start()
     print("Define tresholds for the parameters Temperature, Humidity, Co2 :\n")
     tempMax = input("TRESHOLD MAX TEMPERATURE  (default value 35C) : ")
     if tempMax == "":
@@ -66,7 +64,7 @@ if __name__ == "__main__":
     co2Max = input("TRESHOLD MAX CO2  (default value 2000ppm) : ")
     if co2Max == "": 
         co2Max = 2000
-    co2Min = input("TRESHOLD MIN CO2  (default value 1000ppm) : ")
+    co2Min = input("TRESHOLD MIN CO2  (default value 1000ppm) : \n\n")
     if co2Min == "":
         co2Min = 1000
     print("Values for tresholds: \n Max Temperature = " + str(tempMax) + ",\n Min Temperature = " + str(tempMin) + " ,\n Max Humidity = " + str(humMax) + ",\n Min Humidity = " + str(humMin) +",\
@@ -74,7 +72,13 @@ if __name__ == "__main__":
     
     listOfcommands()
 
-
+    print("System is going to start----->\n")
+    time.sleep(5)
+    
+    client = MqttClient()
+    thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
+    thread.start()
+    
     while 1:
         command = input(">")
         command = command.lower()
