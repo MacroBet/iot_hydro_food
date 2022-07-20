@@ -20,7 +20,15 @@ def checkCommand(command, client):
     if command == "!info commands":
            showInfo()
     elif command == "!check log of sensors":
-            print(client.message)
+        mex = client.message
+       
+        while 1 :
+            try:
+                if(mex != client.message):
+                    print(client.message)
+            except KeyboardInterrupt:
+                break 
+            
     elif command == "!change values of thresholds":
            print("......")
     elif command == "!check values sensors co2":
