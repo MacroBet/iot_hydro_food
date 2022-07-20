@@ -22,12 +22,12 @@ def checkCommand(command, client):
     elif command == "!check log of sensors":
         mex = client.message
         print(client.message)
-        while 1 :
-            try:
+        try:
+            while True:
                 if(mex != client.message):
                     print(client.message)
-            except KeyboardInterrupt:
-                pass 
+        except KeyboardInterrupt:
+         pass
             
     elif command == "!change values of thresholds":
            print("......")
