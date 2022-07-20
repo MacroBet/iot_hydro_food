@@ -10,14 +10,14 @@ class MqttClient:
 
     message = ""
 
-    def on_connect(client, userdata, flags, rc):
+    def on_connect(self, client, userdata, flags, rc):
         print("Connected with result code "+str(rc))
         print("recive")
-        client.subscribe("status")
+        self.client.subscribe("status")
 
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
-        print("msg topic: " + str(msg.payload))
+        #print("msg topic: " + str(msg.payload))
         message = str(msg.payload)
         data = json.loads(msg.payload)
         node_id = data["node"]
@@ -44,5 +44,5 @@ class MqttClient:
             self.client.connect("127.0.0.1", 1883, 60)
         except Exception as e:
             
-            print(str(e))
+           print(str(e))
         self.client.loop_forever()
