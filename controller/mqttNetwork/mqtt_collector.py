@@ -11,7 +11,7 @@ class MqttClient:
     message = ""
 
     def on_connect(self, client, userdata, flags, rc):
-        print("Connected with result code "+str(rc))
+        print("****** Connected with result code "+str(rc) + "******\n")
         self.client.subscribe("status")
 
     # The callback for when a PUBLISH message is received from the server.
@@ -35,7 +35,7 @@ class MqttClient:
     def mqtt_client(self):
         self.db = Database()
         self.connection = self.db.connect_db()
-        print("\nMqtt client starting")
+        print("\n****** Mqtt client starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message

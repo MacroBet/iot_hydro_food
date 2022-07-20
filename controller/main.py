@@ -64,10 +64,10 @@ if __name__ == "__main__":
     co2Max = input("TRESHOLD MAX CO2  (default value 2000ppm) : ")
     if co2Max == "": 
         co2Max = 2000
-    co2Min = input("TRESHOLD MIN CO2  (default value 1000ppm) : \n\n")
+    co2Min = input("TRESHOLD MIN CO2  (default value 1000ppm) : ")
     if co2Min == "":
         co2Min = 1000
-    print("Values for tresholds: \n Max Temperature = " + str(tempMax) + ",\n Min Temperature = " + str(tempMin) + " ,\n Max Humidity = " + str(humMax) + ",\n Min Humidity = " + str(humMin) +",\
+    print("\nValues for tresholds: \n Max Temperature = " + str(tempMax) + ",\n Min Temperature = " + str(tempMin) + " ,\n Max Humidity = " + str(humMax) + ",\n Min Humidity = " + str(humMin) +",\
                 \n Max Co2 = "+ str(co2Max) +", \n Min Co2 = "+ str(co2Min)+"\n\n")
     
     listOfcommands()
@@ -78,7 +78,8 @@ if __name__ == "__main__":
     client = MqttClient()
     thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
     thread.start()
-    
+    time.sleep(5)
+    print("System is running--->")
     while 1:
         command = input(">")
         command = command.lower()
