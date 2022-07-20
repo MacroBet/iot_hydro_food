@@ -8,7 +8,7 @@ from pydoc import cli
 
 class MqttClient:
 
-    message = ""
+    message = "dio povero"
 
     def on_connect(self, client, userdata, flags, rc):
         print("****** Connected with result code "+str(rc) + "******\n")
