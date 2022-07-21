@@ -297,6 +297,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
 		  sprintf(pub_topic, "%s", "status");
+     
       if(stimer_expired(&day_timer)) {
           
         if(day == true)
