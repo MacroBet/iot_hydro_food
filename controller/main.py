@@ -2,7 +2,6 @@
 from pydoc import cli
 import threading
 import time
-from controller.mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 from mqttNetwork.mqtt_collector_values import MqttClientData
 from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 import paho.mqtt.client as mqtt
