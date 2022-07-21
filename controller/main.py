@@ -6,6 +6,25 @@ from mqttNetwork.mqtt_collector_values import MqttClientData
 from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 import paho.mqtt.client as mqtt
 
+
+def shouldOpenWindow(_in, _out, _max, _min):
+    # 40, 35, 35, 25 => open
+    # 32, 24, 35, 25 => close
+    delta_in = abs(_in - _max) + abs(_in - _min)
+    # 3 + 7
+    delta_out = abs(_out - _max) + abs(_out - _min)
+    # 11 + 1
+    return delta_in > delta_out
+
+def shouldOpenWatering(t,h,t_max,h_max,h_min):
+    return h < (h_min) or (t > (t_max) and h < (h_max))
+
+def shouldCharge(level):
+    return level < 20
+
+# temperature or humidity or co2 
+openWindow = shouldOpenWindow(32, 24, 35, 25) or shouldOpenWindow(40, 35, 35, 25)
+
 def listOfcommands():
 
     print("AVAILABLE COMMANDS--->\n")
