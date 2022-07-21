@@ -8,7 +8,6 @@ from pydoc import cli
 
 class MqttClient:
 
-    message = "dio povero"
     tempMax = 35
     tempMin = 20
     humMax = 80
