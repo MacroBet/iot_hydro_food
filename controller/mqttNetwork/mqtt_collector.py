@@ -23,7 +23,7 @@ class MqttClient:
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
         #print("msg topic: " + str(msg.payload))
-        message = str(msg.payload)
+        self.message = str(msg.payload)
         data = json.loads(msg.payload)
         node_id = data["node"]
         temperature = data["temperature"]
@@ -41,6 +41,7 @@ class MqttClient:
     def mqtt_client(self):
         self.db = Database()
         self.connection = self.db.connect_db()
+        self.message = "ciao"
         print("\n****** Mqtt client starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
