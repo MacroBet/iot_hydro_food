@@ -4,7 +4,7 @@ import threading
 import time
 from controller.mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 from mqttNetwork.mqtt_collector_values import MqttClientData
-from mqttNetwork.mqqt_collector_bath_float import MqttClient
+from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 import paho.mqtt.client as mqtt
 
 def listOfcommands():
@@ -156,12 +156,12 @@ if __name__ == "__main__":
     time.sleep(5)
     
     client = MqttClientData()
-    client.tempMax = tempMax
-    client.tempMin = tempMin
-    client.humMax = humMax
-    client.humMin = humMin
-    client.co2Max = co2Max
-    client.co2Min = co2Min
+    # client.tempMax = tempMax
+    # client.tempMin = tempMin
+    # client.humMax = humMax
+    # client.humMin = humMin
+    # client.co2Max = co2Max
+    # client.co2Min = co2Min
     thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
     thread.start()
 
