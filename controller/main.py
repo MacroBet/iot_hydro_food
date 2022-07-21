@@ -10,11 +10,12 @@ import paho.mqtt.client as mqtt
 def listOfcommands():
 
     print("AVAILABLE COMMANDS--->\n")
-    print("!Check values sensors Temperature\n"\
-          "!Check values sensors Humidity\n"\
-          "!Check values sensors Co2\n"\
-          "!Check log of sensors\n"\
+    print("!Change values sensors Temperature\n"\
+          "!Change values sensors Humidity\n"\
+          "!Change values sensors Co2\n"\
+          "!Check sensors log\n"\
           "!List of commands\n"\
+          "!Check bath float level\n"\  
           "!Info commands\n\n")
 
 def checkCommand(command, client, client1):
