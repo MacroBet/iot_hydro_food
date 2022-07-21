@@ -15,7 +15,7 @@ class MqttClientData:
 
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
-        #print("msg topic: " + str(msg.payload))
+        
         self.message = str(msg.payload)
         data = json.loads(msg.payload)
         node_id = data["node"]
@@ -23,14 +23,13 @@ class MqttClientData:
         humidity = data["humidity"]
         co2 = data["co2"]
         dt = datetime.now()
-        timestamp = datetime.timestamp(dt)
         cursor = self.connection.cursor()
         sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
         cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
         self.connection.commit()
         
         # cursor = self.connection.cursor()
-        # sql = "SELECT value FROM watering_actuator ORDER BY ID DESC LIMIT 1"
+        # sql = "SELECT watering FROM actuator ORDER BY ID DESC LIMIT 1"
         # cursor.execute(sql)
         # result_set = cursor.fetchall()
         # if result_set == "watering" :

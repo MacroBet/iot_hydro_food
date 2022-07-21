@@ -251,7 +251,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				    
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-  stimer_set(&day_timer, DAY_INTERVAL)
+  stimer_set(&day_timer, DAY_INTERVAL);
   /* Main loop */
   while(1) {
 
@@ -304,9 +304,10 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           day = false;
         else
           day = true;
-        LOG_INFO("Switch day-nigth \n")
+        LOG_INFO("Switch day-nigth \n");
         stimer_set(&day_timer, DAY_INTERVAL);
       }
+      
       if(day && openW) {
 
         varCo2 = random_rand();

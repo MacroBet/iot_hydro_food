@@ -50,6 +50,7 @@ class MqttClientBathFloat:
         self.db = Database()
         self.connection = self.db.connect_db()
         self.message = ""
+        self.level = 80
         print("\n****** Mqtt client bath float starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
