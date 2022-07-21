@@ -26,8 +26,9 @@ def checkCommand(command, client):
         try:
             while True:
                 if(mex != client.message):
-                    print("Press ctrl + C to exit \n")
+                    print("\nPress ctrl + C to exit \n")
                     print(client.message)
+                    mex = client.message
         except KeyboardInterrupt:
          return
             
