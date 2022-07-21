@@ -29,23 +29,23 @@ class MqttClient:
         cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
         self.connection.commit()
         
-        cursor = self.connection.cursor()
-        sql = "SELECT value FROM watering_actuator ORDER BY ID DESC LIMIT 1"
-        cursor.execute(sql)
-        result_set = cursor.fetchall()
-        if result_set == "watering" :
-             self.client.publish("actuator","wat")
-        else:
-             self.client.publish("actuator","notWat")
+        # cursor = self.connection.cursor()
+        # sql = "SELECT value FROM watering_actuator ORDER BY ID DESC LIMIT 1"
+        # cursor.execute(sql)
+        # result_set = cursor.fetchall()
+        # if result_set == "watering" :
+        #      self.client.publish("actuator","wat")
+        # else:
+        #      self.client.publish("actuator","notWat")
 
-        cursor = self.connection.cursor()
-        sql = "SELECT value FROM window_actuator ORDER BY ID DESC LIMIT 1"
-        cursor.execute(sql)
-        result_set = cursor.fetchall()
-        if result_set == "open" :
-             self.client.publish("actuator","open")
-        else:
-             self.client.publish("actuator","notOpen")
+        # cursor = self.connection.cursor()
+        # sql = "SELECT value FROM window_actuator ORDER BY ID DESC LIMIT 1"
+        # cursor.execute(sql)
+        # result_set = cursor.fetchall()
+        # if result_set == "open" :
+        #      self.client.publish("actuator","open")
+        # else:
+        #      self.client.publish("actuator","notOpen")
 
 
     def mqtt_client(self):
