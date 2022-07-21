@@ -8,16 +8,10 @@ from pydoc import cli
 
 class MqttClient:
 
-    tempMax = 35
-    tempMin = 20
-    humMax = 80
-    humMin = 35
-    co2Max = 2000
-    co2Min = 1000
-
     def on_connect(self, client, userdata, flags, rc):
-        print("****** Connected with result code "+str(rc) + "******\n")
+        print("****** Connected with result code "+str(rc) + " ******\n")
         self.client.subscribe("status")
+        self.client.subscribe("actuator")
 
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
@@ -34,13 +28,36 @@ class MqttClient:
         sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
         cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
         self.connection.commit()
+        
+        cursor = self.connection.cursor()
+        sql = "SELECT value FROM watering_actuator ORDER BY ID DESC LIMIT 1"
+        cursor.execute(sql)
+        result_set = cursor.fetchall()
+        if result_set == "watering" :
+             self.client.publish("actuator","wat")
+        else:
+             self.client.publish("actuator","notWat")
+
+        cursor = self.connection.cursor()
+        sql = "SELECT value FROM window_actuator ORDER BY ID DESC LIMIT 1"
+        cursor.execute(sql)
+        result_set = cursor.fetchall()
+        if result_set == "open" :
+             self.client.publish("actuator","open")
+        else:
+             self.client.publish("actuator","notOpen")
 
 
-    
     def mqtt_client(self):
         self.db = Database()
         self.connection = self.db.connect_db()
-        self.message = "ciao"
+        self.message = ""
+        self.tempMax = 35
+        self.tempMin = 20
+        self.humMax = 80
+        self.humMin = 35
+        self.co2Max = 2000
+        self.co2Min = 1000
         print("\n****** Mqtt client starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect

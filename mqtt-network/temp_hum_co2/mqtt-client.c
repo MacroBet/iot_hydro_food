@@ -64,6 +64,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 #define DEFAULT_BROKER_PORT         1883
 #define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
 #define PUBLISH_INTERVAL	    (8 * CLOCK_SECOND)
+#define DAY_INTERVAL    (20 * CLOCK_SECOND)
 
 
 // We assume that the broker does not require authentication
@@ -110,6 +111,7 @@ static char sub_topic[BUFFER_SIZE];
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
+static struct stimer day_timer;
 
 /*---------------------------------------------------------------------------*/
 /*
@@ -138,62 +140,26 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
 
   if(strcmp(topic, "actuator") == 0) {
     printf("Received Actuator command\n");
-    if(strcmp((const char*) chunk, "wat-day-open") == 0) {
+    if(strcmp((const char*) chunk, "wat") == 0) {
 
-        LOG_INFO("Start watering and open windows\n");
+        LOG_INFO("Start watering\n");
         watering = true;
-        day = true;
+
+      } else if(strcmp((const char*) chunk, "notWat") == 0)  {
+        
+        LOG_INFO("Not watering\n");	
+        watering = false;
+  
+      }	else if(strcmp((const char*) chunk, "Open") == 0)  {
+        
+        LOG_INFO("Open windows\n");	
         openW = true;
 
-      } else if(strcmp((const char*) chunk, "notWat-day-open") == 0)  {
+      }	else if(strcmp((const char*) chunk, "notOpen") == 0)  {
         
-        LOG_INFO("Not watering and openC\n");	
-        watering = false;
-        day = true; 
-        openW = true;
-
-      }	else if(strcmp((const char*) chunk, "notWat-day-notOpen") == 0)  {
-        
-        LOG_INFO("Not watering and openC\n");	
-        watering = false;
-        day = true;
-        openW = false;
-
-      }	else if(strcmp((const char*) chunk, "wat-day-notOpen") == 0)  {
-        
-        LOG_INFO("Not watering and openC\n");	
-        watering = true;
-        day = true;
+        LOG_INFO("Not open windows\n");	
         openW = false;
         
-      }	else if(strcmp((const char*) chunk, "wat-night-open") == 0) {
-
-        LOG_INFO("Start watering and open windows\n");	
-        watering = true;
-        day = false;
-        openW = true;
-
-      } else if(strcmp((const char*) chunk, "notWat-night-open") == 0) {
-
-        LOG_INFO("Start watering and open windows\n");	
-        watering = false;
-        day = false;
-        openW = true;
-
-      }  else if(strcmp((const char*) chunk, "wat-night-notOpen") == 0) {
-
-        LOG_INFO("Start watering and open windows\n");	
-        watering = true;
-        day = false;
-        openW = false;
-
-      } else if(strcmp((const char*) chunk, "notWat-night-notOpen") == 0) {
-
-        LOG_INFO("Start watering and open windows\n");	
-        watering = false;
-        day = false;
-        openW = false;
-
       } 
     } else {
       LOG_ERR("Topic not valid!\n");
@@ -285,7 +251,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				    
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-
+  stimer_set(&day_timer, DAY_INTERVAL)
   /* Main loop */
   while(1) {
 
@@ -312,7 +278,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  }
 		  
 		  if(state==STATE_CONNECTED){
-		  
+          
 			  // Subscribe to a topic
 			  strcpy(sub_topic,"actuator");
 
@@ -331,7 +297,15 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
 		  sprintf(pub_topic, "%s", "status");
-
+      if(stimer_expired(&day_timer)) {
+          
+        if(day == true)
+          day = false;
+        else
+          day = true;
+        LOG_INFO("Switch day-nigth \n")
+        stimer_set(&day_timer, DAY_INTERVAL);
+      }
       if(day && openW) {
 
         varCo2 = random_rand();
