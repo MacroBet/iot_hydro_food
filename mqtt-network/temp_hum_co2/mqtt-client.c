@@ -138,7 +138,7 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
   printf("Pub Handler: topic='%s' (len=%u), chunk_len=%u\n", topic,
           topic_len, chunk_len);
 
-  if(strcmp(topic, "actuator") == 0) {
+  if(strcmp(topic, "actuator_data") == 0) {
     printf("Received Actuator command\n");
     if(strcmp((const char*) chunk, "wat") == 0) {
 
@@ -280,7 +280,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  if(state==STATE_CONNECTED){
           
 			  // Subscribe to a topic
-			  strcpy(sub_topic,"actuator");
+			  strcpy(sub_topic,"actuator_data");
 
 			  status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 
@@ -296,7 +296,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
-		  sprintf(pub_topic, "%s", "status");
+		  sprintf(pub_topic, "%s", "status_data");
      
       if(stimer_expired(&day_timer)) {
           

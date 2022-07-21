@@ -2,7 +2,9 @@
 from pydoc import cli
 import threading
 import time
-from mqttNetwork.mqtt_collector import MqttClient
+from controller.mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
+from mqttNetwork.mqtt_collector_values import MqttClientData
+from mqttNetwork.mqqt_collector_bath_float import MqttClient
 import paho.mqtt.client as mqtt
 
 def listOfcommands():
@@ -11,16 +13,15 @@ def listOfcommands():
     print("!Check values sensors Temperature\n"\
           "!Check values sensors Humidity\n"\
           "!Check values sensors Co2\n"\
-          "!Change values of thresholds\n"
           "!Check log of sensors\n"\
           "!List of commands\n"\
           "!Info commands\n\n")
 
-def checkCommand(command, client):
+def checkCommand(command, client, client1):
    
     if command == "!info commands":
            showInfo()
-    elif command == "!check log of sensors":
+    elif command == "!check sensors log":
         mex = client.message
         print(client.message)
         try:
@@ -31,9 +32,19 @@ def checkCommand(command, client):
                     mex = client.message
         except KeyboardInterrupt:
          return
-            
-    elif command == "!change values of thresholds":
-           print("......")
+
+    elif command == "!check bath float level":
+        level = client1.message
+        print(client1.message)
+        try:
+            while True:
+                if(level != client1.message):
+                    print("\nPress ctrl + C to exit \n")
+                    print(client1.message)
+                    level = client1.message
+        except KeyboardInterrupt:
+         return        
+  
     elif command == "!change value co2":
 
         while 1:
@@ -90,11 +101,11 @@ def checkCommand(command, client):
 
 def showInfo():
 
-    print("check log of sensors ---> check message that the sensord send to the application \n"\
-          "change values of threshold ---> change value of temperature humidity and Co2 that has been setted at the start\n"\
+    print("check sensors log ---> check message that the sensord send to the application \n"\
           "change value co2 ---> chack only the values of Co2\n"\
           "change value humidity ---> check only the values of humidity\n"\
           "change value temperature ---> check only the values of temperature\n"\
+          "check bath float level ---> check level of the bath float\n"\
           "list of commands ---> show the commands that can be promted\n")
 
 
@@ -142,7 +153,7 @@ if __name__ == "__main__":
     print("System is going to start----->\n")
     time.sleep(5)
     
-    client = MqttClient()
+    client = MqttClientData()
     client.tempMax = tempMax
     client.tempMin = tempMin
     client.humMax = humMax
@@ -152,11 +163,15 @@ if __name__ == "__main__":
     thread = threading.Thread(target=client.mqtt_client, args=(), kwargs={})
     thread.start()
 
+    client1 = MqttClientBathFloat()
+    thread1 = threading.Thread(target=client1.mqtt_client, args=(), kwargs={})
+    thread1.start()
+
     time.sleep(5)
     print("System is running--->\n ")
     while 1:
         command = input("COMMAND>")
         command = command.lower()
-        checkCommand(command, client)
+        checkCommand(command, client, client1)
         
 
