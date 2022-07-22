@@ -56,6 +56,7 @@ static int counter = 0;
 static void
 res_event_handler(void)
 {
+  //in base alla pressione del bottone l'handler sarà in grado di notificare il cambio di stato di una delle due valvole
 	counter++;
     // Notify all the observers
     coap_notify_observers(&res_obs);

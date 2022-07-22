@@ -6,6 +6,8 @@ from mqttNetwork.mqtt_collector_values import MqttClientData
 from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 import paho.mqtt.client as mqtt
 
+temperatureOutside = None
+
 
 def shouldOpenWindow(_in, _out, _max, _min):
     # 40, 35, 35, 25 => open
