@@ -269,7 +269,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         tempOut += varTempOut % 2;
         stimer_set(&change_temp, CHANGE_TEMP);
 
-      elif(!day && stimer_exiper(&change_temp))
+      else if(!day && stimer_expired(&change_temp))
 
         varTempOut = random_rand();
         tempOut -= varTempOut % 2;
