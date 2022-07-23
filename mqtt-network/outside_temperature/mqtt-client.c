@@ -70,6 +70,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 // We assume that the broker does not require authentication
 static int tempOut = 25;
 static int varTempOut = 0;
+static bool day = false;
 /*---------------------------------------------------------------------------*/
 /* Various states */
 static uint8_t state;
@@ -269,7 +270,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         tempOut += varTempOut % 2;
         stimer_set(&change_temp, CHANGE_TEMP);
 
-      else if(!day && stimer_expired(&change_temp))
+      } else if(!day && stimer_expired(&change_temp))
 
         varTempOut = random_rand();
         tempOut -= varTempOut % 2;
