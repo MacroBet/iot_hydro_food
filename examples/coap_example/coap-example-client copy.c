@@ -32,40 +32,77 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "contiki.h"
+#include "contiki-net.h"
 #include "coap-engine.h"
+#include "coap-blocking-api.h"
 
-static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
-static void res_event_handler(void);
+/* Log configuration */
+#include "coap-log.h"
+#define LOG_MODULE "App"
+#define LOG_LEVEL  LOG_LEVEL_APP
 
-/*
- * A handler function named [resource name]_handler must be implemented for each RESOURCE.
- * A buffer for the response payload is provided through the buffer pointer. Simple resources can ignore
- * preferred_size and offset, but must respect the REST_MAX_CHUNK_SIZE limit for the buffer.
- * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
- */
-EVENT_RESOURCE(res_obs,
-         "title=\"Hello world\";rt=\"Text\"",
-         res_get_handler,
-         NULL,
-         NULL,
-         NULL, 
-		 res_event_handler);
+#define SERVER_EP "coap://[fd00::202:2:2:2]:5683"
 
-static int counter = 0;
+char *service_url = "/hello";
 
-static void
-res_event_handler(void)
+#define TOGGLE_INTERVAL 10
+
+PROCESS(er_example_client, "Erbium Example Client");
+AUTOSTART_PROCESSES(&er_example_client);
+
+static struct etimer et;
+
+/* This function is will be passed to COAP_BLOCKING_REQUEST() to handle responses. */
+void
+client_chunk_handler(coap_message_t *response)
 {
-  //in base alla pressione del bottone l'handler sarà in grado di notificare il cambio di stato di una delle due valvole
-	counter++;
-    // Notify all the observers
-    coap_notify_observers(&res_obs);
+  const uint8_t *chunk;
+
+  if(response == NULL) {
+    puts("Request timed out");
+    return;
+  }
+
+  int len = coap_get_payload(response, &chunk);
+
+  printf("|%.*s", len, (char *)chunk);
 }
 
-
-static void
-res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+PROCESS_THREAD(er_example_client, ev, data)
 {
-  coap_set_header_content_format(response, TEXT_PLAIN);
-  coap_set_payload(response, buffer, snprintf((char *)buffer, preferred_size, "EVENT %lu", (unsigned long) counter));
+  static coap_endpoint_t server_ep;
+  static coap_message_t request[1];      /* This way the packet can be treated as pointer as usual. */
+
+  PROCESS_BEGIN();
+
+  coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &server_ep);
+
+  etimer_set(&et, TOGGLE_INTERVAL * CLOCK_SECOND);
+
+  while(1) {
+    PROCESS_YIELD();
+
+    if(etimer_expired(&et)) {
+      printf("--Toggle timer--\n");
+
+      /* prepare request, TID is set by COAP_BLOCKING_REQUEST() */
+      coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
+      coap_set_header_uri_path(request, service_url);
+
+      const char msg[] = "Toggle!";
+
+      coap_set_payload(request, (uint8_t *)msg, sizeof(msg) - 1);
+
+      COAP_BLOCKING_REQUEST(&server_ep, request, client_chunk_handler);
+
+      printf("\n--Done--\n");
+
+      etimer_reset(&et);
+
+
+    }
+  }
+
+  PROCESS_END();
 }

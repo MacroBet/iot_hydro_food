@@ -1,0 +1,1 @@
+extern int valve_status;

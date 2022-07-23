@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Carlo Vallati, University of Pisa
+ * Copyright (c) 2013, Institute for Pervasive Computing, ETH Zurich
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,43 +29,16 @@
  * This file is part of the Contiki operating system.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "coap-engine.h"
-
-static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
-static void res_event_handler(void);
-
-/*
- * A handler function named [resource name]_handler must be implemented for each RESOURCE.
- * A buffer for the response payload is provided through the buffer pointer. Simple resources can ignore
- * preferred_size and offset, but must respect the REST_MAX_CHUNK_SIZE limit for the buffer.
- * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
+/**
+ * \file
+ *      Erbium (Er) example project configuration.
+ * \author
+ *      Matthias Kovatsch <kovatsch@inf.ethz.ch>
  */
-EVENT_RESOURCE(res_obs,
-         "title=\"Hello world\";rt=\"Text\"",
-         res_get_handler,
-         NULL,
-         NULL,
-         NULL, 
-		 res_event_handler);
 
-static int counter = 0;
+#ifndef PROJECT_CONF_H_
+#define PROJECT_CONF_H_
 
-static void
-res_event_handler(void)
-{
-  //in base alla pressione del bottone l'handler sarà in grado di notificare il cambio di stato di una delle due valvole
-	counter++;
-    // Notify all the observers
-    coap_notify_observers(&res_obs);
-}
+#define LOG_LEVEL_APP LOG_LEVEL_DBG
 
-
-static void
-res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
-{
-  coap_set_header_content_format(response, TEXT_PLAIN);
-  coap_set_payload(response, buffer, snprintf((char *)buffer, preferred_size, "EVENT %lu", (unsigned long) counter));
-}
+#endif /* PROJECT_CONF_H_ */

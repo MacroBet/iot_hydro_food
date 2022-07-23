@@ -36,46 +36,75 @@
 #include "contiki.h"
 #include "coap-engine.h"
 #include "sys/etimer.h"
-
+#include "app_var.h"
+#include "dev/button-hal.h"
 /* Log configuration */
 #include "sys/log.h"
+
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_APP
 /*
  * Resources to be activated need to be imported through the extern keyword.
  * The build system automatically compiles the resources in the corresponding sub-directory.
  */
-extern coap_resource_t  res_obs; 
+extern coap_resource_t  res_valves; 
+int valve_status = 0;
+int charge = 0;
+static struct stimer timer_charge;
 
-static struct etimer e_timer;
+PROCESS(er_example_server, "Status valve server");
+AUTOSTART_PROCESSES(&status_valve_server);
 
-PROCESS(er_example_server, "Erbium Example Server");
-AUTOSTART_PROCESSES(&er_example_server);
-
-PROCESS_THREAD(er_example_server, ev, data)
+PROCESS_THREAD(status_valve_server, ev, data)
 {
-  PROCESS_BEGIN();
+  button_hal_button_t *btn;
 
+  PROCESS_BEGIN();
+  
+  btn = button_hal_get_by_index(0);
+  
   PROCESS_PAUSE();
 
-  LOG_INFO("Starting Erbium Example Server\n");
+  LOG_INFO("Starting Status valves Server\n");
 
-  coap_activate_resource(&res_obs, "obs");
+  coap_activate_resource(&res_valves, "obs");
   
-  etimer_set(&e_timer, CLOCK_SECOND * 4);
-  
-  printf("Loop\n");
-
   while(1) {
-    PROCESS_WAIT_EVENT();
-	
-	if(ev == PROCESS_EVENT_TIMER && data == &e_timer){
-		    printf("Event triggered\n");
-		  
-			res_obs.trigger();
-			
-			etimer_set(&e_timer, CLOCK_SECOND * 4);
-	}
+    
+    if(charge == 1 && stimer_exipred(&timer_charge)) {
+      valve_status = 0;
+      res_valves.trigger();
+    }
+    PROCESS_YIELD();
+
+    if(ev == button_hal_press_event && valve_status != 1 ) {
+      btn = (button_hal_button_t *)data;
+      LOG_INFO("Press event (%s)\n", BUTTON_HAL_GET_DESCRIPTION(btn));
+
+      if(btn == button_hal_get_by_id(BUTTON_HAL_ID_BUTTON_ZERO)) {
+        LOG_INFO("This was button 0, on pin %u\n", btn->pin);
+        valve_status = 1;
+        res_valves.trigger();
+      }
+    } else if(ev == button_hal_release_event) {
+      btn = (button_hal_button_t *)data;
+      LOG_INFO("Release event (%s)\n", BUTTON_HAL_GET_DESCRIPTION(btn));
+
+    } else if(ev == button_hal_periodic_event && valve_status != 2) {
+
+      btn = (button_hal_button_t *)data;
+      LOG_INFO("Periodic event, %u seconds (%s)\n", btn->press_duration_seconds,
+             BUTTON_HAL_GET_DESCRIPTION(btn));
+
+      if(btn->press_duration_seconds > 2) {
+        LOG_INFO("%s pressed for more than 5 secs. Do custom action\n",
+               BUTTON_HAL_GET_DESCRIPTION(btn));
+        valve_status = 2;
+        charge = 1;
+        res_valves.trigger();
+        stimer_set(&timer_charge, CLOCK_SECOND * 4);
+      }
+    }
   }                             
 
   PROCESS_END();
