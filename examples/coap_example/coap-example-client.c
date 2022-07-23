@@ -87,7 +87,7 @@ PROCESS_THREAD(er_example_client, ev, data)
       printf("--Toggle timer--\n");
 
       /* prepare request, TID is set by COAP_BLOCKING_REQUEST() */
-      coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
+      coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);
       coap_set_header_uri_path(request, "hello/");
 
       const char msg[] = "Toggle!";
