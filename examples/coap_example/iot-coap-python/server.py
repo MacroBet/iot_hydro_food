@@ -18,6 +18,7 @@ class ResExample(Resource):
 
     def render_GET(self, request):
         self.payload = "Hello"
+        print(request)
         return self
 
 class CoAPServer(CoAP):
