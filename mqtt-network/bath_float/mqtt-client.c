@@ -139,7 +139,7 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
       } else if(strcmp((const char*) chunk, "notCharge") == 0)  {
         
         LOG_INFO("Not watering and openC\n");	
-        charge = false
+        charge = false;
 
       }	
     } else {

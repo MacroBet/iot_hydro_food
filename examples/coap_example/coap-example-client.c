@@ -42,7 +42,7 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL  LOG_LEVEL_APP
 
-#define SERVER_EP "coap://[fd00::202:2:2:2]:5683"
+#define SERVER_EP "coap://[fd00::1]:5683"
 
 char *service_url = "/hello";
 
