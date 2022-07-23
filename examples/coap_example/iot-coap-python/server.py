@@ -18,7 +18,7 @@ class ResExample(Resource):
 
     def render_GET(self, request):
         self.payload = "Hello"
-    
+        print("ricevuto")
         print(request.payload)
         return self
 
