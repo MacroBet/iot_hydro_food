@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = coap-example-client observing server-hello
+CONTIKI_PROJECT = coap-example-client
 
 all: $(CONTIKI_PROJECT)
 
