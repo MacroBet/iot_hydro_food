@@ -26,6 +26,7 @@ class ObserveSensor:
         print("callback called")
         if response.payload is None:
             print("response is none")
+            return
         if response.payload is not None:
             print("response:")
             print(response.payload)
@@ -33,6 +34,6 @@ class ObserveSensor:
         status = data["status"]
         #last_status = getLastStatus()
         print(status)
-        self.client.post(self.resource, str(status))
+        
 
         
