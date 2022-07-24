@@ -3,7 +3,7 @@
 import getopt
 import sys
 from coapthon.server.coap import CoAP
-
+from obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
 
 class ResExample(Resource):
@@ -18,6 +18,7 @@ class ResExample(Resource):
 
     def render_GET(self, request):
         self.payload = "Hello"
+        ob = ObserveSensor(request.source)
         print("ricevuto")
         print(request.payload)
         return self
