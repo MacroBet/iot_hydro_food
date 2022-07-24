@@ -49,13 +49,13 @@ EVENT_RESOURCE(res_status,
          res_get_handler,
          res_post_handler,
          NULL,
-         NULL//,
-		 //res_event_handler);
+         NULL, 
+		 res_event_handler);
 
-/*static void res_event_handler(void)
+static void res_event_handler(void)
 {
      coap_notify_observers(&res_obs);
-}*/
+}
 
 
 static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
