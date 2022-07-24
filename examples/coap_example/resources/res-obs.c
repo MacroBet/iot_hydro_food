@@ -78,7 +78,7 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
   size_t len = 0;
   const char *mode = NULL;
   int success  = 1;
-
+  LOG_INFO("post")
   if((len = coap_get_post_variable(request, "status", &mode))) {
     LOG_DBG("mode %s\n", mode);
 
