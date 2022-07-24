@@ -45,7 +45,7 @@ port = 5683
 server = CoAPServer(ip, port)
 
 try:
-    server.listen(10)
+    server.listen(1)
 except KeyboardInterrupt:
     print("Server Shutdown")
     server.close()
