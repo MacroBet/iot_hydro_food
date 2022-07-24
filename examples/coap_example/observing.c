@@ -72,7 +72,7 @@ PROCESS_THREAD(er_example_server, ev, data)
 	
 	if(ev == PROCESS_EVENT_TIMER && data == &e_timer){
 		    printf("Event triggered\n");
-		  counter++;
+		  //counter++;
 			res_obs.trigger();
 			
 			etimer_set(&e_timer, CLOCK_SECOND * 4);
