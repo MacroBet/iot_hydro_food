@@ -23,7 +23,7 @@ port = 5683
 path="/hello"
 
 client = HelperClient(server=(host, port))
-client.observe("obs", client.observer)
+client.observe("obs", observer)
 
 #response = client.get(path)
 #print(response.pretty_print())
