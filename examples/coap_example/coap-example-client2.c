@@ -44,7 +44,6 @@
 
 #define SERVER_EP "coap://[fd00::1]:5683"
 
-char *service_url = "/hello";
 
 #define TOGGLE_INTERVAL 10
 
@@ -80,7 +79,7 @@ PROCESS_THREAD(er_example_client, ev, data)
 
   etimer_set(&et, TOGGLE_INTERVAL * CLOCK_SECOND);
   coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
-  coap_set_header_uri_path(request, service_url);
+  coap_set_header_uri_path(request, "/hello");
 
   const char msg[] = "Toggle!";
 
