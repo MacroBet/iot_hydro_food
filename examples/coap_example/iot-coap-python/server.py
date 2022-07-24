@@ -18,8 +18,6 @@ class ResExample(Resource):
 
     def render_GET(self, request):
         ob = ObserveSensor(request.source)
-        print("ricevuto")
-        print(request.payload)
         return self
 
 class CoAPServer(CoAP):

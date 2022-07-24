@@ -1,1 +1,1 @@
-extern int counter;
+extern int status;

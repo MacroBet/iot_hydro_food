@@ -44,26 +44,50 @@ static void res_event_handler(void);
  * preferred_size and offset, but must respect the REST_MAX_CHUNK_SIZE limit for the buffer.
  * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
  */
-EVENT_RESOURCE(res_obs,
-         "title=\"Hello world\";rt=\"Text\"",
+EVENT_RESOURCE(res_status,
+         "title=\"status\";rt=\"status""",
          res_get_handler,
-         NULL,
+         res_post_handler,
          NULL,
          NULL, 
 		 res_event_handler);
 
-static void
-res_event_handler(void)
+static void res_event_handler(void)
 {
-   
-    // Notify all the observers
-    coap_notify_observers(&res_obs);
+     coap_notify_observers(&res_obs);
 }
 
 
-static void
-res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  coap_set_header_content_format(response, TEXT_PLAIN);
-  coap_set_payload(response, buffer, snprintf((char *)buffer, preferred_size, "EVENT %lu", (unsigned long) counter));
+  coap_set_header_content_format(response, APPLICATION_JSON);
+  sprintf((char *)buffer, "{\"status\": %d}", status);
+  coap_set_payload(response, buffer, strlen((char*)buffer));
+}
+
+static void
+res_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{
+  size_t len = 0;
+  const char *mode = NULL;
+  int success  = 1;
+
+  if((len = coap_get_post_variable(request, "status", &mode))) {
+    LOG_DBG("mode %s\n", mode);
+
+
+    if(strncmp(mode, "0", len) == 0) {
+         LOG_INFO("0")
+    } else if(strncmp(mode, "1", len) == 0) {
+         LOG_INFO("1")
+    } else if(strncmp(mode, "2", len) == 0) {
+         LOG_INFO("2")
+    } else {
+         success = 0;
+    }
+  } else {
+    success = 0;
+  } if(!success) {
+    coap_set_status_code(response, BAD_REQUEST_4_00);
+  }
 }

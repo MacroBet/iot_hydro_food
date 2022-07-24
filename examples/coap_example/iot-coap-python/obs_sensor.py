@@ -1,3 +1,4 @@
+import json
 import socket
 import sys
 from coapthon.server.coap import CoAP
@@ -28,4 +29,10 @@ class ObserveSensor:
         if response.payload is not None:
             print("response:")
             print(response.payload)
+        data = json.loads(response.payload)
+        status = data["status"]
+        #last_status = getLastStatus()
+        print(status)
+        self.client.post(self.resource, status)
+
         

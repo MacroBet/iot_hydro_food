@@ -68,9 +68,9 @@ void client_chunk_handler(coap_message_t *response)
 PROCESS(node, "node");
 AUTOSTART_PROCESSES(&node);
 
-int counter = 0;
+int status = 0;
 
-extern coap_resource_t res_obs;
+extern coap_resource_t res_status;
 
 PROCESS_THREAD(node, ev, data)
 {
@@ -85,14 +85,14 @@ PROCESS_THREAD(node, ev, data)
 
   LOG_INFO("Starting sensor node\n");
 
-  coap_activate_resource(&res_obs, "obs");
+  coap_activate_resource(&res_status, "obs");
 
   coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &my_server);
 
   coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);  
   coap_set_header_uri_path(request, "registry");
   COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
-  printf("--Registred--\n");
+  LOG_INFO("--Registred--\n");
 
   while(!registered){
     LOG_DBG("Retrying with server\n");
@@ -104,12 +104,14 @@ PROCESS_THREAD(node, ev, data)
   while(1) {
     PROCESS_WAIT_EVENT();
 
-      if (ev == PROCESS_EVENT_TIMER && data == &periodic_timer){
-	  counter++;
-	  res_obs.trigger();
-	  period++;
-	  etimer_reset(&periodic_timer);
-      }
+    if (ev == PROCESS_EVENT_TIMER && data == &periodic_timer){
+      status++;
+      if(status > 3)
+        status = 0;
+      res_obs.trigger();
+      period++;
+      etimer_reset(&periodic_timer);
+    }
     }
 
   PROCESS_END();
