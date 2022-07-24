@@ -80,8 +80,6 @@ PROCESS_THREAD(node, ev, data)
 
   PROCESS_BEGIN();
 
-  PROCESS_PAUSE();
-
   LOG_INFO("Starting sensor node\n");
 
   coap_activate_resource(&res_status, "obs");
@@ -92,11 +90,6 @@ PROCESS_THREAD(node, ev, data)
   coap_set_header_uri_path(request, "registry");
   COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
   LOG_INFO("--Registred--\n");
-
-  while(!registered){
-    LOG_DBG("Retrying with server\n");
-    COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
-  }
 
   etimer_set(&periodic_timer, 10*CLOCK_SECOND);
   
