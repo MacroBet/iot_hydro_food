@@ -32,7 +32,7 @@ class CoAPServer(CoAP):
         self.add_resource("/hello", ResExample())
 
 
-ip = ":"
+ip = "::"
 port = 5683
 
 
