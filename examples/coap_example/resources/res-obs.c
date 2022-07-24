@@ -37,7 +37,7 @@
 
 static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 static void res_event_handler(void);
-static int a = 0;
+
 /*
  * A handler function named [resource name]_handler must be implemented for each RESOURCE.
  * A buffer for the response payload is provided through the buffer pointer. Simple resources can ignore
@@ -55,7 +55,7 @@ EVENT_RESOURCE(res_obs,
 static void
 res_event_handler(void)
 {
-    a++;
+   
     // Notify all the observers
     coap_notify_observers(&res_obs);
 }

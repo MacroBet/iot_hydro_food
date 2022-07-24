@@ -17,7 +17,6 @@ class ResExample(Resource):
         self.interface_type = "if1"
 
     def render_GET(self, request):
-        self.payload = "Hello"
         ob = ObserveSensor(request.source)
         print("ricevuto")
         print(request.payload)
@@ -26,7 +25,7 @@ class ResExample(Resource):
 class CoAPServer(CoAP):
     def __init__(self, host, port):
         CoAP.__init__(self, (host, port), False)
-        self.add_resource("hello/", ResExample())
+        self.add_resource("registry", ResExample())
 
 
 ip = "::"
