@@ -34,7 +34,7 @@ class CoAPServer(CoAP):
     def __init__(self, host, port):
         CoAP.__init__(self, (host, port), False)
         self.add_resource("registry", ResExample())
-        self.client.post(self.resource, "0")
+      
 
 
 ip = "::"
