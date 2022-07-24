@@ -14,13 +14,10 @@ from coapthon.resources.resource import Resource
 address = None
 class ResExample(Resource):
 
-    def __init__(self, name="ResExample", coap_server=None):
-        super(ResExample, self).__init__(name, coap_server, visible=True, observable=True, allow_children=True)
+    def __init__(self, name="Resources"):
+        super(ResExample, self).__init__(name)
 
         self.payload = "Basic Resource"
-        self.resource_type = "rt1"
-        self.content_type = "text/plain"
-        self.interface_type = "if1"
 
     def render_GET(self, request):
         if request.payload is None:
