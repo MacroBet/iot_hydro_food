@@ -99,7 +99,7 @@ PROCESS_THREAD(er_example_client, ev, data)
       coap_set_payload(request, (uint8_t *)msg, sizeof(msg) - 1);
 
       COAP_BLOCKING_REQUEST(&server_ep, request, client_chunk_handler);
-      printf("\nsend counter\n")
+      printf("\nsend counter\n");
       counter++;
       res_obs.trigger();
 
