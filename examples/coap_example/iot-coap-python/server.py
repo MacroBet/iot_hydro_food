@@ -11,43 +11,42 @@ from coapthon.server.coap import CoAP
 from obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
 
-address = None
 class ResExample(Resource):
 
-    def __init__(self, name="Resources"):
-        super(ResExample, self).__init__(name)
+    def __init__(self, name="ResExample", coap_server=None):
+        super(ResExample, self).__init__(name, coap_server, visible=True, observable=True, allow_children=True)
 
         self.payload = "Basic Resource"
+        self.resource_type = "rt1"
+        self.content_type = "text/plain"
+        self.interface_type = "if1"
 
     def render_GET(self, request):
+        self.payload = "Hello"
         print(request.payload)
-        if request.payload is None:
-            print("empty payload")
-            ob = ObserveSensor(request.source)
-            return self
-        else :
-            ob = ObserveSensor(request.source)
-            return self
+        return self
 
 class CoAPServer(CoAP):
     def __init__(self, host, port):
         CoAP.__init__(self, (host, port), False)
-        self.add_resource("registry", ResExample())
-      
+        self.add_resource("/hello", ResExample())
 
 
-ip = "::"
+ip = "0.0.0.0"
 port = 5683
 
 
 server = CoAPServer(ip, port)
 
 try:
-    server.listen(1)
+    server.listen(10)
 except KeyboardInterrupt:
     print("Server Shutdown")
     server.close()
     print("Exiting...")
+
+
+
 
 
 
