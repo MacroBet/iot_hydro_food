@@ -47,8 +47,8 @@ static void res_event_handler(void);
 EVENT_RESOURCE(res_status,
          "title=\"status\";rt=\"status""",
          res_get_handler,
-         res_post_handler,
          NULL,
+         res_put_handler,
          NULL, 
 		 res_event_handler);
 
@@ -65,7 +65,7 @@ static void res_get_handler(coap_message_t *request, coap_message_t *response, u
   coap_set_payload(response, buffer, strlen((char*)buffer));
 }
 
-static void res_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+static void res_put_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
   size_t len = 0;
   const char *mode = NULL;
