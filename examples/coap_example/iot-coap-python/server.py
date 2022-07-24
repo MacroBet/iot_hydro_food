@@ -3,6 +3,11 @@
 import getopt
 import sys
 from coapthon.server.coap import CoAP
+from coapthon.resources.resource import Resource
+from coapthon.messages.request import Request
+from coapthon.messages.response import Response
+from coapthon.client.helperclient import HelperClient
+from coapthon.server.coap import CoAP
 from obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
 
@@ -37,7 +42,15 @@ port = 5683
 
 
 server = CoAPServer(ip, port)
+host = "127.0.0.1"
+port = 5683
 
+path="obs"
+
+client = HelperClient(server=(host, port))
+
+response = client.post(path, "0")
+print(response.pretty_print())
 try:
     server.listen(100)
 except KeyboardInterrupt:
