@@ -108,7 +108,7 @@ PROCESS_THREAD(node, ev, data)
       status++;
       if(status > 3)
         status = 0;
-      res_status.trigger();
+      //res_status.trigger();
       period++;
       etimer_reset(&periodic_timer);
     }
