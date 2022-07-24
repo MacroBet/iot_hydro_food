@@ -49,6 +49,7 @@ char *service_url = "/hello";
 
 #define TOGGLE_INTERVAL 10
 extern coap_resource_t res_obs;
+counter = 0;
 
 PROCESS(er_example_client, "Erbium Example Client");
 AUTOSTART_PROCESSES(&er_example_client);

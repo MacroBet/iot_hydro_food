@@ -1,1 +1,1 @@
-extern int counter = 0;
+extern int counter;
