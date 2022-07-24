@@ -50,7 +50,6 @@
 
 static struct etimer periodic_timer;
 bool registered = false;
-static int period = 0;
 
 void client_chunk_handler(coap_message_t *response)
 {
