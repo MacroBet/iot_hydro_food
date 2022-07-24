@@ -11,6 +11,7 @@ from coapthon.server.coap import CoAP
 from obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
 
+address = None
 class ResExample(Resource):
 
     def __init__(self, name="ResExample", coap_server=None):
@@ -28,7 +29,7 @@ class ResExample(Resource):
             return self
         else :
             ob = ObserveSensor(request.source)
-        return self
+            return self
 
 class CoAPServer(CoAP):
     def __init__(self, host, port):
@@ -42,17 +43,9 @@ port = 5683
 
 
 server = CoAPServer(ip, port)
-host = "127.0.0.1"
-port = 5683
 
-path="obs"
-
-client = HelperClient(server=(host, port))
-
-response = client.post(path, "0")
-print(response.pretty_print())
 try:
-    server.listen(100)
+    server.listen(10)
 except KeyboardInterrupt:
     print("Server Shutdown")
     server.close()
