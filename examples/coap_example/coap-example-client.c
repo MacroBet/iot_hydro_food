@@ -99,7 +99,7 @@ PROCESS_THREAD(node, ev, data)
     COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
   }
 
-  etimer_set(&periodic_timer, 30*CLOCK_SECOND);
+  etimer_set(&periodic_timer, 10*CLOCK_SECOND);
   
   while(1) {
     PROCESS_WAIT_EVENT();
@@ -109,7 +109,6 @@ PROCESS_THREAD(node, ev, data)
       if(status > 3)
         status = 0;
       //res_status.trigger();
-      period++;
       etimer_reset(&periodic_timer);
     }
     }
