@@ -84,7 +84,7 @@ PROCESS_THREAD(node, ev, data)
 
   coap_activate_resource(&res_obs, "obs");
 
-  coap_endpoint_parse(SERVER, strlen(SERVER), &my_server);
+  coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &my_server);
 
   coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);  
   coap_set_header_uri_path(request, "registry");
