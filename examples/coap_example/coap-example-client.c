@@ -31,11 +31,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <string.h>
 #include "contiki.h"
-#include "contiki-net.h"
 #include "coap-engine.h"
+#include "sys/etimer.h"
 #include "coap-blocking-api.h"
+#include "random.h"
+#include "node-id.h"
 
 /* Log configuration */
 #include "app_var.h"
