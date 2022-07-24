@@ -33,6 +33,6 @@ class ObserveSensor:
         status = data["status"]
         #last_status = getLastStatus()
         print(status)
-        self.client.post(self.resource, status)
+        self.client.post(self.resource, str(status))
 
         
