@@ -20,6 +20,7 @@ class ResExample(Resource):
         self.payload = "Basic Resource"
 
     def render_GET(self, request):
+        print(request.payload)
         if request.payload is None:
             print("empty payload")
             ob = ObserveSensor(request.source)
