@@ -103,7 +103,7 @@ PROCESS_THREAD(node, ev, data)
 
       if (ev == PROCESS_EVENT_TIMER && data == &periodic_timer){
 	  counter++;
-	  res_aqi.trigger();
+	  res_obs.trigger();
 	  period++;
 	  etimer_reset(&periodic_timer);
       }
