@@ -49,13 +49,13 @@ char *service_url = "/hello";
 
 #define TOGGLE_INTERVAL 10
 extern coap_resource_t res_obs;
-counter = 0;
+
 
 PROCESS(er_example_client, "Erbium Example Client");
 AUTOSTART_PROCESSES(&er_example_client);
 
 static struct etimer et;
-
+int counter = 0;
 /* This function is will be passed to COAP_BLOCKING_REQUEST() to handle responses. */
 void
 client_chunk_handler(coap_message_t *response)
