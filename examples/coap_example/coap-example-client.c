@@ -38,6 +38,7 @@
 #include "coap-blocking-api.h"
 
 /* Log configuration */
+#include "app_var.h"
 #include "coap-log.h"
 #define LOG_MODULE "App"
 #define LOG_LEVEL  LOG_LEVEL_APP
@@ -47,6 +48,7 @@
 char *service_url = "/hello";
 
 #define TOGGLE_INTERVAL 10
+externnm coap_resource_t res_obs;
 
 PROCESS(er_example_client, "Erbium Example Client");
 AUTOSTART_PROCESSES(&er_example_client);
@@ -79,6 +81,7 @@ PROCESS_THREAD(er_example_client, ev, data)
   coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &server_ep);
 
   etimer_set(&et, TOGGLE_INTERVAL * CLOCK_SECOND);
+  coap_activate_resource(&res_obs, "obs");
 
   while(1) {
     PROCESS_YIELD();
@@ -95,6 +98,9 @@ PROCESS_THREAD(er_example_client, ev, data)
       coap_set_payload(request, (uint8_t *)msg, sizeof(msg) - 1);
 
       COAP_BLOCKING_REQUEST(&server_ep, request, client_chunk_handler);
+
+      counter++;
+      res_obs.trigger();
 
       printf("\n--Done--\n");
 
