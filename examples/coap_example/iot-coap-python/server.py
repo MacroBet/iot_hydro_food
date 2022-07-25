@@ -41,9 +41,6 @@ while(1) :
                 path="status"
                 response = client.post("obs", "mode=0")
     
-    
-    else :
-        print("vuoto")
         
         
 
