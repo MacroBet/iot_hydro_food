@@ -10,7 +10,7 @@ from coapthon.client.helperclient import HelperClient
 from coapthon.server.coap import CoAP
 #from obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
-from addresses import Addresses
+from coapNetwork.addresses import Addresses
 
 
 class ResExample(Resource):
