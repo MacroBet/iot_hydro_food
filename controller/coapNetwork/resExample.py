@@ -1,4 +1,5 @@
 import getopt
+import imp
 import json
 import sys
 from coapthon.server.coap import CoAP
@@ -10,7 +11,7 @@ from coapthon.server.coap import CoAP
 from obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
 from addresses import Addresses
-from obs_sensor import ObserveSensor
+#from obs_sensor import ObserveSensor
 
 class ResExample(Resource):
     
