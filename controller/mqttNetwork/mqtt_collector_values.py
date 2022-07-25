@@ -3,7 +3,7 @@ from email import message
 import paho.mqtt.client as mqtt
 from datetime import datetime
 from database.dataBase import Database
-import main as main
+#import main as main
 import json
 from pydoc import cli
 from coapNetwork.addresses import Addresses
@@ -52,12 +52,12 @@ class MqttClientData:
             #      self.client.publish("actuator","open")
             # else:
             #      self.client.publish("actuator","notOpen")
-        elif msg.topic == "status_outside" :
-            self.message = str(msg.payload)
-            data = json.loads(msg.payload)
-            node_id = data["node"]
-            tempOut = data["tempOut"]
-            main.temperatureOutside = tempOut
+        # elif msg.topic == "status_outside" :
+        #     self.message = str(msg.payload)
+        #     data = json.loads(msg.payload)
+        #     node_id = data["node"]
+        #     tempOut = data["tempOut"]
+        #     main.temperatureOutside = tempOut
 
     def checkActuator(self, temp, hum, co2):
         if self.shouldOpenWatering(temp, hum, self.tempMax, self.humMax, self.humMin) :
