@@ -24,14 +24,15 @@ class ObserveSensor:
     
     def observer(self, response):
         print("callback called")
+        if response.payload is None:
+            print("response is none")
         if response.payload is not None:
             print("response:")
             print(response.payload)
             return
-        #data = json.loads(response.payload)
-        #status = data["status"]
-        #last_status = getLastStatus()
-        #print(status)
+        data = json.loads(response.payload)
+        status = data["status"]
+        print(status)
         
 
         

@@ -1,4 +1,5 @@
 import getopt
+import json
 import sys
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
@@ -9,6 +10,7 @@ from coapthon.server.coap import CoAP
 from obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
 from addresses import Addresses
+from obs_sensor import ObserveSensor
 
 class ResExample(Resource):
     
@@ -25,7 +27,10 @@ class ResExample(Resource):
     def render_GET(self, request):
         Addresses.insertNewAddress(request.source)
         ResExample.mote = 1
+        ob =ObserveSensor(request.source)
         return self
 
     def checkpresence():
         return ResExample.mote
+
+    

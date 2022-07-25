@@ -8,7 +8,7 @@ class Addresses:
     address = []
 
     def insertNewAddress(source) :
-
+            
         Addresses.address.append(source)
     
     def constructAddress():
