@@ -69,7 +69,7 @@ AUTOSTART_PROCESSES(&node);
 
 int status = 0;
 
-extern coap_resource_t res_status;
+extern coap_resource_t res_obs;
 
 PROCESS_THREAD(node, ev, data)
 {
