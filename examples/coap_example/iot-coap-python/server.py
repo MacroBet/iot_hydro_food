@@ -35,7 +35,6 @@ while(1) :
     print(ResExample.checkpresence())
     if ResExample.checkpresence() == 1:
         add = Addresses.constructAddress()
-        print(add)
         if add is not None :
             for address in add :
                 print(address)
