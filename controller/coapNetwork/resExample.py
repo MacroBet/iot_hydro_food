@@ -8,7 +8,7 @@ from coapthon.messages.request import Request
 from coapthon.messages.response import Response
 from coapthon.client.helperclient import HelperClient
 from coapthon.server.coap import CoAP
-#from obs_sensor import ObserveSensor
+from coapNetwork.obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
 from coapNetwork.addresses import Addresses
 
