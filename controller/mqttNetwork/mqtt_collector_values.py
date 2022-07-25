@@ -3,7 +3,7 @@ from email import message
 import paho.mqtt.client as mqtt
 from datetime import datetime
 from database.dataBase import Database
-import controller.main as main
+import main as main
 import json
 from pydoc import cli
 from coapNetwork.addresses import Addresses
