@@ -23,7 +23,7 @@ class ResExample(Resource):
         self.interface_type = "if1"
 
     def render_GET(self, request):
-        Addresses.insertNewAdress(request.source)
+        Addresses.insertNewAddress(request.source)
         print(request.source)
         return self
 
