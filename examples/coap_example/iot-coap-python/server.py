@@ -39,7 +39,7 @@ port = 5683
 
 server = CoAPServer(ip, port)
 while(1) :
-    add = Addresses.constructAddresses()
+    add = Addresses.constructAddress()
     if add is not None :
         for address in add :
             print(address)
