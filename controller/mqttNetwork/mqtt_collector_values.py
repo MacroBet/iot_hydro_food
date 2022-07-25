@@ -1,3 +1,4 @@
+from ast import Return
 from email import message
 import paho.mqtt.client as mqtt
 from datetime import datetime
@@ -5,7 +6,8 @@ from mqttNetwork.dataBase import Database
 import controller.main as main
 import json
 from pydoc import cli
-
+from coapNetwork.addresses import Addresses
+from coapNetwork.sendpost import Post
 
 class MqttClientData:
 
@@ -32,7 +34,7 @@ class MqttClientData:
             sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
             self.connection.commit()
-            
+            self.checkActuator(self, temperature, humidity, co2)
             # cursor = self.connection.cursor()
             # sql = "SELECT watering FROM actuator ORDER BY ID DESC LIMIT 1"
             # cursor.execute(sql)
@@ -57,17 +59,55 @@ class MqttClientData:
             tempOut = data["tempOut"]
             main.temperatureOutside = tempOut
 
+    def checkActuator(self, temp, hum, co2):
+        if self.shouldOpenWatering(temp, hum, self.tempMax, self.humMax, self.humMin) :
+            self.startWatering(self)
+        
+    
+    def startWatering(self):
 
-    def mqtt_client(self):
+        for ad in Addresses.address :
+            status = self.executeLastState(self, ad)
+            if status is not None:
+                if status == 0:
+                    Post.changeStatus(status, ad)
+                    dt = datetime.now()
+                    cursor = self.connection.cursor()
+                    sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                    cursor.execute(sql, (ad, dt, 1))
+                    print("\nSTATUS = " + status)
+                self.connection.commit()
+                if status == 2:
+                    return
+            else:
+                return
+
+
+    def executeLastState(self, address) :
+        cursor = self.connection.cursor()
+        sql = "SELECT status FROM actuator WHERE address = %s ORDER BY ID DESC LIMIT 1"
+        cursor.execute(sql, (address))
+        result_set = cursor.fetchall()
+        if result_set is None:
+            return None
+        else: 
+            return result_set
+
+
+    def shouldOpenWatering(t,h,t_max,h_max,h_min):
+        return h < (h_min) or (t > (t_max) and h < (h_max))
+    
+
+    def mqtt_client(self, tempMax, tempMin, humMax, humMin, co2Max, co2Min):
         self.db = Database()
         self.connection = self.db.connect_db()
         self.message = ""
-        self.tempMax = 35
-        self.tempMin = 20
-        self.humMax = 80
-        self.humMin = 35
-        self.co2Max = 2000
-        self.co2Min = 1000
+        self.tempMax = tempMax
+        self.tempMin = tempMin
+        self.humMax = humMax
+        self.humMin = humMin
+        self.co2Max = co2Max
+        self.co2Min = co2Min
         print("\n****** Mqtt client Temperature Humidity Co2 starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect

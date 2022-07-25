@@ -8,14 +8,14 @@ from coapthon.messages.request import Request
 from coapthon.messages.response import Response
 from coapthon.client.helperclient import HelperClient
 from coapthon.utils import parse_uri
-from dataBase import Database
+from database.dataBase import Database
 
 class ObserveSensor:
 
 
     def __init__(self,source_address):
-        #self.db = Database()
-        #self.connection = self.db.connect_db()
+        self.db = Database()
+        self.connection = self.db.connect_db()
         self.address = source_address
         self.resource = "obs"
         self.start_observing()
@@ -43,7 +43,7 @@ class ObserveSensor:
         with self.connection.cursor() as cursor:
             # Create a new record
             sql = "INSERT INTO `coap` (`add`, `status`, `timestamp`) VALUES (%s, %s, %s)"
-            cursor.execute(sql, (self.aqi, self.ts))
+            cursor.execute(sql, (add, stat, timestamp))
         
         self.connection.commit()
 

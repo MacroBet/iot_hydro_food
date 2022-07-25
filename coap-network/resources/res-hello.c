@@ -29,81 +29,37 @@
  * This file is part of the Contiki operating system.
  */
 
-#include <stdio.h>
+
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
-#include "contiki.h"
 #include "coap-engine.h"
-#include "sys/etimer.h"
-#include "coap-blocking-api.h"
-#include "random.h"
-#include "node-id.h"
 
-/* Log configuration */
-#include "app_var.h"
-#include "coap-log.h"
-#define LOG_MODULE "App"
-#define LOG_LEVEL  LOG_LEVEL_APP
+static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
-#define SERVER_EP "coap://[fd00::1]:5683"
+/*
+ * A handler function named [resource name]_handler must be implemented for each RESOURCE.
+ * A buffer for the response payload is provided through the buffer pointer. Simple resources can ignore
+ * preferred_size and offset, but must respect the REST_MAX_CHUNK_SIZE limit for the buffer.
+ * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
+ */
+RESOURCE(res_hello,
+         "title=\"Hello world\";rt=\"Text\"",
+         res_get_handler,
+         res_get_handler,
+         NULL,
+         NULL);
 
-static struct etimer periodic_timer;
-bool registered = false;
-
-void client_chunk_handler(coap_message_t *response)
+static void
+res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-	const uint8_t *chunk;
+  char const *const message = "Hello World!";
+  int length = 12; 
+ 
+  // Copy the response in the transmission buffer
+  memcpy(buffer, message, length);
 
-	if(response == NULL) {
-		LOG_INFO("Request timed out");
-		return;
-	}
-	registered = true;
-	int len = coap_get_payload(response, &chunk);
-	LOG_INFO("|%.*s \n", len, (char *)chunk);
-}
-
-PROCESS(node, "node");
-AUTOSTART_PROCESSES(&node);
-
-int status = 0;
-
-extern coap_resource_t res_status;
-
-PROCESS_THREAD(node, ev, data)
-{
-  srand(time(NULL));
-  static coap_endpoint_t my_server;
-  static coap_message_t request[1];
-
-
-  PROCESS_BEGIN();
-
-  LOG_INFO("Starting sensor node\n");
-
-  coap_activate_resource(&res_status, "obs");
-
-  coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &my_server);
-
-  coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);  
-  coap_set_header_uri_path(request, "registry");
-  COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
-  LOG_INFO("--Registred--\n");
-
-  etimer_set(&periodic_timer, 10*CLOCK_SECOND);
-  
-  while(1) {
-    PROCESS_WAIT_EVENT();
-
-    if (ev == PROCESS_EVENT_TIMER && data == &periodic_timer){
-      status++;
-      if(status > 3)
-        status = 0;
-      res_status.trigger();
-      etimer_reset(&periodic_timer);
-    }
-    }
-
-  PROCESS_END();
+  // Prepare the response
+  coap_set_header_content_format(response, TEXT_PLAIN); 
+  coap_set_header_etag(response, (uint8_t *)&length, 1);
+  coap_set_payload(response, buffer, length);
 }

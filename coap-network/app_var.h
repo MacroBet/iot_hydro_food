@@ -1,1 +1,1 @@
-extern int valve_status;
+extern int status;
