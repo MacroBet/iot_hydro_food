@@ -34,8 +34,6 @@ while(1) :
     if ResExample.checkpresence == 1:
         add = Addresses.constructAddress()
         print(add)
-    else :
-        print("vuoto")
         if add is not None :
             for address in add :
                 print(address)
@@ -44,6 +42,9 @@ while(1) :
                 response = client.post("obs", "mode=0")
     
     
+    else :
+        print("vuoto")
+        
         
 
 
