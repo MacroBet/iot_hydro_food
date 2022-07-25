@@ -10,4 +10,4 @@ class Addresses:
     
     def constructAddress():
 
-        return Addresses.adress
+        return Addresses.address
