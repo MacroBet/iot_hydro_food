@@ -2,6 +2,7 @@
 
 import getopt
 import sys
+import threading
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
 from coapthon.messages.request import Request
@@ -26,18 +27,24 @@ port = 5683
 
 server = CoAPServer(ip, port)
 
-try:
-    server.listen(10)
-    print("ok")
+thread = threading.Thread(target=server.listen(10), args=(), kwargs={})
+thread.start()
+    
+while(1) :
+    if ResExample.checkpresence == 1:
+        add = Addresses.constructAddress()
+        print(add)
+    else :
+        print("vuoto")
+        if add is not None :
+            for address in add :
+                print(address)
+                client = HelperClient(address)
+                path="status"
+                response = client.post("obs", "mode=0")
     
     
-            
-
-except KeyboardInterrupt:
-    print("Server Shutdown")
-    server.close()
-    print("Exiting...")
-
+        
 
 
 
