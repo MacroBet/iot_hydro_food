@@ -1,5 +1,8 @@
 
 
+from ast import Add
+
+
 class Addresses:
 
     address = None
@@ -9,5 +12,7 @@ class Addresses:
         Addresses.address.append(source)
     
     def constructAddress():
-
-        return Addresses.address
+        if Addresses.address is not None:
+            return Addresses.address
+        else :
+            return None
