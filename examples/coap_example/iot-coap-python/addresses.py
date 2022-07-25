@@ -5,7 +5,7 @@ from ast import Add
 
 class Addresses:
 
-    address = None
+    address = []
 
     def insertNewAddress(source) :
 
