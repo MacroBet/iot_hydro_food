@@ -26,10 +26,10 @@ ip = "::"
 port = 5683
 
 server = CoAPServer(ip, port)
-
+print("ciao")
 thread = threading.Thread(target=server.listen(10), args=(), kwargs={})
 thread.start()
-    
+print("ciao")    
 while(1) :
     if ResExample.checkpresence == 1:
         add = Addresses.constructAddress()
