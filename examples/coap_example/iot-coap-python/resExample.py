@@ -25,7 +25,6 @@ class ResExample(Resource):
     def render_GET(self, request):
         Addresses.insertNewAddress(request.source)
         ResExample.mote = 1
-        print(request.source)
         return self
 
     def checkpresence():
