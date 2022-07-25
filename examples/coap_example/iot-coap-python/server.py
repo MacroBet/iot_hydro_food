@@ -28,12 +28,9 @@ server = CoAPServer(ip, port)
 
 try:
     server.listen(10)
-    while(1) :
-        if ResExample.checkpresence == 1:
-            add = Addresses.constructAddress()
-            print(add)
-        else :
-            print("vuoto")
+    print("ok")
+    
+    
             
 
 except KeyboardInterrupt:
