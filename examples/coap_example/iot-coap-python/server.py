@@ -31,13 +31,8 @@ try:
     while(1) :
         if ResExample.checkpresence:
             add = Addresses.constructAddress()
-            if add is not None :
-                for address in add :
-                    print(address)
-                    client = HelperClient(address)
-                    path="status"
-                    response = client.post("obs", "mode=0")
-    
+            print(add)
+            
 
 except KeyboardInterrupt:
     print("Server Shutdown")
