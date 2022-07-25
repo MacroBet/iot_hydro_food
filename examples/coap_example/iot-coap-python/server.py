@@ -13,7 +13,7 @@ from obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
 from addresses import Addresses
 from resExample import ResExample
-
+import time
 
 
 class CoAPServer(CoAP):
@@ -31,7 +31,9 @@ thread = threading.Thread(target=server.listen, args=(), kwargs={})
 thread.start()
    
 while(1) :
-    if ResExample.checkpresence == 1:
+    time.sleep(8)
+    print(ResExample.checkpresence())
+    if ResExample.checkpresence() == 1:
         add = Addresses.constructAddress()
         print(add)
         if add is not None :

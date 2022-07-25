@@ -13,7 +13,7 @@ from addresses import Addresses
 class ResExample(Resource):
     
     mote = 0
-    address = None
+    
     def __init__(self, name="ResExample", coap_server=None):
         super(ResExample, self).__init__(name, coap_server, visible=True, observable=True, allow_children=True)
 
