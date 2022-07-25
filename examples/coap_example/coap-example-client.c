@@ -69,7 +69,7 @@ AUTOSTART_PROCESSES(&node);
 
 int status = 0;
 
-extern coap_resource_t res_obs;
+extern coap_resource_t res_status;
 
 PROCESS_THREAD(node, ev, data)
 {
@@ -82,7 +82,7 @@ PROCESS_THREAD(node, ev, data)
 
   LOG_INFO("Starting sensor node\n");
 
-  coap_activate_resource(&res_obs, "obs");
+  coap_activate_resource(&res_status, "obs");
 
   coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &my_server);
 
@@ -100,7 +100,7 @@ PROCESS_THREAD(node, ev, data)
       status++;
       if(status > 3)
         status = 0;
-      res_obs.trigger();
+      res_status.trigger();
       etimer_reset(&periodic_timer);
     }
     }
