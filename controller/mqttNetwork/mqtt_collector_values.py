@@ -34,7 +34,7 @@ class MqttClientData:
             sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
             self.connection.commit()
-            self.checkActuator(self, temperature, humidity, co2)
+            self.checkActuator(temperature, humidity, co2)
             # cursor = self.connection.cursor()
             # sql = "SELECT watering FROM actuator ORDER BY ID DESC LIMIT 1"
             # cursor.execute(sql)
@@ -61,13 +61,13 @@ class MqttClientData:
 
     def checkActuator(self, temp, hum, co2):
         if self.shouldOpenWatering(temp, hum, self.tempMax, self.humMax, self.humMin) :
-            self.startWatering(self)
+            self.startWatering()
         
     
     def startWatering(self):
 
         for ad in Addresses.address :
-            status = self.executeLastState(self, ad)
+            status = self.executeLastState(ad)
             if status is not None:
                 if status == 0:
                     Post.changeStatus(status, ad)
