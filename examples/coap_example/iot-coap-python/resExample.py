@@ -9,7 +9,7 @@ from coapthon.server.coap import CoAP
 from obs_sensor import ObserveSensor
 from coapthon.resources.resource import Resource
 from addresses import Addresses
-from server import *
+
 class ResExample(Resource):
     
     mote = 0
