@@ -72,10 +72,11 @@ class MqttClientData:
 
     def communicateToSensors(self, status):
     
+        print("communicate")
         if status == "1":
-            self.client.publish("actuator","wat")
+            self.client.publish("actuator_data","wat")
         if status == "0" :
-            self.client.publish("actuator","notWat")
+            self.client.publish("actuator_data","notWat")
                 
 
     
