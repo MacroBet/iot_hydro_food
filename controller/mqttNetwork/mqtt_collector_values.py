@@ -82,11 +82,12 @@ class MqttClientData:
                 if status == 2:
                     return
             else:
+                status = "1"
                 Post.changeStatus(status, ad)
                 dt = datetime.now()
                 cursor = self.connection.cursor()
                 sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                cursor.execute(sql, (ad, dt, 1))
+                cursor.execute(sql, (ad, dt, "1"))
                 print("\nSTATUS = " + status)
                 self.connection.commit()
 
