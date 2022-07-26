@@ -96,7 +96,7 @@ class MqttClientData:
         cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
         rows = [x.values() for x in result_set]
-        if rows[0] is not None :
+        if rows is not None :
             print("result set"+rows[0])
         else:
             print("vuoto")
