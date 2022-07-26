@@ -96,11 +96,11 @@ class MqttClientData:
         cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
         rows = [x.values() for x in result_set]
-        print("result set"+rows)
+        print("result set"+rows[0])
         if rows is None:
             return None
         else: 
-            return rows
+            return rows[0]
 
 
     def shouldOpenWatering(self, t, h, t_max, h_max, h_min):
