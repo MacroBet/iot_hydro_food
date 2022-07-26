@@ -89,6 +89,7 @@ class MqttClientData:
         sql = "SELECT status FROM actuator_watering WHERE address = %s ORDER BY address DESC LIMIT 1"
         cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
+        print("result set"+ result_set)
         if result_set is None:
             return None
         else: 
