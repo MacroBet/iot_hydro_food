@@ -77,11 +77,17 @@ class MqttClientData:
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (ad, dt, 1))
                     print("\nSTATUS = " + status)
-                self.connection.commit()
+                    self.connection.commit()
                 if status == 2:
                     return
             else:
-                return
+                Post.changeStatus(status, ad)
+                dt = datetime.now()
+                cursor = self.connection.cursor()
+                sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                cursor.execute(sql, (ad, dt, 1))
+                print("\nSTATUS = " + status)
+                self.connection.commit()
 
 
     def executeLastState(self, address) :
@@ -89,11 +95,11 @@ class MqttClientData:
         sql = "SELECT status FROM actuator_watering WHERE address = %s ORDER BY address DESC LIMIT 1"
         cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
-        print("result set"+ result_set)
+        print("result set"+ str(result_set))
         if result_set is None:
-            return None
+            return 
         else: 
-            return result_set
+            return str(result_set)
 
 
     def shouldOpenWatering(self, t, h, t_max, h_max, h_min):
