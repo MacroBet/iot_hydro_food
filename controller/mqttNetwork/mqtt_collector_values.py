@@ -102,7 +102,7 @@ class MqttClientData:
             print("vuoto")
            
         else:
-            print("result set"+rows[0])
+            print("result set"+str(rows[0]))
         if not rows :
             return None
         else: 
