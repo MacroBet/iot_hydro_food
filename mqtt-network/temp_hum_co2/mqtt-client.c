@@ -318,7 +318,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           varTemp = random_rand();
           temperature -= (int) varTemp % 2;
           varHum = random_rand();
-          humidity += (int) varHum % 2;
+          humidity += (int) varHum % 4;
 
 			  } else {
 
@@ -361,7 +361,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           varTemp = random_rand();
           temperature -= (int) varTemp % 3;
           varHum = random_rand();
-          humidity += (int) varHum % 3;
+          humidity += (int) varHum % 5;
 
 			  } else {
 
@@ -383,7 +383,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           varTemp = random_rand();
           temperature -= (int) varTemp % 2;
           varHum = random_rand();
-          humidity += (int) varHum % 4;
+          humidity += (int) varHum % 5;
 
 			  } else {
 

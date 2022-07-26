@@ -31,77 +31,81 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <string.h>
 #include "contiki.h"
-#include "contiki-net.h"
 #include "coap-engine.h"
+#include "sys/etimer.h"
 #include "coap-blocking-api.h"
+#include "random.h"
+#include "node-id.h"
 
 /* Log configuration */
+#include "app_var.h"
 #include "coap-log.h"
 #define LOG_MODULE "App"
 #define LOG_LEVEL  LOG_LEVEL_APP
 
 #define SERVER_EP "coap://[fd00::1]:5683"
 
+static struct etimer periodic_timer;
+bool registered = false;
 
-#define TOGGLE_INTERVAL 10
-
-PROCESS(er_example_client, "Erbium Example Client");
-AUTOSTART_PROCESSES(&er_example_client);
-
-static struct etimer et;
-
-/* This function is will be passed to COAP_BLOCKING_REQUEST() to handle responses. */
-void
-client_chunk_handler(coap_message_t *response)
+void client_chunk_handler(coap_message_t *response)
 {
-  const uint8_t *chunk;
+	const uint8_t *chunk;
 
-  if(response == NULL) {
-    puts("Request timed out");
-    return;
-  }
-
-  int len = coap_get_payload(response, &chunk);
-
-  printf("|%.*s", len, (char *)chunk);
+	if(response == NULL) {
+		LOG_INFO("Request timed out");
+		return;
+	}
+	registered = true;
+	int len = coap_get_payload(response, &chunk);
+	LOG_INFO("|%.*s \n", len, (char *)chunk);
 }
 
-PROCESS_THREAD(er_example_client, ev, data)
+PROCESS(node, "node");
+AUTOSTART_PROCESSES(&node);
+
+int open = 0;
+
+extern coap_resource_t res_open;
+
+PROCESS_THREAD(node, ev, data)
 {
-  static coap_endpoint_t server_ep;
-  static coap_message_t request[1];      /* This way the packet can be treated as pointer as usual. */
+  srand(time(NULL));
+  static coap_endpoint_t my_server;
+  static coap_message_t request[1];
+
 
   PROCESS_BEGIN();
 
-  coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &server_ep);
+  LOG_INFO("Starting sensor node\n");
 
-  etimer_set(&et, TOGGLE_INTERVAL * CLOCK_SECOND);
-  coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
-  coap_set_header_uri_path(request, "/hello");
+  coap_activate_resource(&res_open, "window");
 
-  const char msg[] = "Toggle!";
+  coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &my_server);
 
+  coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);  
+  coap_set_header_uri_path(request, "registry");
+  const char msg[] = "window";
   coap_set_payload(request, (uint8_t *)msg, sizeof(msg) - 1);
+  COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
+  LOG_INFO("--Registred--\n");
 
-  COAP_BLOCKING_REQUEST(&server_ep, request, client_chunk_handler);
-
-  printf("\n--Done--\n");
-
+  etimer_set(&periodic_timer, 10*CLOCK_SECOND);
+  
   while(1) {
-    PROCESS_YIELD();
+    PROCESS_WAIT_EVENT();
 
-    if(etimer_expired(&et)) {
-      printf("--Toggle timer--\n");
-
-      /* prepare request, TID is set by COAP_BLOCKING_REQUEST() */
-      
-      etimer_reset(&et);
-
-
+    if (ev == PROCESS_EVENT_TIMER && data == &periodic_timer){
+      open++;
+      if(open > 1)
+        status = 0;
+      res_status.trigger();
+      etimer_reset(&periodic_timer);
     }
-  }
+    }
 
   PROCESS_END();
 }

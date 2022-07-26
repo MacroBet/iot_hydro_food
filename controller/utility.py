@@ -2,6 +2,9 @@
 
 class Utility:
 
+  # temperature or humidity or co2 
+#openWindow = shouldOpenWindow(32, 24, 35, 25) or shouldOpenWindow(40, 35, 35, 25)
+#temperatureOutside = None
     def shouldOpenWindow(_in, _out, _max, _min):
         # 40, 35, 35, 25 => open
         # 32, 24, 35, 25 => close

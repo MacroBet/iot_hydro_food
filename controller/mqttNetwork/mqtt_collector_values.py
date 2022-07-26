@@ -29,21 +29,41 @@ class MqttClientData:
             temperature = data["temperature"]
             humidity = data["humidity"]
             co2 = data["co2"]
+            self.tempIn = temperature
+            self.co2In = co2
             dt = datetime.now()
             cursor = self.connection.cursor()
             sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
             self.connection.commit()
-            self.checkActuator(temperature, humidity, co2)
+            self.checkActuatorWatering(temperature, humidity, co2)
            
-        # elif msg.topic == "status_outside" :
-        #     self.message = str(msg.payload)
-        #     data = json.loads(msg.payload)
-        #     node_id = data["node"]
-        #     tempOut = data["tempOut"]
-        #     main.temperatureOutside = tempOut
+        elif msg.topic == "status_outside" :
+            self.message = str(msg.payload)
+            data = json.loads(msg.payload)
+            node_id = data["node"]
+            tempOut = data["tempOut"]
+            self.checkActuatorWindow(tempOut)
 
-    def checkActuator(self, temp, hum, co2):
+             
+
+    def checkActuatorWindow(self, tempOut):
+
+        if self.co2In is not None and self.tempIn is not None:
+            
+            delta_inTemp = abs(self.tempIn - self.tempMax) + abs(self.tempIn - self.tempMin)
+
+            delta_outTemp = abs(tempOut - self.tempMax) + abs(tempOut - self.tempIn)
+
+            if self.co2In < self.co2Max-200 and delta_inTemp > delta_outTemp:
+                
+                self.openWindow()
+
+    def openWindow(self):
+            return
+
+
+    def checkActuatorWatering(self, temp, hum, co2):
         if self.shouldOpenWatering(temp, hum, self.tempMax, self.humMax, self.humMin) :
             self.startWatering()
         elif temp < (self.tempMin + 2) and hum >= ((self.humMax*70)/100) :
@@ -51,7 +71,7 @@ class MqttClientData:
         
     def stopWatering(self):
 
-        for ad in Addresses.address :
+        for ad in Addresses.adValves :
             print(ad)
             status = self.executeLastState(ad)
             if status is None:
@@ -82,7 +102,7 @@ class MqttClientData:
     
     def startWatering(self):
 
-        for ad in Addresses.address :
+        for ad in Addresses.adValves :
             print(ad)
             status = self.executeLastState(ad)
             if status is not None:
@@ -138,6 +158,8 @@ class MqttClientData:
         self.humMin = humMin
         self.co2Max = co2Max
         self.co2Min = co2Min
+        self.tempIn = None
+        self.co2In = None
         print(self.humMax)
         print("\n****** Mqtt client Temperature Humidity Co2 starting ******")
         self.client = mqtt.Client()

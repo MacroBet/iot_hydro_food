@@ -20,9 +20,7 @@ from coapNetwork.resExample import ResExample
 import time
 
 
-    # temperature or humidity or co2 
-#openWindow = shouldOpenWindow(32, 24, 35, 25) or shouldOpenWindow(40, 35, 35, 25)
-#temperatureOutside = None
+
 ip = "::"
 port = 5683
 

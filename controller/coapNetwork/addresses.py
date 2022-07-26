@@ -4,11 +4,15 @@ from ast import Add
 
 class Addresses:
 
-    address = []
+    adWindows = []
+    adValves = []
 
-    def insertNewAddress(source) :
-            
-        Addresses.address.append(source)
+    def insertNewAddress(source, str) :
+        
+        if str == "valves":
+            Addresses.adValves.append(source)
+        elif str == "windows":
+             Addresses.adWindows.append(source)
     
     def constructAddress():
         if Addresses.address is not None:

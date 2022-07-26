@@ -88,6 +88,8 @@ PROCESS_THREAD(node, ev, data)
 
   coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);  
   coap_set_header_uri_path(request, "registry");
+  const char msg[] = "valves";
+  coap_set_payload(request, (uint8_t *)msg, sizeof(msg) - 1);
   COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
   LOG_INFO("--Registred--\n");
 

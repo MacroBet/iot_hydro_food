@@ -29,12 +29,22 @@
  * This file is part of the Contiki operating system.
  */
 
-
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../app_var.h"
 #include "coap-engine.h"
+#include "contiki.h"
+#include "dev/leds.h"
+
+/* Log configuration */
+#include "sys/log.h"
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
 
 static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
+static void res_event_handler(void);
+static void res_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
 /*
  * A handler function named [resource name]_handler must be implemented for each RESOURCE.
@@ -42,24 +52,47 @@ static void res_get_handler(coap_message_t *request, coap_message_t *response, u
  * preferred_size and offset, but must respect the REST_MAX_CHUNK_SIZE limit for the buffer.
  * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
  */
-RESOURCE(res_hello,
-         "title=\"Hello world\";rt=\"Text\"",
+EVENT_RESOURCE(res_open,
+         "title=\"Ope \" POST mode=0|1;rt=\"status\"",
          res_get_handler,
-         res_get_handler,
+         res_post_handler,
          NULL,
-         NULL);
+         NULL, 
+		 res_event_handler);
 
-static void
-res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+static void res_event_handler(void)
 {
-  char const *const message = "Hello World!";
-  int length = 12; 
- 
-  // Copy the response in the transmission buffer
-  memcpy(buffer, message, length);
+     coap_notify_observers(&res_status);
+}
 
-  // Prepare the response
-  coap_set_header_content_format(response, TEXT_PLAIN); 
-  coap_set_header_etag(response, (uint8_t *)&length, 1);
-  coap_set_payload(response, buffer, length);
+
+static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{
+  coap_set_header_content_format(response, APPLICATION_JSON);
+  sprintf((char *)buffer, "{\"open\": %d}", open);
+  coap_set_payload(response, buffer, strlen((char*)buffer));
+}
+
+static void res_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{
+  size_t len = 0;
+  const char *mode = NULL;
+  int success  = 1;
+  LOG_INFO("post");
+  if((len = coap_get_post_variable(request, "mode", &mode))) {
+    LOG_DBG("mode %s\n", mode);
+
+
+    if(strncmp(mode, "0", len) == 0) {
+         LOG_INFO("0");
+    } else if(strncmp(mode, "1", len) == 0) {
+         LOG_INFO("1");
+   else {
+         success = 0;
+    }
+  } else {
+    success = 0;
+  } if(!success) {
+    coap_set_status_code(response, BAD_REQUEST_4_00);
+  }
 }

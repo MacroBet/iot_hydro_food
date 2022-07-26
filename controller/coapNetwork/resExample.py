@@ -15,8 +15,8 @@ from coapNetwork.addresses import Addresses
 
 class ResExample(Resource):
     
-    mote = 0
-    
+    valves = 0
+    windows = 0
     def __init__(self, name="ResExample", coap_server=None):
         super(ResExample, self).__init__(name, coap_server, visible=True, observable=True, allow_children=True)
 
@@ -26,12 +26,20 @@ class ResExample(Resource):
         self.interface_type = "if1"
 
     def render_GET(self, request):
-        Addresses.insertNewAddress(request.source)
-        ResExample.mote = 1
+        if request.payload == "valves":
+            Addresses.insertNewAddress(request.source, "valves")
+            ResExample.valves = 1
         #ob =ObserveSensor(request.source)
+        elif request.payload == "valves":
+            Addresses.insertNewAddress(request.source, "window")
+            ResExample.windows = 1
         return self
 
-    def checkpresence():
-        return ResExample.mote
+    def checkpresenceValves():
+        return ResExample.valves
+
+    def checkpresenceWindows():
+        return ResExample.windows
+
 
     
