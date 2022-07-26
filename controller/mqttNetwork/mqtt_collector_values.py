@@ -76,7 +76,7 @@ class MqttClientData:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                    cursor.execute(sql, (ad, dt, "1"))
+                    cursor.execute(sql, (str(ad), dt, "1"))
                     print("\nSTATUS = " + status)
                     self.connection.commit()
                 if status == 2:
@@ -87,7 +87,7 @@ class MqttClientData:
                 dt = datetime.now()
                 cursor = self.connection.cursor()
                 sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                cursor.execute(sql, (ad, dt, "1"))
+                cursor.execute(sql, (str(ad), dt, "1"))
                 print("\nSTATUS = " + status)
                 self.connection.commit()
 
