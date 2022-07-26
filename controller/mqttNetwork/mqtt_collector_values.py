@@ -95,11 +95,12 @@ class MqttClientData:
         sql = "SELECT status FROM actuator_watering WHERE address = %s ORDER BY address DESC LIMIT 1"
         cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
-        print("result set"+ str(result_set[0]))
-        if result_set is None:
-            return 
+        rows = [x.values() for x in result_set]
+        print("result set"+rows)
+        if rows is None:
+            return None
         else: 
-            return str(result_set[0])
+            return rows
 
 
     def shouldOpenWatering(self, t, h, t_max, h_max, h_min):
