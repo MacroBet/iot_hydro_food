@@ -28,7 +28,6 @@ class ResExample(Resource):
     def render_GET(self, request):
         Addresses.insertNewAddress(request.source)
         ResExample.mote = 1
-        print("\nlog\n")
         #ob =ObserveSensor(request.source)
         return self
 
