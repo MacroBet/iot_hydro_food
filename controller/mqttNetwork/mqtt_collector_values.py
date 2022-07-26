@@ -86,7 +86,7 @@ class MqttClientData:
 
     def executeLastState(self, address) :
         cursor = self.connection.cursor()
-        sql = "SELECT status FROM actuator WHERE address = %s ORDER BY ID DESC LIMIT 1"
+        sql = "SELECT status FROM actuator_watering WHERE address = %s ORDER BY ID DESC LIMIT 1"
         cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
         if result_set is None:
