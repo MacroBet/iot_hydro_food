@@ -35,23 +35,7 @@ class MqttClientData:
             cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
             self.connection.commit()
             self.checkActuator(temperature, humidity, co2)
-            # cursor = self.connection.cursor()
-            # sql = "SELECT watering FROM actuator ORDER BY ID DESC LIMIT 1"
-            # cursor.execute(sql)
-            # result_set = cursor.fetchall()
-            # if result_set == "watering" :
-            #      self.client.publish("actuator","wat")
-            # else:
-            #      self.client.publish("actuator","notWat")
-
-            # cursor = self.connection.cursor()
-            # sql = "SELECT value FROM window_actuator ORDER BY ID DESC LIMIT 1"
-            # cursor.execute(sql)
-            # result_set = cursor.fetchall()
-            # if result_set == "open" :
-            #      self.client.publish("actuator","open")
-            # else:
-            #      self.client.publish("actuator","notOpen")
+           
         # elif msg.topic == "status_outside" :
         #     self.message = str(msg.payload)
         #     data = json.loads(msg.payload)
@@ -62,7 +46,38 @@ class MqttClientData:
     def checkActuator(self, temp, hum, co2):
         if self.shouldOpenWatering(temp, hum, self.tempMax, self.humMax, self.humMin) :
             self.startWatering()
+        elif temp < (self.tempMax-5) and hum < (self.humMax - 5) :
+            self.stopWatering()
         
+    def stopWatering(self):
+
+        for ad in Addresses.address :
+            print(ad)
+            status = self.executeLastState(ad)
+            if status is None:
+                return
+            elif status == "1":
+                status = "0"
+                Post.changeStatus(status, ad)
+                dt = datetime.now()
+                cursor = self.connection.cursor()
+                sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                cursor.execute(sql, (str(ad), dt, "0"))
+                print("\nSTATUS = " + status)
+                self.connection.commit()
+                self.communicateToSensors("0")
+            else:
+                return
+           
+
+    def communicateToSensors(self, status):
+    
+        if status == "1":
+            self.client.publish("actuator","wat")
+        if status == "0" :
+            self.client.publish("actuator","notWat")
+                
+
     
     def startWatering(self):
 
@@ -70,7 +85,7 @@ class MqttClientData:
             print(ad)
             status = self.executeLastState(ad)
             if status is not None:
-                if status == 0:
+                if status == "0":
                     status = "1"
                     Post.changeStatus(status, ad)
                     dt = datetime.now()
@@ -79,7 +94,7 @@ class MqttClientData:
                     cursor.execute(sql, (str(ad), dt, "1"))
                     print("\nSTATUS = " + status)
                     self.connection.commit()
-                if status == 2:
+                if status == "2" or status == "1":
                     return
             else:
                 status = "1"
