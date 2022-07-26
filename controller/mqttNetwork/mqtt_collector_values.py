@@ -67,6 +67,7 @@ class MqttClientData:
     def startWatering(self):
 
         for ad in Addresses.address :
+            print(ad)
             status = self.executeLastState(ad)
             if status is not None:
                 if status == 0:
@@ -86,7 +87,7 @@ class MqttClientData:
     def executeLastState(self, address) :
         cursor = self.connection.cursor()
         sql = "SELECT status FROM actuator WHERE address = %s ORDER BY ID DESC LIMIT 1"
-        cursor.execute(sql, (address))
+        cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
         if result_set is None:
             return None
