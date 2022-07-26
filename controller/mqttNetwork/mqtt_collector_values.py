@@ -94,7 +94,7 @@ class MqttClientData:
             return result_set
 
 
-    def shouldOpenWatering(t,h,t_max,h_max,h_min):
+    def shouldOpenWatering(self, t, h, t_max, h_max, h_min):
         return h < (h_min) or (t > (t_max) and h < (h_max))
     
 
@@ -108,7 +108,6 @@ class MqttClientData:
         self.humMin = humMin
         self.co2Max = co2Max
         self.co2Min = co2Min
-        print(self.co2Max)
         print("\n****** Mqtt client Temperature Humidity Co2 starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
