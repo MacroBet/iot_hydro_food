@@ -46,7 +46,7 @@ class MqttClientData:
     def checkActuator(self, temp, hum, co2):
         if self.shouldOpenWatering(temp, hum, self.tempMax, self.humMax, self.humMin) :
             self.startWatering()
-        elif temp < (self.tempMax-5) and hum < (self.humMax - 5) :
+        elif temp < (self.tempMax-5) and hum >= (self.humMax +2) :
             self.stopWatering()
         
     def stopWatering(self):
@@ -112,7 +112,7 @@ class MqttClientData:
 
     def executeLastState(self, address) :
         cursor = self.connection.cursor()
-        sql = "SELECT status FROM actuator_watering WHERE address = %s ORDER BY address DESC LIMIT 1"
+        sql = "SELECT status FROM actuator_watering WHERE address = %s ORDER BY timestamp DESC LIMIT 1"
         cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
         if not result_set :
