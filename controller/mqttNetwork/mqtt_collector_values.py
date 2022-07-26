@@ -94,6 +94,7 @@ class MqttClientData:
                     cursor.execute(sql, (str(ad), dt, "1"))
                     print("\nSTATUS = " + status)
                     self.connection.commit()
+                    self.communicateToSensors(status)
                 if status == "2" or status == "1":
                     return
             else:
@@ -105,6 +106,7 @@ class MqttClientData:
                 cursor.execute(sql, (str(ad), dt, "1"))
                 print("\nSTATUS = " + status)
                 self.connection.commit()
+                self.communicateToSensors(status)
 
 
     def executeLastState(self, address) :
