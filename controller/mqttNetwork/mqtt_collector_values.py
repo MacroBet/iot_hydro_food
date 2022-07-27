@@ -42,7 +42,6 @@ class MqttClientData:
             data = json.loads(msg.payload)
             node_id = data["node"]
             tempOut = data["tempOut"]
-            print(tempOut)
             self.checkActuatorWindow(tempOut)
 
              

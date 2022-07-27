@@ -262,7 +262,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       if(day) {
 
         varTempOut = random_rand();
-        tempOut += varTempOut % 4;
+        tempOut += varTempOut % 3;
        
 
       } else if(!day) {
