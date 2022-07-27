@@ -273,7 +273,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       } else if(!day && stimer_expired(&change_temp)) {
 
         varTempOut = random_rand();
-        tempOut -= varTempOut % 2;
+        tempOut -= varTempOut % 4;
         stimer_set(&change_temp, CHANGE_TEMP);
 
       }
