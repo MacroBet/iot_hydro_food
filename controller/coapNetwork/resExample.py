@@ -31,7 +31,7 @@ class ResExample(Resource):
             Addresses.insertNewAddress(request.source, "valves")
             ResExample.valves = 1
         #ob =ObserveSensor(request.source)
-        elif request.payload == "windows":
+        elif request.payload == "window":
             Addresses.insertNewAddress(request.source, "window")
             print(request.payload)
             ResExample.windows = 1
