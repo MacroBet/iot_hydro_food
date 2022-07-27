@@ -62,7 +62,7 @@ EVENT_RESOURCE(res_open,
 
 static void res_event_handler(void)
 {
-     coap_notify_observers(&res_status);
+     coap_notify_observers(&res_open);
 }
 
 
