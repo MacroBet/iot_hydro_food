@@ -60,7 +60,7 @@ class MqttClientData:
                 Post.changeStatusWindows(open, ad)
                 dt = datetime.now()
                 cursor = self.connection.cursor()
-                sql = "INSERT INTO `actuator_windows` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                 cursor.execute(sql, (str(ad), dt, "0"))
                 print("\OPEN = " + open)
                 self.connection.commit()
