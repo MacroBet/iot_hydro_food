@@ -285,7 +285,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		}
 		
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-    LOG_INFO(period)
+    LOG_INFO(period);
     period++; 
     }
 
