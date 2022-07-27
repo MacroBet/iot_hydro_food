@@ -100,7 +100,7 @@ PROCESS_THREAD(node, ev, data)
 
     if (ev == PROCESS_EVENT_TIMER && data == &periodic_timer){
       open++;
-      if(open > 1)
+      if(open > 3)
         open = 0;
       res_open.trigger();
       etimer_reset(&periodic_timer);

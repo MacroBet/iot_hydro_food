@@ -53,7 +53,7 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
  * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
  */
 EVENT_RESOURCE(res_open,
-         "title=\"Ope \" POST mode=0|1;rt=\"status\"",
+         "title=\"Open \" POST mode=0|1;rt=\"status\"",
          res_get_handler,
          res_post_handler,
          NULL,
