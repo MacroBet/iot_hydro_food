@@ -7,7 +7,14 @@ from coapthon.server.coap import CoAP
 
 class Post:
 
-    def  changeStatus(status, ad):
+    def  changeStatusWatering(status, ad):
         client = HelperClient(ad)
         path="status"
         response = client.post("obs", "mode="+status)
+
+
+
+    def  changeStatusWindows(status, ad):
+        client = HelperClient(ad)
+        path="window"
+        response = client.post("window", "mode="+status)
