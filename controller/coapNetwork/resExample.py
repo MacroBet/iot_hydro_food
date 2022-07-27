@@ -17,6 +17,7 @@ class ResExample(Resource):
     
     valves = 0
     windows = 0
+
     def __init__(self, name="ResExample", coap_server=None):
         super(ResExample, self).__init__(name, coap_server, visible=True, observable=True, allow_children=True)
 
@@ -32,7 +33,8 @@ class ResExample(Resource):
             ResExample.valves = 1
         #ob =ObserveSensor(request.source)
         elif request.payload == "window":
-            Addresses.insertNewAddress(request.source, "window")
+            Addresses.insertNewAddress(request.source, "windows")
+            print(Addresses.adWindows)
             print(request.payload)
             ResExample.windows = 1
         return self
