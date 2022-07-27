@@ -43,7 +43,7 @@ class MqttClientData:
             node_id = data["node"]
             tempOut = data["tempOut"]
             print(tempOut)
-            #self.checkActuatorWindow(tempOut)
+            self.checkActuatorWindow(tempOut)
 
              
 
