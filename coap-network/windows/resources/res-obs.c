@@ -85,9 +85,13 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
 
     if(strncmp(mode, "0", len) == 0) {
          LOG_INFO("0");
+         open = 0;
+
     } else if(strncmp(mode, "1", len) == 0) {
          LOG_INFO("1");
-   else {
+         open = 1;
+         
+    }else {
          success = 0;
     }
   } else {
