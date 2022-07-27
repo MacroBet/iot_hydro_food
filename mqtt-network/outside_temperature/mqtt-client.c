@@ -63,7 +63,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 // Defaukt config values
 #define DEFAULT_BROKER_PORT         1883
 #define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
-#define PUBLISH_INTERVAL	    (10 * CLOCK_SECOND)
+#define PUBLISH_INTERVAL	    (8 * CLOCK_SECOND)
 
 // We assume that the broker does not require authentication
 static int tempOut = 25;
@@ -249,7 +249,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			// Publish something
 		  sprintf(pub_topic, "%s", "status_outside");
      
-      if(period%60==0) {
+      if(period%10==0) {
         LOG_INFO("Switch day-nigth \n");
         if(day == true)
           day = false;
@@ -285,6 +285,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		}
 		
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+    LOG_INFO(period)
     period++; 
     }
 

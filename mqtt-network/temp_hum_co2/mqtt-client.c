@@ -294,7 +294,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			// Publish something
 		  sprintf(pub_topic, "%s", "status_data");
      
-      if(period%60==0) {
+      if(period%10==0) {
           
         if(day == true)
           day = false;
