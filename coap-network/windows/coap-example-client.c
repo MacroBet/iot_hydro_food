@@ -67,9 +67,9 @@ void client_chunk_handler(coap_message_t *response)
 PROCESS(node, "node");
 AUTOSTART_PROCESSES(&node);
 
-int open = 0;
+int status = 0;
 
-extern coap_resource_t res_open;
+extern coap_resource_t res_status;
 
 PROCESS_THREAD(node, ev, data)
 {
@@ -82,7 +82,7 @@ PROCESS_THREAD(node, ev, data)
 
   LOG_INFO("Starting sensor node\n");
 
-  coap_activate_resource(&res_open, "window");
+  coap_activate_resource(&res_status, "open");
 
   coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &my_server);
 
@@ -99,10 +99,10 @@ PROCESS_THREAD(node, ev, data)
     PROCESS_WAIT_EVENT();
 
     if (ev == PROCESS_EVENT_TIMER && data == &periodic_timer){
-      open++;
-      if(open > 3)
-        open = 0;
-      res_open.trigger();
+      status++;
+      if(status > 3)
+        status = 0;
+      res_status.trigger();
       etimer_reset(&periodic_timer);
     }
     }

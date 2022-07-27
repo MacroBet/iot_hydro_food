@@ -52,8 +52,8 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
  * preferred_size and offset, but must respect the REST_MAX_CHUNK_SIZE limit for the buffer.
  * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
  */
-EVENT_RESOURCE(res_open,
-         "title=\"Open \" POST mode=0|1;rt=\"status\"",
+EVENT_RESOURCE(res_status,
+         "title=\"Status \" POST mode=0|1;rt=\"status\"",
          res_get_handler,
          res_post_handler,
          NULL,
@@ -62,14 +62,14 @@ EVENT_RESOURCE(res_open,
 
 static void res_event_handler(void)
 {
-     coap_notify_observers(&res_open);
+     coap_notify_observers(&res_status);
 }
 
 
 static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
   coap_set_header_content_format(response, APPLICATION_JSON);
-  sprintf((char *)buffer, "{\"open\": %d}", open);
+  sprintf((char *)buffer, "{\"open\": %d}", status);
   coap_set_payload(response, buffer, strlen((char*)buffer));
 }
 
@@ -84,14 +84,13 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
 
 
     if(strncmp(mode, "0", len) == 0) {
-         LOG_INFO("0");
-         open = 0;
-
-    } else if(strncmp(mode, "1", len) == 0) {
-         LOG_INFO("1");
-         open = 1;
+         LOG_INFO("close");
+         status = 0;
          
-    }else {
+    } else if(strncmp(mode, "1", len) == 0) {
+         LOG_INFO("open");
+         status = 1;
+    } else {
          success = 0;
     }
   } else {

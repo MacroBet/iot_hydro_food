@@ -1,1 +1,1 @@
-extern int open;
+extern int status;
