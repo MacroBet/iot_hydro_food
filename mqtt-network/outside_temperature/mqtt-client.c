@@ -64,8 +64,6 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 #define DEFAULT_BROKER_PORT         1883
 #define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
 #define PUBLISH_INTERVAL	    (10 * CLOCK_SECOND)
-#define DAY_INTERVAL    (2 * CLOCK_SECOND)
-#define CHANGE_TEMP    (2 * CLOCK_SECOND)
 
 // We assume that the broker does not require authentication
 static int tempOut = 25;
@@ -104,8 +102,7 @@ static char pub_topic[BUFFER_SIZE];
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
-static struct stimer day_timer;
-static struct stimer change_temp;
+static int period = 0;
 
 /*---------------------------------------------------------------------------*/
 /*
@@ -217,8 +214,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				    
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-  stimer_set(&day_timer, DAY_INTERVAL);
-  stimer_set(&change_temp, CHANGE_TEMP);
   /* Main loop */
   while(1) {
 
@@ -254,27 +249,26 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			// Publish something
 		  sprintf(pub_topic, "%s", "status_outside");
      
-      if(stimer_expired(&day_timer)) {
-          
+      if(period%60==0) {
+        LOG_INFO("Switch day-nigth \n");
         if(day == true)
           day = false;
         else
           day = true;
-        LOG_INFO("Switch day-nigth \n");
-        stimer_set(&day_timer, DAY_INTERVAL);
+        
+        period = 0;
       }
       
-      if(day && stimer_expired(&change_temp)) {
+      if(day) {
 
         varTempOut = random_rand();
-        tempOut += varTempOut % 2;
-        stimer_set(&change_temp, CHANGE_TEMP);
+        tempOut += varTempOut % 4;
+       
 
-      } else if(!day && stimer_expired(&change_temp)) {
+      } else if(!day) {
 
         varTempOut = random_rand();
         tempOut -= varTempOut % 4;
-        stimer_set(&change_temp, CHANGE_TEMP);
 
       }
 
@@ -291,7 +285,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		}
 		
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-      
+    period++; 
     }
 
   }

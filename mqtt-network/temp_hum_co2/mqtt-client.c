@@ -64,8 +64,6 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 #define DEFAULT_BROKER_PORT         1883
 #define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
 #define PUBLISH_INTERVAL	    (8 * CLOCK_SECOND)
-#define DAY_INTERVAL    (2 * CLOCK_SECOND)
-
 
 // We assume that the broker does not require authentication
 static int temperature = 25;
@@ -111,8 +109,7 @@ static char sub_topic[BUFFER_SIZE];
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
-static struct stimer day_timer;
-
+static int period = 0;
 /*---------------------------------------------------------------------------*/
 /*
  * The main MQTT buffers.
@@ -251,7 +248,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				    
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-  stimer_set(&day_timer, DAY_INTERVAL);
   /* Main loop */
   while(1) {
 
@@ -298,14 +294,14 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			// Publish something
 		  sprintf(pub_topic, "%s", "status_data");
      
-      if(stimer_expired(&day_timer)) {
+      if(period%60==0) {
           
         if(day == true)
           day = false;
         else
           day = true;
         LOG_INFO("Switch day-nigth \n");
-        stimer_set(&day_timer, DAY_INTERVAL);
+        period = 0;
       }
       
       if(day && openW) {
@@ -410,7 +406,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		}
 		
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-      
+    period++;
     }
 
   }
