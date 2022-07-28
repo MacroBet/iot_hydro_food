@@ -79,11 +79,12 @@ class MqttClientData:
                     print("\OPEN = " + open)
                     self.connection.commit()
                     self.communicateToSensors("1", "window")
-                elif open == 1:
+                elif open == "1":
                     return
 
             elif open is None:
                 open = "1"
+                print("change")
                 Post.changeStatusWindows(open, ad)
                 dt = datetime.now()
                 cursor = self.connection.cursor()
