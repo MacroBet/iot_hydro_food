@@ -66,7 +66,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 #define PUBLISH_INTERVAL	    (8 * CLOCK_SECOND)
 
 // We assume that the broker does not require authentication
-static int tempOut = 25;
+static int tempOut = 27;
 static int varTempOut = 0;
 static bool day = false;
 /*---------------------------------------------------------------------------*/

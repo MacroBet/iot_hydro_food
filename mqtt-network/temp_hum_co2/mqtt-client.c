@@ -66,7 +66,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 #define PUBLISH_INTERVAL	    (8 * CLOCK_SECOND)
 
 // We assume that the broker does not require authentication
-static int temperature = 25;
+static int temperature = 27;
 static int humidity = 50;
 static int co2 = 1400;
 static bool watering = false;
