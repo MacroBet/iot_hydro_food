@@ -82,7 +82,7 @@ PROCESS_THREAD(node, ev, data)
 
   LOG_INFO("Starting sensor node\n");
 
-  coap_activate_resource(&res_status, "open");
+  coap_activate_resource(&res_status, "window");
 
   coap_endpoint_parse(SERVER_EP, strlen(SERVER_EP), &my_server);
 
