@@ -203,6 +203,8 @@ class MqttClientData:
             self.startWatering()
         elif temp < ((self.tempMin + self.tempMax)/2)+1 and hum >= ((self.humMax*70)/100) :
             self.stopWatering()
+        elif temp < self.tempMin+2:
+             self.stopWatering()
 
 
 

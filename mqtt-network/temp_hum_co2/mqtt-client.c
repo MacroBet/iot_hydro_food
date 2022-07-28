@@ -137,24 +137,29 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
 
   if(strcmp(topic, "actuator_data") == 0) {
     printf("Received Actuator command\n");
+
     if(strcmp((const char*) chunk, "wat") == 0) {
 
         LOG_INFO("Start watering\n");
+        leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
         watering = true;
 
       } else if(strcmp((const char*) chunk, "notWat") == 0)  {
         
         LOG_INFO("Not watering\n");	
+        leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
         watering = false;
   
       }	else if(strcmp((const char*) chunk, "Open") == 0)  {
         
         LOG_INFO("Open windows\n");	
+        leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
         openW = true;
 
       }	else if(strcmp((const char*) chunk, "notOpen") == 0)  {
         
         LOG_INFO("Not open windows\n");	
+        leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
         openW = false;
         
       } 
@@ -402,7 +407,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-		
+      leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");	
 		   // Recover from error

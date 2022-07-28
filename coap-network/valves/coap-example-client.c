@@ -90,6 +90,7 @@ PROCESS_THREAD(node, ev, data)
   coap_set_header_uri_path(request, "registry");
   const char msg[] = "valves";
   coap_set_payload(request, (uint8_t *)msg, sizeof(msg) - 1);
+  leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
   COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
   LOG_INFO("--Registred--\n");
 

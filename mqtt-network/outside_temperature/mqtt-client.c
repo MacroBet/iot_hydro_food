@@ -278,6 +278,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+      leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
 		
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");	
