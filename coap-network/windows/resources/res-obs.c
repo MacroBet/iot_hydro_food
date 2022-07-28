@@ -80,7 +80,7 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
   int success  = 1;
   LOG_INFO("post");
   if((len = coap_get_post_variable(request, "mode", &mode))) {
-    LOG_DBG("mode %s\n", mode);
+    LOG_DBG("mode_windows %s\n", mode);
 
   //status == 0 (windowws close), status == 1 (windows open)
 
