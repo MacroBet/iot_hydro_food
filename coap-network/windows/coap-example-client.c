@@ -38,7 +38,9 @@
 #include "sys/etimer.h"
 #include "coap-blocking-api.h"
 #include "random.h"
+#include "dev/leds.h"
 #include "node-id.h"
+#include "os/dev/serial-line.h"
 
 /* Log configuration */
 #include "app_var.h"
