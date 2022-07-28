@@ -261,7 +261,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
     if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || 
 	      ev == PROCESS_EVENT_POLL){
-			leds_off(LEDS_ALL);  			  
+			 
 		  if(state==STATE_INIT){
 			 if(have_connectivity()==true)  
 				 state = STATE_NET_OK;
@@ -298,8 +298,9 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
+      leds_off(LEDS_ALL);  			 
 		  sprintf(pub_topic, "%s", "status_data");
-     
+
       if(period%10==0) {
           
         if(day == true)
