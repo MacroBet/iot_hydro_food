@@ -31,57 +31,39 @@
  */
 
 #include "contiki.h"
-#include "dev/leds.h"
+#include <stdio.h>
+#include "os/dev/leds.h"
+#include "sys/etimer.h"
+#include "os/dev/serial-line.h"
+#include <string.h>
+#include <unistd.h> 
 
-#include <stdio.h> /* For printf() */
-/*---------------------------------------------------------------------------*/
-static struct etimer et_hello;
-static struct etimer et_blink;
-static uint16_t count;
-static uint8_t blinks;
-/*---------------------------------------------------------------------------*/
-PROCESS(hello_world_process, "Hello world process");
-PROCESS(blink_process, "LED blink process");
-AUTOSTART_PROCESSES(&hello_world_process, &blink_process);
-/*---------------------------------------------------------------------------*/
-PROCESS_THREAD(hello_world_process, ev, data)
-{
-  PROCESS_BEGIN();
+PROCESS(led_blink, "Led blink");
+AUTOSTART_PROCESSES(&led_blink);
 
-  etimer_set(&et_hello, CLOCK_SECOND * 4);
-  count = 0;
+PROCESS_THREAD(led_blink, ev, data){
+	char green[6];
+	char red[4];
+	char yellow[7];
+	strcpy(green, "GREEN");
+	strcpy(red, "RED");
+	strcpy(yellow, "YELLOW");
 
-  while(1) {
-    PROCESS_WAIT_EVENT();
+	PROCESS_BEGIN();
+	while(1){
+		PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
+		if(strcmp(data, green) == 0){
+			leds_on(LEDS_NUM_TO_MASK(LEDS_GREEN));
+			sleep(2);
+			leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
 
-    if(ev == PROCESS_EVENT_TIMER) {
-      printf("Sensor says #%u\n", count);
-      count++;
-
-      etimer_reset(&et_hello);
-    }
-  }
-
-  PROCESS_END();
+		}
+		else if(strcmp(data, red) == 0){
+			leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+		}
+		else if(strcmp(data, yellow) == 0){
+			leds_on(LEDS_NUM_TO_MASK(LEDS_YELLOW));
+		}
+	}
+	PROCESS_END();
 }
-/*---------------------------------------------------------------------------*/
-PROCESS_THREAD(blink_process, ev, data)
-{
-  PROCESS_BEGIN();
-
-  blinks = 0;
-
-  while(1) {
-    etimer_set(&et_blink, CLOCK_SECOND);
-
-    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
-
-    leds_off(LEDS_ALL);
-    leds_on(blinks & LEDS_ALL);
-    blinks++;
-
-  }
-
-  PROCESS_END();
-}
-/*---------------------------------------------------------------------------*/
