@@ -67,7 +67,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 #define PUBLISH_INTERVAL	    (8 * CLOCK_SECOND)
 
 // We assume that the broker does not require authentication
-static int temperature = 27;
+static int temperature = 30;
 static int humidity = 50;
 static int co2 = 1400;
 static bool watering = false;
@@ -142,7 +142,7 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
     if(strcmp((const char*) chunk, "wat") == 0) {
 
         LOG_INFO("Start watering\n");
-        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+        leds_set(LEDS_NUM_TO_MASK(LEDS_BLUE));
         watering = true;
 
       } else if(strcmp((const char*) chunk, "notWat") == 0)  {
@@ -154,7 +154,7 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
       }	else if(strcmp((const char*) chunk, "Open") == 0)  {
         
         LOG_INFO("Open windows\n");	
-        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+        leds_set(LEDS_NUM_TO_MASK(LEDS_BLUE));
         openW = true;
 
       }	else if(strcmp((const char*) chunk, "notOpen") == 0)  {
@@ -261,7 +261,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
     if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || 
 	      ev == PROCESS_EVENT_POLL){
-			  			  
+			leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));  			  
 		  if(state==STATE_INIT){
 			 if(have_connectivity()==true)  
 				 state = STATE_NET_OK;
@@ -402,9 +402,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       }
 
 			LOG_INFO("New values: %d, %d, %d\n", temperature, humidity, co2);
-			leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
-      sleep(1);
-      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+
 			sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", 
                                                       node_id, temperature, humidity, co2);
 			
@@ -416,6 +414,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 		
+    leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     period++;
     }

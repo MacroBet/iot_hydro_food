@@ -222,7 +222,8 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
     if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || 
 	      ev == PROCESS_EVENT_POLL){
-			  			  
+
+      leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN)); 			  
 		  if(state==STATE_INIT){
 			 if(have_connectivity()==true)  
 				 state = STATE_NET_OK;
@@ -274,20 +275,19 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       }
 
 			LOG_INFO("New values: %d\n", tempOut);
-			leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
-      sleep(1);
-      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+			
 			sprintf(app_buffer, "{\"node\": %d, \"tempOut\": %d}", node_id, tempOut);
 	
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-      leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+    
 		
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");	
 		   // Recover from error
 		}
 		
+    leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     printf("period = %d" , period);
     period++; 
