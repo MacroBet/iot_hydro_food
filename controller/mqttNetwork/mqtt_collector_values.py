@@ -84,7 +84,6 @@ class MqttClientData:
 
             elif open is None:
                 open = "1"
-                print("change")
                 Post.changeStatusWindows(open, ad)
                 dt = datetime.now()
                 cursor = self.connection.cursor()
@@ -101,7 +100,6 @@ class MqttClientData:
     def stopWatering(self):
 
         for ad in Addresses.adValves :
-            print(ad)
             status = self.executeLastState(ad, "watering")
             if status is None:
                 return
@@ -123,7 +121,6 @@ class MqttClientData:
     def startWatering(self):
 
         for ad in Addresses.adValves :
-            print(ad)
             status = self.executeLastState(ad, "watering")
             if status is not None:
                 if status == "0":
