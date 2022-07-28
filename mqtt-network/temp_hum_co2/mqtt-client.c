@@ -417,7 +417,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		
     
     leds_off(LEDS_ALL);
-    leds_on(period & LEDS_ALL);
+    leds_on(LEDS_GREEEN);
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     period++;
 
