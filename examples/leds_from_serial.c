@@ -53,7 +53,7 @@ PROCESS_THREAD(led_blink, ev, data){
 	while(1){
 		PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
 		if(strcmp(data, green) == 0){
-			leds_single_on(LEDS_GREEN)
+			leds_single_on(LEDS_GREEN);
 			//sleep(2);
 			//leds_single_off(LEDS_GREEN)
 
