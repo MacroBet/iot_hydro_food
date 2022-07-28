@@ -312,16 +312,16 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         if (watering) {
 					
           varTemp = random_rand();
-          temperature -= (int) varTemp % 2;
+          temperature -= (int) varTemp % 3;
           varHum = random_rand();
-          humidity += (int) varHum % 4;
+          humidity += (int) varHum % 5;
 
 			  } else {
 
           varTemp = random_rand();
-          temperature += (int) varTemp % 3;
+          temperature += (int) varTemp % 4;
           varHum = random_rand();
-          humidity -= (int) varHum % 5;
+          humidity -= (int) varHum % 6;
 					
 			}
 
@@ -333,16 +333,16 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         if (watering) {
 					
           varTemp = random_rand();
-          temperature -= (int) varTemp % 3;
+          temperature -= (int) varTemp % 4;
           varHum = random_rand();
-          humidity += (int) varHum % 6;
+          humidity += (int) varHum % 7;
 
 			  } else {
 
           varTemp = random_rand();
-          temperature += (int) varTemp % 2;
+          temperature -= (int) varTemp % 3;
           varHum = random_rand();
-          humidity -= (int) varHum % 2;
+          humidity -= (int) varHum % 3;
 					
 			}
 
@@ -355,16 +355,16 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         if (watering) {
 					
           varTemp = random_rand();
-          temperature -= (int) varTemp % 2;
+          temperature -= (int) varTemp % 3;
           varHum = random_rand();
-          humidity += (int) varHum % 5;
+          humidity += (int) varHum % 6;
 
 			  } else {
 
           varTemp = random_rand();
-          temperature += (int) varTemp % 5;
+          temperature += (int) varTemp % 6;
           varHum = random_rand();
-          humidity -= (int) varHum % 3;
+          humidity -= (int) varHum % 4;
 					
 			}
 
@@ -377,17 +377,20 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         if (watering) {
 					
           varTemp = random_rand();
-          temperature -= (int) varTemp % 2;
+          temperature -= (int) varTemp % 5;
           varHum = random_rand();
-          humidity += (int) varHum % 5;
+          humidity += (int) varHum %6;
 
 			  } else {
-
-          varTemp = random_rand();
-          temperature += (int) varTemp % 2;
-          varHum = random_rand();
-          humidity -= (int) varHum % 4;
-					
+          if(temperature % 2 == 0){
+            varTemp = random_rand();
+            temperature -= (int) varTemp % 2;
+            varHum = random_rand();
+            humidity -= (int) varHum % 4;
+          }else {
+            temperature -= 1;
+            humidity -= 1;
+          }
 			}
 
       }
