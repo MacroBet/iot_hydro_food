@@ -248,7 +248,6 @@ class MqttClientData:
         self.co2Min = co2Min
         self.tempIn = None
         self.co2In = None
-        print(self.humMax)
         print("\n****** Mqtt client Temperature Humidity Co2 starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect

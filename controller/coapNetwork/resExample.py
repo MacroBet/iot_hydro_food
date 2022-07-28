@@ -28,14 +28,11 @@ class ResExample(Resource):
 
     def render_GET(self, request):
         if request.payload == "valves":
-            print(request.payload)
             Addresses.insertNewAddress(request.source, "valves")
             ResExample.valves = 1
         #ob =ObserveSensor(request.source)
         elif request.payload == "window":
             Addresses.insertNewAddress(request.source, "windows")
-            print(Addresses.adWindows)
-            print(request.payload)
             ResExample.windows = 1
         return self
 
