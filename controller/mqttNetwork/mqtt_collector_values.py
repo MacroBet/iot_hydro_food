@@ -213,6 +213,7 @@ class MqttClientData:
 
         open = 0
         close = 0
+     
         if self.co2In is not None and self.tempIn is not None:
             
             if self.tempIn > self.tempMax and tempOut < self.tempIn:
@@ -222,12 +223,14 @@ class MqttClientData:
 
             elif self.co2In > (self.co2Max - 100):
                 open = 1
-            elif self.co2In > (self.co2Min + 100):
+            elif self.co2In < (self.co2Min + 100):
                 close = 1
 
-            if open == 1 :  
+            if open == 1 and close == 1 :  
                 self.openWindow()
-            elif close == 1:
+            elif open == 1 and close == 0:
+                self.openWindow()
+            elif open == 0 and close == 1:
                 self.closeWindow()
             else:
                 return
