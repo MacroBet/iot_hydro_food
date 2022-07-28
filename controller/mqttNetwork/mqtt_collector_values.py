@@ -49,7 +49,6 @@ class MqttClientData:
     def closeWindow(self):
         
         for ad in Addresses.adWindows :
-            print(ad)
             open = self.executeLastState(ad, "window")
             if open is None:
                 return
@@ -68,7 +67,6 @@ class MqttClientData:
     def openWindow(self):
 
         for ad in Addresses.adWindows:
-            print(ad)
             open = self.executeLastState(ad,"window")
             if open is not None:
                 if open == "0":
@@ -161,11 +159,9 @@ class MqttClientData:
         cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
         if not result_set :
-            print("vuoto")
             return None
         else:
             for row in result_set:
-                print(row["status"])
                 return row["status"]
 
 
