@@ -36,6 +36,7 @@
 #include "sys/etimer.h"
 #include "os/dev/serial-line.h"
 #include <string.h>
+#include <unistd.h> 
 
 PROCESS(led_blink, "Led blink");
 AUTOSTART_PROCESSES(&led_blink);
@@ -53,6 +54,9 @@ PROCESS_THREAD(led_blink, ev, data){
 		PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
 		if(strcmp(data, green) == 0){
 			leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+			sleep(2)
+			leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+
 		}
 		else if(strcmp(data, red) == 0){
 			leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
