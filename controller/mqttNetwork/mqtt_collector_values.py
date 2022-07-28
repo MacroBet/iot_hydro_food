@@ -1,6 +1,3 @@
-from ast import Return
-from curses import window
-from email import message
 import paho.mqtt.client as mqtt
 from datetime import datetime
 from database.dataBase import Database
