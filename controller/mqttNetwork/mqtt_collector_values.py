@@ -35,7 +35,7 @@ class MqttClientData:
             sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
             self.connection.commit()
-            #self.checkActuatorWatering(temperature, humidity, co2)
+            self.checkActuatorWatering(temperature, humidity, co2)
            
         elif msg.topic == "status_outside" :
             self.message = str(msg.payload)
