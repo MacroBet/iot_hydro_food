@@ -198,7 +198,7 @@ class MqttClientData:
     def checkActuatorWatering(self, temp, hum, co2):
         if self.shouldOpenWatering(temp, hum, self.tempMax, self.humMax, self.humMin) :
             self.startWatering()
-        elif temp < ((self.tempMin + self.tempMax)/2)+1 and hum >= ((self.humMax*70)/100) :
+        elif temp < ((self.tempMin + self.tempMax)/2)+3 and hum >= ((self.humMax*60)/100) :
             self.stopWatering()
         elif temp < self.tempMin+2:
              self.stopWatering()

@@ -46,6 +46,7 @@
 #include <time.h>
 #include <string.h>
 #include <strings.h>
+#include <unistd.h> 
 /*---------------------------------------------------------------------------*/
 #define LOG_MODULE "mqtt-client-temp-hum-co2"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
@@ -141,25 +142,25 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
     if(strcmp((const char*) chunk, "wat") == 0) {
 
         LOG_INFO("Start watering\n");
-        leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
+        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
         watering = true;
 
       } else if(strcmp((const char*) chunk, "notWat") == 0)  {
         
         LOG_INFO("Not watering\n");	
-        leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
+        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
         watering = false;
   
       }	else if(strcmp((const char*) chunk, "Open") == 0)  {
         
         LOG_INFO("Open windows\n");	
-        leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
+        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
         openW = true;
 
       }	else if(strcmp((const char*) chunk, "notOpen") == 0)  {
         
         LOG_INFO("Not open windows\n");	
-        leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
+        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
         openW = false;
         
       } 
@@ -360,7 +361,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         if (watering) {
 					
           varTemp = random_rand();
-          temperature -= (int) varTemp % 3;
+          temperature -= (int) varTemp % 2;
           varHum = random_rand();
           humidity += (int) varHum % 6;
 
@@ -401,13 +402,15 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       }
 
 			LOG_INFO("New values: %d, %d, %d\n", temperature, humidity, co2);
-				
+			leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      sleep(1);
+      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
 			sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", 
                                                       node_id, temperature, humidity, co2);
 			
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-      leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");	
 		   // Recover from error

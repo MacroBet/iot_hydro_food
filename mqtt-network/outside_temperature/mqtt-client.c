@@ -46,6 +46,7 @@
 #include <time.h>
 #include <string.h>
 #include <strings.h>
+#include <unistd.h> 
 /*---------------------------------------------------------------------------*/
 #define LOG_MODULE "outside temperature"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
@@ -262,7 +263,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       if(day) {
 
         varTempOut = random_rand();
-        tempOut += varTempOut % 3;
+        tempOut += varTempOut % 2;
        
 
       } else if(!day) {
@@ -273,9 +274,11 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       }
 
 			LOG_INFO("New values: %d\n", tempOut);
-				
+			leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      sleep(1);
+      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
 			sprintf(app_buffer, "{\"node\": %d, \"tempOut\": %d}", node_id, tempOut);
-			
+	
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
       leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
