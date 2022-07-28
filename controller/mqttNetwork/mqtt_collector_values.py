@@ -211,19 +211,26 @@ class MqttClientData:
 
     def checkActuatorWindow(self, tempOut):
 
+        open = 0
+        close = 0
         if self.co2In is not None and self.tempIn is not None:
             
-            delta_inTemp = abs(self.tempIn - self.tempMax) + abs(self.tempIn - self.tempMin)
+            if self.tempIn > self.tempMax and tempOut < self.tempIn:
+                open = 1
+            elif self.tempIn > (self.tempMin + 5) and tempOut < self.tempIn:
+                close = 1
 
-            delta_outTemp = abs(tempOut - self.tempMax) + abs(tempOut - self.tempIn)
+            elif self.co2In > (self.co2Max - 100):
+                open = 1
+            elif self.co2In > (self.co2Min + 100):
+                close = 1
 
-            if self.co2In < self.co2Max-100 and delta_inTemp > delta_outTemp:
-                
+            if open == 1 :  
                 self.openWindow()
-
-            elif self.co2In < (self.co2Max+self.co2Min)/2 and delta_inTemp < delta_outTemp:
-
+            elif close == 1:
                 self.closeWindow()
+            else:
+                return
 
 #/---------------------------------------------------------------------------\
 
