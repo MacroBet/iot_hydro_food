@@ -142,25 +142,25 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
     if(strcmp((const char*) chunk, "wat") == 0) {
 
         LOG_INFO("Start watering\n");
-        leds_set(LEDS_NUM_TO_MASK(LEDS_BLUE));
+          leds_single_on(LEDS_GREEN);
         watering = true;
 
       } else if(strcmp((const char*) chunk, "notWat") == 0)  {
         
         LOG_INFO("Not watering\n");	
-        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+        leds_single_on(LEDS_RED);
         watering = false;
   
       }	else if(strcmp((const char*) chunk, "Open") == 0)  {
         
         LOG_INFO("Open windows\n");	
-        leds_set(LEDS_NUM_TO_MASK(LEDS_BLUE));
+        leds_single_on(LEDS_GREEN);
         openW = true;
 
       }	else if(strcmp((const char*) chunk, "notOpen") == 0)  {
         
         LOG_INFO("Not open windows\n");	
-        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+        leds_single_on(LEDS_RED);
         openW = false;
         
       } 
@@ -261,7 +261,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
     if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || 
 	      ev == PROCESS_EVENT_POLL){
-			leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));  			  
+			leds_off(LEDS_ALL);  			  
 		  if(state==STATE_INIT){
 			 if(have_connectivity()==true)  
 				 state = STATE_NET_OK;
@@ -414,7 +414,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 		
-    leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+    leds_single_on(LEDS_GREEN);
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     period++;
     }

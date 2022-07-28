@@ -223,7 +223,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
     if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || 
 	      ev == PROCESS_EVENT_POLL){
 
-      leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN)); 			  
+      leds_off(LEDS_ALL);			  
 		  if(state==STATE_INIT){
 			 if(have_connectivity()==true)  
 				 state = STATE_NET_OK;
@@ -287,7 +287,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 		
-    leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+    leds_single_on(LEDS_GREEN);
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     printf("period = %d" , period);
     period++; 
