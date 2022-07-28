@@ -298,7 +298,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
-      leds_off(LEDS_ALL);  			 
+       			 
 		  sprintf(pub_topic, "%s", "status_data");
 
       if(period%10==0) {
@@ -418,6 +418,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
     leds_single_on(LEDS_GREEN);
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     period++;
+    leds_off(LEDS_ALL); 
     }
 
   }
