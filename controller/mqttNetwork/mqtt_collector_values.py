@@ -1,4 +1,5 @@
 from ast import Return
+from curses import window
 from email import message
 import paho.mqtt.client as mqtt
 from datetime import datetime
@@ -64,7 +65,7 @@ class MqttClientData:
                 cursor.execute(sql, (str(ad), dt, "0"))
                 print("\OPEN = " + open)
                 self.connection.commit()
-                self.communicateToSensors("0")
+                self.communicateToSensors("0", "window")
          
 
     def openWindow(self):
@@ -219,7 +220,7 @@ class MqttClientData:
 
             delta_outTemp = abs(tempOut - self.tempMax) + abs(tempOut - self.tempIn)
 
-            if self.co2In < self.co2Max-200 and delta_inTemp > delta_outTemp:
+            if self.co2In < self.co2Max-100 and delta_inTemp > delta_outTemp:
                 
                 self.openWindow()
 
