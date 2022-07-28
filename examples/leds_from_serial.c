@@ -54,7 +54,7 @@ PROCESS_THREAD(led_blink, ev, data){
 		PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
 		if(strcmp(data, green) == 0){
 			leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
-			sleep(2)
+			sleep(2);
 			leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
 
 		}
