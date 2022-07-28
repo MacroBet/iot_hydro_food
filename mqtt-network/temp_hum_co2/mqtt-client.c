@@ -415,10 +415,12 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 		
-    leds_single_on(LEDS_GREEN);
+    
+    leds_off(LEDS_ALL);
+    leds_on(period & LEDS_ALL);
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     period++;
-    leds_off(LEDS_ALL); 
+
     }
 
   }
