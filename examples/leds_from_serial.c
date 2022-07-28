@@ -42,10 +42,7 @@ leds_init();
  static struct etimer et; 
 while(1){ 
             leds_on(1);
-            etimer_set(&et, (1*CLOCK_SECOND));             
-            PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et)); 
-            leds_toggle(1);
-            leds_off(1);
+           	leds_single_toggle(1)
            } 
 PROCESS_END(); 
 }
