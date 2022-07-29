@@ -56,7 +56,7 @@ PROCESS_THREAD(leds_example, ev, data)
 
     if(ev == PROCESS_EVENT_TIMER && data == &et) {
       if((counter & 7) == 0) {
-        leds_set(LEDS_ALL);
+        leds_set(LEDS_LED1s);
       } else if((counter & 7) == 1) {
         leds_off(LEDS_ALL);
       } else if((counter & 7) == 2) {
