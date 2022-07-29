@@ -29,33 +29,57 @@
  * This file is part of the Contiki operating system.
  *
  */
+/*---------------------------------------------------------------------------*/
 #include "contiki.h"
-#include "net/routing/routing.h"
-#include "net/ipv6/uip.h"
-#include "net/ipv6/uip-icmp6.h"
-#include "net/ipv6/sicslowpan.h"
-#include "sys/etimer.h"
-#include "sys/ctimer.h"
-#include "lib/sensors.h"
-#include "dev/button-hal.h"
 #include "dev/leds.h"
-#include "os/sys/log.h"
-#include <sys/node-id.h>
+#include "sys/etimer.h"
 
-#include <time.h>
-#include <string.h>
-#include <strings.h>
-#include <unistd.h> 
-PROCESS(hello_world_process, "Hello world process"); AUTOSTART_PROCESSES(&hello_world_process); 
-PROCESS_THREAD(hello_world_process, ev, data) { 
-	PROCESS_EXITHANDLER(); 
-PROCESS_BEGIN(); 
+#include <stdio.h>
+/*---------------------------------------------------------------------------*/
+static struct etimer et;
+static uint8_t counter;
+/*---------------------------------------------------------------------------*/
+PROCESS(leds_example, "LED HAL Example");
+AUTOSTART_PROCESSES(&leds_example);
+/*---------------------------------------------------------------------------*/
+PROCESS_THREAD(leds_example, ev, data)
+{
+  PROCESS_BEGIN();
 
+  counter = 0;
 
-while(1){ 
-            LOG_INFO("ciao");
-			sleep(5);
-            
-           } 
-PROCESS_END(); 
+  etimer_set(&et, CLOCK_SECOND);
+
+  while(1) {
+
+    PROCESS_YIELD();
+
+    if(ev == PROCESS_EVENT_TIMER && data == &et) {
+      if((counter & 7) == 0) {
+        leds_set(LEDS_ALL);
+      } else if((counter & 7) == 1) {
+        leds_off(LEDS_ALL);
+      } else if((counter & 7) == 2) {
+        leds_on(LEDS_ALL);
+      } else if((counter & 7) == 3) {
+        leds_toggle(LEDS_ALL);
+#if !LEDS_LEGACY_API
+      } else if((counter & 7) == 4) {
+        leds_single_on(LEDS_LED1);
+      } else if((counter & 7) == 5) {
+        leds_single_off(LEDS_LED1);
+      } else if((counter & 7) == 6) {
+        leds_single_toggle(LEDS_LED1);
+#endif /* LEDS_LEGACY_API */
+      } else if((counter & 7) == 7) {
+        leds_toggle(LEDS_ALL);
+      }
+
+      counter++;
+      etimer_set(&et, CLOCK_SECOND);
+    }
+  }
+
+  PROCESS_END();
 }
+/*---------------------------------------------------------------------------*/
