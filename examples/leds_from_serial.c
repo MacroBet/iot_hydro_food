@@ -81,7 +81,7 @@ PROCESS_THREAD(leds_example, ev, data)
       /*} else if((counter & 7) == 7) {
         leds_toggle(LEDS_LED1);
 		printf("8");
-      }/*
+      }*/
 
       counter++;
       etimer_set(&et, CLOCK_SECOND);
