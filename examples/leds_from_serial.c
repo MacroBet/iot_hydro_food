@@ -67,7 +67,7 @@ PROCESS_THREAD(leds_example, ev, data)
       } else if((counter & 7) == 3) {
         leds_toggle(LEDS_LED1);
 		printf("4");
-#if !LEDS_LEGACY_API
+//#if !LEDS_LEGACY_API
       } /*else if((counter & 7) == 4) {
         leds_single_on(LEDS_LED1);
 		printf("5");
