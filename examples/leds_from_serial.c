@@ -57,11 +57,10 @@ PROCESS_THREAD(leds_example, ev, data)
 
     if(ev == PROCESS_EVENT_TIMER && data == &et) {
      
-        leds_toggle(LEDS_LED1);
+        //leds_toggle(LEDS_LED1);
     
         leds_single_on(LEDS_LED1);
      
-        leds_single_off(LEDS_LED1);
       
 
       counter++;
