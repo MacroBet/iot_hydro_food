@@ -53,7 +53,7 @@ PROCESS_BEGIN();
 
 
 while(1){ 
-            leds_toggle(1);
+            LOG_INFO("ciao")
 			sleep(5);
             
            } 
