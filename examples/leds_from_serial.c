@@ -68,7 +68,7 @@ PROCESS_THREAD(leds_example, ev, data)
 
       counter++;
       etimer_set(&et, CLOCK_SECOND);
-    }
+    
   }
 
   PROCESS_END();
