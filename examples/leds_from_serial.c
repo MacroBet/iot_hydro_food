@@ -51,15 +51,14 @@ PROCESS_THREAD(leds_example, ev, data)
   etimer_set(&et, CLOCK_SECOND);
 
   while(1) {
-	 leds_set(LEDS_LED1);
-	 leds_on(LEDS_LED1);
+
     PROCESS_YIELD();
 
     if(ev == PROCESS_EVENT_TIMER && data == &et) {
      
         //leds_toggle(LEDS_LED1);
     
-        leds_single_on(LEDS_LED1);
+        leds_toggle(LEDS_LED1);
      
       
 
