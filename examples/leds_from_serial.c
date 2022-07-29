@@ -67,22 +67,7 @@ PROCESS_THREAD(leds_example, ev, data)
       } else if((counter & 7) == 3) {
         leds_toggle(LEDS_LED1);
 
-//#if !LEDS_LEGACY_API
-      } /*else if((counter & 7) == 4) {
-        leds_single_on(LEDS_LED1);
-		printf("5");
-      } else if((counter & 7) == 5) {
-        leds_single_off(LEDS_LED1);
-		printf("6");
-      } else if((counter & 7) == 6) {
-        leds_single_toggle(LEDS_LED1);
-		printf("7");
-#endif /* LEDS_LEGACY_API */
-      /*} else if((counter & 7) == 7) {
-        leds_toggle(LEDS_LED1);
-		printf("8");
-      }*/
-
+	  }
       counter++;
       etimer_set(&et, CLOCK_SECOND);
     }
