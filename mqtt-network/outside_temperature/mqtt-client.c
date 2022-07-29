@@ -103,6 +103,7 @@ static char pub_topic[BUFFER_SIZE];
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
+static struct etimer reset_timer;
 static int period = 0;
 
 /*---------------------------------------------------------------------------*/
@@ -215,6 +216,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				    
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+  etimer_set(&reset_timer, CLOCK_SECOND);
   /* Main loop */
   while(1) {
 
@@ -277,7 +279,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			LOG_INFO("New values: %d\n", tempOut);
 			
 			sprintf(app_buffer, "{\"node\": %d, \"tempOut\": %d}", node_id, tempOut);
-	
+      leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
     
@@ -287,10 +289,16 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 		
-    leds_single_on(LEDS_GREEN);
+
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-    printf("period = %d" , period);
     period++; 
+    }
+
+    if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {
+     
+      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      
+      etimer_set(&reset_timer, CLOCK_SECOND);
     }
 
   }
