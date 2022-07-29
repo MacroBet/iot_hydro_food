@@ -255,7 +255,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				    
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-   etimer_set(&reset_timer, CLOCK_SECOND);
+  etimer_set(&reset_timer, CLOCK_SECOND);
   /* Main loop */
   while(1) {
 
@@ -417,16 +417,17 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 		
-    if(ev == PROCESS_EVENT_TIMER && data == &ereset_timer) {
-     
-       leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
-      
-        etimer_set(&reset_timer, CLOCK_SECOND);
-    }
+   
   
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     period++;
 
+    }
+    if(ev == PROCESS_EVENT_TIMER && data == &ereset_timer) {
+     
+      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      
+      etimer_set(&reset_timer, CLOCK_SECOND);
     }
 
   }
