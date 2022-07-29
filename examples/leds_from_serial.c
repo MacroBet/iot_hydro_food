@@ -55,19 +55,19 @@ PROCESS_THREAD(leds_example, ev, data)
     PROCESS_YIELD();
 
     if(ev == PROCESS_EVENT_TIMER && data == &et) {
-      if((counter & 7) == 0) {
+      if((counter & 4) == 0) {
         leds_set(LEDS_LED1);
-		
-      } else if((counter & 7) == 1) {
-        leds_off(LEDS_ALL);
-
-      } else if((counter & 7) == 2) {
+      } else if((counter & 4) == 1) {
         leds_on(LEDS_LED1);
-	
-      } else if((counter & 7) == 3) {
+      } else if((counter & 4) == 2) {
         leds_toggle(LEDS_LED1);
+#if !LEDS_LEGACY_API
+      } else if((counter & 4) == 3) {
+        leds_single_on(LEDS_LED1);
+      } else if((counter & 4) == 4) {
+        leds_single_off(LEDS_LED1);
+      } 
 
-	  }
       counter++;
       etimer_set(&et, CLOCK_SECOND);
     }
