@@ -49,7 +49,7 @@ PROCESS_THREAD(leds_example, ev, data)
   counter = 0;
 
   etimer_set(&et, CLOCK_SECOND);
-  leds_init(void);	
+  leds_init();	
   while(1) {
 
     PROCESS_YIELD();
