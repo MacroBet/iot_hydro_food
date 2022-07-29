@@ -11,7 +11,7 @@ class Post:
     def  changeStatusWatering(status, ad):
         client = HelperClient(ad)
         response = client.post("obs", "mode="+status)
-        print(response)
+        print(response.status)
         return response
 
 
