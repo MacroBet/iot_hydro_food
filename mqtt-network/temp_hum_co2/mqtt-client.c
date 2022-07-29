@@ -417,7 +417,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 		
-    if(ev == PROCESS_EVENT_TIMER && data == &et1) {
+    if(ev == PROCESS_EVENT_TIMER && data == &ereset_timer) {
      
        leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
       
