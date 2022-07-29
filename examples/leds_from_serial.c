@@ -53,7 +53,7 @@ PROCESS_BEGIN();
 
 
 while(1){ 
-            LOG_INFO("ciao")
+            LOG_INFO("ciao");
 			sleep(5);
             
            } 
