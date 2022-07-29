@@ -1,9 +1,10 @@
-from email import message
 import paho.mqtt.client as mqtt
 from datetime import datetime
 from database.dataBase import Database
 import json
 from pydoc import cli
+from coapNetwork.addresses import Addresses
+from coapNetwork.sendpost import Post
 
 
 class MqttClientBathFloat:
@@ -12,39 +13,114 @@ class MqttClientBathFloat:
         print("****** Connected with result code "+str(rc) + " ******\n")
         self.client.subscribe("status_bathFloat")
         self.client.subscribe("actuator_bathFloat")
+        self.client.subscribe("actuator_data")
 
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
-        #print("msg topic: " + str(msg.payload))
+        
         self.message = str(msg.payload)
         data = json.loads(msg.payload)
         node_id = data["node"]
         level = data["level"]
         dt = datetime.now()
-        timestamp = datetime.timestamp(dt)
         cursor = self.connection.cursor()
         sql = "INSERT INTO `bath_float` (`id_node`, `timestamp`, `level`) VALUES (%s, %s, %s)"
         cursor.execute(sql, (node_id, dt, level))
         self.connection.commit()
-        
-        # cursor = self.connection.cursor()
-        # sql = "SELECT value FROM watering_actuator ORDER BY ID DESC LIMIT 1"
-        # cursor.execute(sql)
-        # result_set = cursor.fetchall()
-        # if result_set == "watering" :
-        #      self.client.publish("actuator","wat")
-        # else:
-        #      self.client.publish("actuator","notWat")
+        self.checkActuatorLevel(level)
 
-        # cursor = self.connection.cursor()
-        # sql = "SELECT value FROM window_actuator ORDER BY ID DESC LIMIT 1"
-        # cursor.execute(sql)
-        # result_set = cursor.fetchall()
-        # if result_set == "open" :
-        #      self.client.publish("actuator","open")
-        # else:
-        #      self.client.publish("actuator","notOpen")
+#/----------methods to open/close the charge valve--------------\
+    
+    def closeCharge(self):
 
+        for ad in Addresses.adValves :
+            status = self.executeLastState(ad, "watering")
+            if status is None:
+                return
+            elif status == "2":
+                status = "0"
+                Post.changeStatusWatering(status, ad)
+                dt = datetime.now()
+                cursor = self.connection.cursor()
+                sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                cursor.execute(sql, (str(ad), dt, "0"))
+                print("\nSTATUS = " + status)
+                self.connection.commit()
+                self.communicateToSensors("0")
+            else:
+                return
+
+
+    def openCharge(self):
+
+        for ad in Addresses.adValves :
+            status = self.executeLastState(ad, "watering")
+            if status is not None:
+                if status == "0":
+                    status = "2"
+                    Post.changeStatusWatering(status, ad)
+                    dt = datetime.now()
+                    cursor = self.connection.cursor()
+                    sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                    cursor.execute(sql, (str(ad), dt, "2"))
+                    print("\nSTATUS = " + status)
+                    self.connection.commit()
+                    self.communicateToSensors("2")
+                if status == "2" or status == "1":
+                    return
+            else:
+                status = "2"
+                Post.changeStatusWatering(status, ad)
+                dt = datetime.now()
+                cursor = self.connection.cursor()
+                sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                cursor.execute(sql, (str(ad), dt, "2"))
+                print("\nSTATUS = " + status)
+                self.connection.commit()
+                self.communicateToSensors("2")
+
+#/---------------------------------------------------------------------------\
+
+#/----------methods to retrive last state of the actuator--------------\
+
+
+    def executeLastState(self, address, table) :
+        cursor = self.connection.cursor()
+        sql = "SELECT status FROM actuator_"+table+ " WHERE address = %s ORDER BY timestamp DESC LIMIT 1"
+        cursor.execute(sql, str(address))
+        result_set = cursor.fetchall()
+        if not result_set :
+            return None
+        else:
+            for row in result_set:
+                return row["status"]
+
+
+#/---------------------------------------------------------------------------\
+
+#/----------methods to check level of the bath float--------------\
+
+      
+    def checkActuatorLevel(self, level):
+        if level < 20:
+            self.openCharge()
+        elif level > 80:
+            self.closeCharge()
+
+#/---------------------------------------------------------------------------\
+
+#/----------methods to notify state changement on the actuator--------------\
+   
+
+    def communicateToSensors(self,status):
+
+        if status == "2":
+            self.client.publish("actuator_bathFloat","charge")
+        elif status == "0" :
+                self.client.publish("actuator_bathFloat","notCharge")
+
+                    
+#/---------------------------------------------------------------------------\
 
     def mqtt_client(self):
         self.db = Database()

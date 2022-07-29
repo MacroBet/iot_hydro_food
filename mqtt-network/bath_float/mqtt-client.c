@@ -102,6 +102,7 @@ static char sub_topic[BUFFER_SIZE];
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
+static struct etimer reset_timer;
 
 /*---------------------------------------------------------------------------*/
 /*
@@ -120,6 +121,8 @@ PROCESS(mqtt_client_process, "MQTT Client-bath-float");
 
 static int level = 50;
 static bool charge = false;
+static bool watering = false;
+unsigned short varLevel;
 
 /*---------------------------------------------------------------------------*/
 static void
@@ -133,19 +136,37 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
     printf("Received Actuator command\n");
     if(strcmp((const char*) chunk, "charge") == 0) {
 
-        LOG_INFO("Start watering and open windows\n");
+        LOG_INFO("Start charge\n");
         charge = true;
 
       } else if(strcmp((const char*) chunk, "notCharge") == 0)  {
         
-        LOG_INFO("Not watering and openC\n");	
+        LOG_INFO("Stop charge\n");	
         charge = false;
 
       }	
     } else {
       LOG_ERR("Topic not valid!\n");
-	
-  }
+    
+    }
+
+  if(strcmp(topic, "actuator_data") == 0) {
+      printf("Received Actuator command\n");
+      else if(strcmp((const char*) chunk, "wat") == 0)  {
+          
+          LOG_INFO("Start watering\n");	
+          watering = true;
+
+        }	else if(strcmp((const char*) chunk, "notWat") == 0)  {
+          
+          LOG_INFO("Stop watering\n");	
+          watering = false;
+
+        }	
+  } else {
+        LOG_ERR("Topic not valid!\n");
+      
+      }
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -235,7 +256,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				    
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-
+  etimer_set(&reset_timer, CLOCK_SECOND);
   /* Main loop */
   while(1) {
 
@@ -265,6 +286,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  
 			  // Subscribe to a topic
 			  strcpy(sub_topic,"actuator_bathFloat");
+        strcpy(sub_topic,"actuator_data");
 
 			  status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 
@@ -286,9 +308,16 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         level = 100;
       } else
         level = level;
+      if(watering) {
+        varLevel = random_rand();
+        level -= (int) level % 4;
+      } else
+        level = level;
+
+      
 
 			LOG_INFO("New values: %d\n", level);
-				
+			leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
 			sprintf(app_buffer, "{\"node\": %d, \"level\": %d}", node_id, level);
 			
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
@@ -301,6 +330,13 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
       
+    }
+
+    if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {
+     
+      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      
+      etimer_set(&reset_timer, CLOCK_SECOND);
     }
 
   }
