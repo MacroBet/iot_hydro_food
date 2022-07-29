@@ -56,8 +56,7 @@ PROCESS_THREAD(leds_example, ev, data)
 
     if(ev == PROCESS_EVENT_TIMER && data == &et) {
      
-       leds_on(LEDS_LED1);
-     
+       leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
       
 
       counter++;
