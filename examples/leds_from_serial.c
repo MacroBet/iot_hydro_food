@@ -57,30 +57,30 @@ PROCESS_THREAD(leds_example, ev, data)
     if(ev == PROCESS_EVENT_TIMER && data == &et) {
       if((counter & 7) == 0) {
         leds_set(LEDS_LED1);
-		print("1");
+		printf("1");
       } else if((counter & 7) == 1) {
         leds_off(LEDS_ALL);
-		print("2");
+		printf("2");
       } else if((counter & 7) == 2) {
         leds_on(LEDS_LED1);
-		print("3");
+		printf("3");
       } else if((counter & 7) == 3) {
         leds_toggle(LEDS_LED1);
-		print("4");
+		printf("4");
 #if !LEDS_LEGACY_API
       } else if((counter & 7) == 4) {
         leds_single_on(LEDS_LED1);
-		print("5");
+		printf("5");
       } else if((counter & 7) == 5) {
         leds_single_off(LEDS_LED1);
-		print("6");
+		printf("6");
       } else if((counter & 7) == 6) {
         leds_single_toggle(LEDS_LED1);
-		print("7");
+		printf("7");
 #endif /* LEDS_LEGACY_API */
       } else if((counter & 7) == 7) {
         leds_toggle(LEDS_LED1);
-		print("8");
+		printf("8");
       }
 
       counter++;
