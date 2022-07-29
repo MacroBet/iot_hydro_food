@@ -37,6 +37,7 @@
 #include <stdio.h>
 /*---------------------------------------------------------------------------*/
 static struct etimer et;
+static struct etimer et1;
 static uint8_t counter;
 /*---------------------------------------------------------------------------*/
 PROCESS(leds_example, "LED HAL Example");
@@ -49,6 +50,7 @@ PROCESS_THREAD(leds_example, ev, data)
   counter = 0;
 
   etimer_set(&et, CLOCK_SECOND);
+  etimer_set(&et1, CLOCK_SECOND);
   leds_init();	
   while(1) {
 
@@ -58,9 +60,15 @@ PROCESS_THREAD(leds_example, ev, data)
      
        leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
       
-      etimer_set(&et, 3*CLOCK_SECOND);
+      etimer_set(&et, CLOCK_SECOND);
+
+    }  if(ev == PROCESS_EVENT_TIMER && data == &et1) {
+     
+       leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      
+      etimer_set(&et1, CLOCK_SECOND);
     }
-	leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+	
   }
 
   PROCESS_END();
