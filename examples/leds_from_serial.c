@@ -56,7 +56,7 @@ PROCESS_THREAD(leds_example, ev, data)
 
     if(ev == PROCESS_EVENT_TIMER && data == &et) {
      
-       leds_invert(LEDS_LED1);
+       leds_on(LEDS_LED1);
      
       
 
