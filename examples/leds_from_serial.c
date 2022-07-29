@@ -49,16 +49,14 @@ PROCESS_THREAD(leds_example, ev, data)
   counter = 0;
 
   etimer_set(&et, CLOCK_SECOND);
-
+  leds_init(void);	
   while(1) {
 
     PROCESS_YIELD();
 
     if(ev == PROCESS_EVENT_TIMER && data == &et) {
      
-        //leds_toggle(LEDS_LED1);
-    
-        leds_toggle(LEDS_LED1);
+       leds_invert(LEDS_LED1);
      
       
 
