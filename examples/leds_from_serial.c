@@ -72,7 +72,7 @@ PROCESS_THREAD(leds_example, ev, data)
         leds_single_toggle(LEDS_LED1);
 #endif /* LEDS_LEGACY_API */
       } else if((counter & 7) == 7) {
-        leds_toggle(LEDS_ALL);
+        leds_toggle(LEDS_LED1);
       }
 
       counter++;
