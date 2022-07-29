@@ -4,7 +4,7 @@ from coapthon.messages.request import Request
 from coapthon.messages.response import Response
 from coapthon.client.helperclient import HelperClient
 from coapthon.server.coap import CoAP
-from numpy import true_divide
+
 
 class Post:
 
