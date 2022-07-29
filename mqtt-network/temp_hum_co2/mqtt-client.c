@@ -416,19 +416,20 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   LOG_ERR("Disconnected form MQTT broker\n");	
 		   // Recover from error
 		}
-		 if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {
-     
-      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
-      
-      etimer_set(&reset_timer, CLOCK_SECOND);
-    }
-
    
   
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     period++;
 
     }
+
+     if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {
+     
+      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      
+      etimer_set(&reset_timer, CLOCK_SECOND);
+    }
+
    
   }
 
