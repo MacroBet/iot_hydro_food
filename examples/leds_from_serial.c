@@ -58,10 +58,9 @@ PROCESS_THREAD(leds_example, ev, data)
      
        leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
       
-
-      counter++;
-      etimer_set(&et, CLOCK_SECOND);
+      etimer_set(&et, 3*CLOCK_SECOND);
     }
+	leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
   }
 
   PROCESS_END();
