@@ -85,19 +85,29 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
 
 
     if(strncmp(mode, "0", len) == 0) {
-         LOG_INFO("0");
-         leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
-         status = 0;
+        LOG_INFO("0");
+        leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
+        status = 0;
          
     } else if(strncmp(mode, "1", len) == 0) {
-         LOG_INFO("1");
-          leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
-         status = 1;
-
+        LOG_INFO("1");
+        leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+        if(status == 2)
+           coap_set_status_code(response, BAD_REQUEST_4_00);
+        else{
+          coap_set_status_code(response,VALID_2_03);
+          status = 1;
+        }
     } else if(strncmp(mode, "2", len) == 0) {
-         LOG_INFO("2");
-          leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
-         status = 2;
+        LOG_INFO("2");
+        leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+        if(status == 1)
+           coap_set_status_code(response, BAD_REQUEST_4_00);
+        else{
+          coap_set_status_code(response,VALID_2_03);
+          status = 2;
+        }
+        
 
     } else {
          success = 0;
