@@ -50,14 +50,11 @@ PROCESS(hello_world_process, "Hello world process"); AUTOSTART_PROCESSES(&hello_
 PROCESS_THREAD(hello_world_process, ev, data) { 
 	PROCESS_EXITHANDLER(); 
 PROCESS_BEGIN(); 
-leds_init(); 
- leds_on(1);
- static struct etimer et; 
+
+
 while(1){ 
-            leds_on(1);
-            etimer_set(&et, (1 * CLOCK_SECOND));             
-            if((ev == PROCESS_EVENT_TIMER && data == &et) ) 
             leds_toggle(1);
+			sleep(5);
             
            } 
 PROCESS_END(); 
