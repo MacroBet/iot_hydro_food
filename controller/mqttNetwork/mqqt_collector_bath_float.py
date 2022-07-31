@@ -24,7 +24,7 @@ class MqttClientBathFloat:
         level = data["level"]
         dt = datetime.now()
         cursor = self.connection.cursor()
-        sql = "INSERT INTO `bath_float` (`id_node`, `timestamp`, `level`) VALUES (%s, %s, %s)"
+        sql = "INSERT INTO `bath_float` (`node_id`, `timestamp`, `level`) VALUES (%s, %s, %s)"
         cursor.execute(sql, (node_id, dt, level))
         self.connection.commit()
         self.checkActuatorLevel(level)
