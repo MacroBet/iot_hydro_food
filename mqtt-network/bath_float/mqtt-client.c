@@ -150,9 +150,10 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
     
     }
 
+
   if(strcmp(topic, "actuator_data") == 0) {
       printf("Received Actuator command\n");
-      else if(strcmp((const char*) chunk, "wat") == 0)  {
+      if(strcmp((const char*) chunk, "wat") == 0)  {
           
           LOG_INFO("Start watering\n");	
           watering = true;
