@@ -105,14 +105,17 @@ class MqttClientData:
                 return
             elif status == "1":
                 status = "0"
-                Post.changeStatusWatering(status, ad)
-                dt = datetime.now()
-                cursor = self.connection.cursor()
-                sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                cursor.execute(sql, (str(ad), dt, "0"))
-                print("\nSTATUS = " + status)
-                self.connection.commit()
-                self.communicateToSensors("0", "inValues")
+                success = Post.changeStatusWatering(status, ad)
+                if success == 1:
+                    dt = datetime.now()
+                    cursor = self.connection.cursor()
+                    sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                    cursor.execute(sql, (str(ad), dt, "0"))
+                    print("\nSTATUS = " + status)
+                    self.connection.commit()
+                    self.communicateToSensors("0", "inValues")
+                else:
+                    return
             else:
                 return
            
@@ -125,7 +128,23 @@ class MqttClientData:
             if status is not None:
                 if status == "0":
                     status = "1"
-                    Post.changeStatusWatering(status, ad)
+                    success = Post.changeStatusWatering(status, ad)
+                    if success == 1:
+                        dt = datetime.now()
+                        cursor = self.connection.cursor()
+                        sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                        cursor.execute(sql, (str(ad), dt, "1"))
+                        print("\nSTATUS = " + status)
+                        self.connection.commit()
+                        self.communicateToSensors(status, "inValues")
+                    else:
+                        return
+                if status == "2" or status == "1":
+                    return
+            else:
+                status = "1"
+                success = Post.changeStatusWatering(status, ad)
+                if success == 1:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
@@ -133,18 +152,8 @@ class MqttClientData:
                     print("\nSTATUS = " + status)
                     self.connection.commit()
                     self.communicateToSensors(status, "inValues")
-                if status == "2" or status == "1":
+                else:
                     return
-            else:
-                status = "1"
-                Post.changeStatusWatering(status, ad)
-                dt = datetime.now()
-                cursor = self.connection.cursor()
-                sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                cursor.execute(sql, (str(ad), dt, "1"))
-                print("\nSTATUS = " + status)
-                self.connection.commit()
-                self.communicateToSensors(status, "inValues")
 
 #/---------------------------------------------------------------------------\
 
