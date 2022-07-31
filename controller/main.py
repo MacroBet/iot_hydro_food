@@ -39,6 +39,11 @@ def listOfcommands():
           "!Check sensors log\n"\
           "!List of commands\n"\
           "!Check bath float level\n"  
+          "!Start watering\n"
+          "!Stop watering\n"
+          "!Open windows\n"
+          "!Close windows\n"
+          "!Charge the tanks\n"
           "!Info commands\n\n")
 
 def checkCommand(command, client, client1):
@@ -119,9 +124,19 @@ def checkCommand(command, client, client1):
 
     elif command == "!list of commands":
             listOfcommands()
+    elif command == "!start watering":
+        client.startWatering()
+    elif command == "!stop watering":
+        client.stopWatering()
+    elif command == "!open window":
+        client.openWindow()
+    elif command == "!close window":
+        client.closeWindow()
     else:
         print("Command not found")
         listOfcommands()
+
+
 
 def showInfo():
 
@@ -180,10 +195,9 @@ if __name__ == "__main__":
     client = MqttClientData()
     thread = threading.Thread(target=client.mqtt_client, args=(tempMax, tempMin, humMax, humMin, co2Max, co2Min,), kwargs={})
     thread.start()
-
-    # client1 = MqttClientBathFloat()
-    # thread1 = threading.Thread(target=client1.mqtt_client, args=(), kwargs={})
-    # thread1.start()
+    client1 = MqttClientBathFloat()
+    thread1 = threading.Thread(target=client1.mqtt_client, args=(), kwargs={})
+    thread1.start()
     
     server = CoAPServer(ip, port)
     thread = threading.Thread(target=server.listen, args=(), kwargs={})
@@ -196,15 +210,5 @@ if __name__ == "__main__":
         command = input("COMMAND>")
         command = command.lower()
         checkCommand(command, client, client1)
-        # time.sleep(8)
-       
-        # if ResExample.checkpresence() == 1:
-        #     add = Addresses.constructAddress()
-        #     if add is not None :
-        #         for address in add :
-        #             print(address)
-        #             client = HelperClient(address)
-        #             path="status"
-        #             response = client.post("obs", "mode=0")
-            
+        
 
