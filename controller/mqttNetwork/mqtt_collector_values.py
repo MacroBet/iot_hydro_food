@@ -54,14 +54,17 @@ class MqttClientData:
                 return
             elif open == "1":
                 open = "0"
-                Post.changeStatusWindows(open, ad)
-                dt = datetime.now()
-                cursor = self.connection.cursor()
-                sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                cursor.execute(sql, (str(ad), dt, "0"))
-                print("\OPEN = " + open)
-                self.connection.commit()
-                self.communicateToSensors("0", "window")
+                success = Post.changeStatusWatering(status, ad)
+                if success == 1:
+                    dt = datetime.now()
+                    cursor = self.connection.cursor()
+                    sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                    cursor.execute(sql, (str(ad), dt, "0"))
+                    print("\OPEN = " + open)
+                    self.connection.commit()
+                    self.communicateToSensors("0", "window")
+                else:
+                    return
          
 
     def openWindow(self):
@@ -71,7 +74,24 @@ class MqttClientData:
             if open is not None:
                 if open == "0":
                     open = "1"
-                    Post.changeStatusWindows(open, ad)
+                    success = Post.changeStatusWatering(status, ad)
+                    if success == 1:
+                        dt = datetime.now()
+                        cursor = self.connection.cursor()
+                        sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                        cursor.execute(sql, (str(ad), dt, open))
+                        print("\OPEN = " + open)
+                        self.connection.commit()
+                        self.communicateToSensors("1", "window")
+                    else:
+                        return
+                elif open == "1":
+                    return
+
+            elif open is None:
+                open = "1"
+                success = Post.changeStatusWatering(status, ad)
+                if success == 1:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
@@ -79,19 +99,8 @@ class MqttClientData:
                     print("\OPEN = " + open)
                     self.connection.commit()
                     self.communicateToSensors("1", "window")
-                elif open == "1":
+                else:
                     return
-
-            elif open is None:
-                open = "1"
-                Post.changeStatusWindows(open, ad)
-                dt = datetime.now()
-                cursor = self.connection.cursor()
-                sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                cursor.execute(sql, (str(ad), dt, open))
-                print("\OPEN = " + open)
-                self.connection.commit()
-                self.communicateToSensors("1", "window")
 
 #/---------------------------------------------------------------------------\
 

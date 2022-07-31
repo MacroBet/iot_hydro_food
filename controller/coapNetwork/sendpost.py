@@ -22,3 +22,10 @@ class Post:
     def  changeStatusWindows(status, ad):
         client = HelperClient(ad)
         response = client.post("window", "mode="+status)
+        if response.code == 67:
+            print(response.code)
+            return 1
+        else:
+            return 0
+
+
