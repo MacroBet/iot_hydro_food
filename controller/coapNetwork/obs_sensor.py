@@ -1,7 +1,5 @@
-import datetime
 import json
-import socket
-import sys
+from datetime import datetime
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
 from coapthon.messages.request import Request
