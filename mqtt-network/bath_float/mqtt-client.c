@@ -98,7 +98,7 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
-
+static char sub_topic1[BUFFER_SIZE];
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
@@ -239,6 +239,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   PROCESS_BEGIN();
   
   mqtt_status_t status;
+  mqtt_status_t status1;
   char broker_address[CONFIG_IP_ADDR_STR_LEN];
 
   printf("MQTT Client Process\n");
@@ -287,12 +288,20 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  
 			  // Subscribe to a topic
 			  strcpy(sub_topic,"actuator_bathFloat");
-        strcpy(sub_topic,"actuator_data");
+        strcpy(sub_topic1,"actuator_data");
 
 			  status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 
 			  printf("Subscribing!\n");
 			  if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
+				LOG_ERR("Tried to subscribe but command queue was full!\n");
+				PROCESS_EXIT();
+			  }
+
+        status1 = mqtt_subscribe(&conn, NULL, sub_topic1, MQTT_QOS_LEVEL_0);
+
+			  printf("Subscribing!\n");
+			  if(status1 == MQTT_STATUS_OUT_QUEUE_FULL) {
 				LOG_ERR("Tried to subscribe but command queue was full!\n");
 				PROCESS_EXIT();
 			  }
