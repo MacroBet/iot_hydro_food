@@ -116,6 +116,8 @@ static struct mqtt_message *msg_ptr = 0;
 
 static struct mqtt_connection conn;
 
+static struct mqtt_connection conn1;
+
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_client_process, "MQTT Client-bath-float");
 
@@ -253,6 +255,8 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   // Broker registration					 
   mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event,
                   MAX_TCP_SEGMENT_SIZE);
+  mqtt_register(&conn1, &mqtt_client_process, client_id, mqtt_event,
+                  MAX_TCP_SEGMENT_SIZE);
 				  
   state=STATE_INIT;
 				    
@@ -281,6 +285,9 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
 						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
+         mqtt_connect(&conn1, broker_address, DEFAULT_BROKER_PORT,
+						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
+						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
 		  }
 		  
@@ -298,7 +305,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				PROCESS_EXIT();
 			  }
 
-        status1 = mqtt_subscribe(&conn, NULL, sub_topic1, MQTT_QOS_LEVEL_0);
+        status1 = mqtt_subscribe(&conn1, NULL, sub_topic1, MQTT_QOS_LEVEL_0);
 
 			  printf("Subscribing!\n");
 			  if(status1 == MQTT_STATUS_OUT_QUEUE_FULL) {
