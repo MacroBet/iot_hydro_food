@@ -33,7 +33,6 @@ class ObserveSensor:
         if response.payload is not None:
             print("response:")
             print(response.payload)
-            return
         data = json.loads(response.payload)
         if self.type == 0:
             status = data["status"]
