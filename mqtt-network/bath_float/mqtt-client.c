@@ -303,7 +303,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         level = level;
       if(watering) {
         varLevel = random_rand();
-        level -= (int) varLevel % 4;
+        level -= (int) varLevel % 8;
       } else
         level = level;
 
