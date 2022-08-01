@@ -31,16 +31,18 @@ class ObserveSensor:
         data = json.loads(response.payload)
         if self.type == 0:
             status = data["status"]
+           
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "watering")
             client = MqttClientData()
-            if status == 1:
+            print(status)
+            if status == "1":
                 client.communicateToSensors(status, "inValues")
 
-            elif status == 0:
+            elif status == "0":
                 client.communicateToSensors(status, "inValues")
 
-            elif status == 2:
+            elif status == "2":
                 client.communicateToSensors(status, "inValues")
 
           
@@ -49,10 +51,10 @@ class ObserveSensor:
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "window")
             client = MqttClientData()
-            if status == 1:
+            if status == "1":
                 client.communicateToSensors(status, "window")
 
-            elif status == 0:
+            elif status == "0":
                 client.communicateToSensors(status, "window")
 
    
