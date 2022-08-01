@@ -74,7 +74,7 @@ class MqttClientData:
             if open is not None:
                 if open == "0":
                     open = "1"
-                    success = Post.changeStatusWatering(status, ad)
+                    success = Post.changeStatusWatering(open, ad)
                     if success == 1:
                         dt = datetime.now()
                         cursor = self.connection.cursor()
@@ -90,7 +90,7 @@ class MqttClientData:
 
             elif open is None:
                 open = "1"
-                success = Post.changeStatusWatering(status, ad)
+                success = Post.changeStatusWatering(open, ad)
                 if success == 1:
                     dt = datetime.now()
                     cursor = self.connection.cursor()

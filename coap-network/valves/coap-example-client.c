@@ -79,6 +79,8 @@ PROCESS_THREAD(node, ev, data)
   static coap_endpoint_t my_server;
   static coap_message_t request[1];
 
+  button_hal_button_t *btn;
+  btn = button_hal_get_by_index(0);
 
   PROCESS_BEGIN();
 
@@ -96,18 +98,53 @@ PROCESS_THREAD(node, ev, data)
   COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
   LOG_INFO("--Registred--\n");
 
-  etimer_set(&periodic_timer, 10*CLOCK_SECOND);
+  if(btn) {
+    printf("%s on pin %u with ID=0, Logic=%s, Pull=%s\n",
+           BUTTON_HAL_GET_DESCRIPTION(btn), btn->pin,
+           btn->negative_logic ? "Negative" : "Positive",
+           btn->pull == GPIO_HAL_PIN_CFG_PULL_UP ? "Pull Up" : "Pull Down");
+  }
   
   while(1) {
     PROCESS_WAIT_EVENT();
 
-    if (ev == PROCESS_EVENT_TIMER && data == &periodic_timer){
-      status++;
-      if(status > 3)
+   if(ev == button_hal_press_event) {
+      btn = (button_hal_button_t *)data;
+      printf("Press event (%s)\n", BUTTON_HAL_GET_DESCRIPTION(btn));
+
+      if(btn == button_hal_get_by_id(BUTTON_HAL_ID_BUTTON_ZERO)) {
+        printf("This was button 0, on pin %u\n", btn->pin);
+      }
+    } else if(ev == button_hal_release_event) {
+      
+      if(status == 0){
+        status = 1;
+        leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+        res_status.trigger();
+
+      } else if (status == 1 || status == 2){
         status = 0;
-      res_status.trigger();
-      etimer_reset(&periodic_timer);
+        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+        res_status.trigger();
+      }
+      
+
+      btn = (button_hal_button_t *)data;
+      printf("Release event (%s)\n", BUTTON_HAL_GET_DESCRIPTION(btn));
+    } else if(ev == button_hal_periodic_event) {
+      
+      btn = (button_hal_button_t *)data;
+      if(btn->press_duration_seconds > 2 && status == 0) {
+        printf("%s pressed for more than 5 secs. Do custom action\n",
+               BUTTON_HAL_GET_DESCRIPTION(btn));
+       
+        status = 2;
+        leds_set(LEDS_NUM_TO_MASK(LEDS_BLUE));
+        res_status.trigger();
+
+      }
     }
+    
     }
 
   PROCESS_END();
