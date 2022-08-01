@@ -98,7 +98,6 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
-static char sub_topic1[BUFFER_SIZE];
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
@@ -116,7 +115,6 @@ static struct mqtt_message *msg_ptr = 0;
 
 static struct mqtt_connection conn;
 
-static struct mqtt_connection conn1;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_client_process, "MQTT Client-bath-float");
@@ -146,30 +144,22 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
         LOG_INFO("Stop charge\n");	
         charge = false;
 
-      }	
-    } else {
-      LOG_ERR("Topic not valid!\n");
-    
-    }
-
-
-  if(strcmp(topic, "actuator_data") == 0) {
-      printf("Received Actuator command\n");
-      if(strcmp((const char*) chunk, "wat") == 0)  {
+      }	else if(strcmp((const char*) chunk, "wat") == 0)  {
           
           LOG_INFO("Start watering\n");	
           watering = true;
 
-        }	else if(strcmp((const char*) chunk, "notWat") == 0)  {
+      }	else if(strcmp((const char*) chunk, "notWat") == 0)  {
           
           LOG_INFO("Stop watering\n");	
           watering = false;
 
         }	
-  } else {
-        LOG_ERR("Topic not valid!\n");
-      
-      }
+    } else {
+      LOG_ERR("Topic not valid!\n");
+    
+    }
+
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -241,7 +231,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   PROCESS_BEGIN();
   
   mqtt_status_t status;
-  mqtt_status_t status1;
+
   char broker_address[CONFIG_IP_ADDR_STR_LEN];
 
   printf("MQTT Client Process\n");
@@ -254,8 +244,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
   // Broker registration					 
   mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event,
-                  MAX_TCP_SEGMENT_SIZE);
-  mqtt_register(&conn1, &mqtt_client_process, client_id, mqtt_event,
                   MAX_TCP_SEGMENT_SIZE);
 				  
   state=STATE_INIT;
@@ -285,9 +273,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
 						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
-         mqtt_connect(&conn1, broker_address, DEFAULT_BROKER_PORT,
-						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
-						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
 		  }
 		  
@@ -305,14 +290,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				PROCESS_EXIT();
 			  }
 
-        status1 = mqtt_subscribe(&conn1, NULL, sub_topic1, MQTT_QOS_LEVEL_0);
-
-			  printf("Subscribing!\n");
-			  if(status1 == MQTT_STATUS_OUT_QUEUE_FULL) {
-				LOG_ERR("Tried to subscribe but command queue was full!\n");
-				PROCESS_EXIT();
-			  }
-			  
 			  state = STATE_SUBSCRIBED;
 		  }
 

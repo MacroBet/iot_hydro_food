@@ -14,6 +14,7 @@ class MqttClientData:
         self.client.subscribe("status_data")
         self.client.subscribe("status_outside")
         self.client.subscribe("actuator_data")
+        self.client.subscribe("actuator_bathFloat")
 
 
     # The callback for when a PUBLISH message is received from the server.
@@ -193,8 +194,10 @@ class MqttClientData:
 
             if status == "1":
                 self.client.publish("actuator_data","wat")
+                self.client.publish("actuator_bathFloat","wat")
             elif status == "0" :
                 self.client.publish("actuator_data","notWat")
+                self.client.publish("actuator_bathFloat","notWat")
 
         elif type == "window":
 

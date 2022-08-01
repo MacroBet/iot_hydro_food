@@ -13,7 +13,6 @@ class MqttClientBathFloat:
         print("****** Connected with result code "+str(rc) + " ******\n")
         self.client.subscribe("status_bathFloat")
         self.client.subscribe("actuator_bathFloat")
-        self.client.subscribe("actuator_data")
 
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
