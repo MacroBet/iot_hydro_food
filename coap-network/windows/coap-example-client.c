@@ -51,7 +51,6 @@
 
 #define SERVER_EP "coap://[fd00::1]:5683"
 
-static struct etimer periodic_timer;
 bool registered = false;
 
 void client_chunk_handler(coap_message_t *response)

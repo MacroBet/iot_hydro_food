@@ -41,6 +41,7 @@
 #include "node-id.h"
 #include "os/dev/serial-line.h"
 #include "dev/leds.h"
+#include "dev/button-hal.h"
 
 /* Log configuration */
 #include "app_var.h"
@@ -50,7 +51,7 @@
 
 #define SERVER_EP "coap://[fd00::1]:5683"
 
-static struct etimer periodic_timer;
+
 bool registered = false;
 
 void client_chunk_handler(coap_message_t *response)
