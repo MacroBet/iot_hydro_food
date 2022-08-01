@@ -120,13 +120,13 @@ PROCESS_THREAD(node, ev, data)
       
       if(status == 0){
         status = 1;
-        printf(status);
+        printf(%d, status);
         leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
         res_status.trigger();
 
       } else if (status == 1 || status == 2){
         status = 0;
-        printf(status);
+        printf(%d, status);
         leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
         res_status.trigger();
       }
