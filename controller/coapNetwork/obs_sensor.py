@@ -26,23 +26,17 @@ class ObserveSensor:
         self.client.observe(self.resource, self.observer)
     
     def observer(self, response):
-        print("callback called")
-        if response.payload is None:
-            print("response is none")
-        if response.payload is not None:
-            print("response:")
-            print(response.payload)
         data = json.loads(response.payload)
         if self.type == 0:
             status = data["status"]
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "watering")
-            print(status)
+          
         elif self.type == 1:
             status = data["open"]
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "window")
-            print(status)
+   
 
     def execute_query(self, add, stat, timestamp, table):
         with self.connection.cursor() as cursor:

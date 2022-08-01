@@ -17,17 +17,19 @@ class MqttClientBathFloat:
 
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
-        
-        self.message = str(msg.payload)
-        data = json.loads(msg.payload)
-        node_id = data["node"]
-        level = data["level"]
-        dt = datetime.now()
-        cursor = self.connection.cursor()
-        sql = "INSERT INTO `bath_float` (`node_id`, `timestamp`, `level`) VALUES (%s, %s, %s)"
-        cursor.execute(sql, (node_id, dt, level))
-        self.connection.commit()
-        self.checkActuatorLevel(level)
+        if msg.topic == "status_bathFloat":
+            self.message = str(msg.payload)
+            data = json.loads(msg.payload)
+            node_id = data["node"]
+            level = data["level"]
+            dt = datetime.now()
+            cursor = self.connection.cursor()
+            sql = "INSERT INTO `bath_float` (`node_id`, `timestamp`, `level`) VALUES (%s, %s, %s)"
+            cursor.execute(sql, (node_id, dt, level))
+            self.connection.commit()
+            self.checkActuatorLevel(level)
+        else:
+            return
 
 #/----------methods to open/close the charge valve--------------\
     
