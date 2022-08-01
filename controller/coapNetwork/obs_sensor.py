@@ -7,6 +7,8 @@ from coapthon.messages.request import Request
 from coapthon.messages.response import Response
 from coapthon.client.helperclient import HelperClient
 from coapthon.utils import parse_uri
+from controller.mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
+from controller.mqttNetwork.mqtt_collector_values import MqttClientData
 from database.dataBase import Database
 
 class ObserveSensor:
@@ -29,14 +31,30 @@ class ObserveSensor:
         data = json.loads(response.payload)
         if self.type == 0:
             status = data["status"]
-            print(status)
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "watering")
+            client = MqttClientData()
+            if status == 1:
+                client.communicateToSensors(status, "inValues")
+
+            elif status == 0:
+                client.communicateToSensors(status, "inValues")
+
+            elif status == 2:
+                client.communicateToSensors(status, "inValues")
+
           
         elif self.type == 1:
             status = data["open"]
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "window")
+            client = MqttClientData()
+            if status == 1:
+                client.communicateToSensors(status, "window")
+
+            elif status == 0:
+                client.communicateToSensors(status, "window")
+
    
 
     def execute_query(self, add, stat, timestamp, table):
