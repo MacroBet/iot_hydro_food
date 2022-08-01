@@ -37,13 +37,13 @@ class ObserveSensor:
             client = MqttClientData()
             print(status)
             if status == "1":
-                client.communicateToSensors(status, "inValues")
+                client.communicateToSensors(client, status, "inValues")
 
             elif status == "0":
-                client.communicateToSensors(status, "inValues")
+                client.communicateToSensors(client, status, "inValues")
 
             elif status == "2":
-                client.communicateToSensors(status, "inValues")
+                client.communicateToSensors(client, status, "inValues")
 
           
         elif self.type == 1:

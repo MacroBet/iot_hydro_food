@@ -189,7 +189,7 @@ class MqttClientData:
    
 
     def communicateToSensors(self, status, type):
-    
+        print(status)
         if type == "inValues":
 
             if status == "1":
