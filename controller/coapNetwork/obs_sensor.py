@@ -29,6 +29,7 @@ class ObserveSensor:
         data = json.loads(response.payload)
         if self.type == 0:
             status = data["status"]
+            print(status)
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "watering")
           
