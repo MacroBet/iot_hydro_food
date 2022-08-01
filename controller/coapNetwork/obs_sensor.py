@@ -47,7 +47,7 @@ class ObserveSensor:
         with self.connection.cursor() as cursor:
             # Create a new record
             sql = "INSERT INTO `actuator_`" + table + "(`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-            cursor.execute(sql, (add, timestamp, stat))
+            cursor.execute(sql, (str(add), timestamp, stat))
         
         self.connection.commit()
 
