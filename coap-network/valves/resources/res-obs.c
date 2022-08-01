@@ -37,6 +37,7 @@
 #include "contiki.h"
 #include "dev/leds.h"
 #include "os/dev/serial-line.h"
+#include "coap-observe.h"
 
 /* Log configuration */
 #include "sys/log.h"
@@ -54,7 +55,7 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
  * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
  */
 EVENT_RESOURCE(res_status,
-         "title=\"Status \" POST mode=0|1|2;rt=\"status\"",
+         "title=\"Status \" POST mode=0|1|2;obs;rt=\"status\"",
          res_get_handler,
          res_post_handler,
          NULL,

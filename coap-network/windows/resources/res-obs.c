@@ -37,6 +37,7 @@
 #include "contiki.h"
 #include "dev/leds.h"
 #include "os/dev/serial-line.h"
+#include "coap-observe.h"
 
 /* Log configuration */
 #include "sys/log.h"
