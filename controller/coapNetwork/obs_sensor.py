@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from time import time
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
 from coapthon.messages.request import Request
@@ -45,11 +46,8 @@ class ObserveSensor:
 
     def execute_query(self, add, stat, timestamp, table):
         with self.connection.cursor() as cursor:
-            # Create a new record
-            sql = "INSERT INTO `actuator_`" + table + "(`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+            cursor = self.connection.cursor()
+            sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
             cursor.execute(sql, (str(add), timestamp, stat))
-        
-        self.connection.commit()
-
-
+            self.connection.commit()
         
