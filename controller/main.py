@@ -5,8 +5,6 @@ import time
 from mqttNetwork.mqtt_collector_values import MqttClientData
 from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 import paho.mqtt.client as mqtt
-import getopt
-import sys
 import threading
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
@@ -15,7 +13,6 @@ from coapthon.messages.response import Response
 from coapthon.client.helperclient import HelperClient
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
-from coapNetwork.addresses import Addresses
 from coapNetwork.resExample import ResExample
 import time
 
@@ -44,7 +41,8 @@ def listOfcommands():
           "!Open windows\n"
           "!Close windows\n"
           "!Charge the tanks\n"
-          "!Info commands\n\n")
+          "!Info commands \n"
+          "!Exit\n\n")
 
 def checkCommand(command, client, client1):
    
@@ -52,13 +50,15 @@ def checkCommand(command, client, client1):
            showInfo()
     elif command == "!check sensors log":
         mex = client.message
-        print(client.message)
+        mex1 = client1.message
+        print(client.message+"\n"+mex1)
         try:
             while True:
                 if(mex != client.message):
                     print("\nPress ctrl + C to exit \n")
-                    print(client.message)
+                    print(mex+"\n"+mex1)
                     mex = client.message
+                    mex1 = client1.message
         except KeyboardInterrupt:
          return
 
@@ -105,6 +105,10 @@ def checkCommand(command, client, client1):
             elif(answer == "no" or answer == "n"):
                 print("Insert new value\n")
                 continue
+            else:
+                answer = input(">")
+                answer = answer.lower()
+
 
     elif command == "!change value temperature":
             
@@ -132,6 +136,12 @@ def checkCommand(command, client, client1):
         client.openWindow()
     elif command == "!close window":
         client.closeWindow()
+    elif command == "!exit":
+        thread.join()
+        thread1.join()
+        thread2.join()
+        server.close()
+        print("SHUTDOWN")
     else:
         print("Command not found")
         listOfcommands()
@@ -200,15 +210,24 @@ if __name__ == "__main__":
     thread1.start()
 
     server = CoAPServer(ip, port)
-    thread = threading.Thread(target=server.listen, args=(), kwargs={})
-    thread.start()
+    thread2 = threading.Thread(target=server.listen, args=(), kwargs={})
+    thread2.start()
     
     time.sleep(5)
     
     print("System is running--->\n ")
-    while 1:
-        command = input("COMMAND>")
-        command = command.lower()
-        checkCommand(command, client, client1)
+    try:
+        while 1:
+            command = input("COMMAND>")
+            command = command.lower()
+            checkCommand(command, client, client1)
+        
+    except KeyboardInterrupt:
+        thread.join()
+        thread1.join()
+        thread2.join()
+        server.close()
+        print("SHUTDOWN")
+
         
 

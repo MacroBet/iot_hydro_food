@@ -272,7 +272,8 @@ class MqttClientData:
         self.tempIn = None
         self.co2In = None
         self.type = type
-        print("\n****** Mqtt client Temperature Humidity Co2 starting ******")
+        if type == "check":
+            print("\n****** Mqtt client Temperature Humidity Co2 starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         if type == "check":
