@@ -279,4 +279,5 @@ class MqttClientData:
         except Exception as e:
             
             print(str(e))
-        self.client.loop_forever()
+        if type == "check":
+            self.client.loop_forever()
