@@ -20,7 +20,8 @@ class ObserveSensor:
         self.address = source_address
         self.resource = resource
         self.type = type
-        self.client = MqttClientData.mqtt_client(None, None, None, None, None, None)
+        client = MqttClientData()
+        client.mqtt_client(None, None, None, None, None, None)
         self.start_observing()
 
     def start_observing(self):
