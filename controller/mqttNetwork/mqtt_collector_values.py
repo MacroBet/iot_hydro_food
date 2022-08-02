@@ -189,21 +189,21 @@ class MqttClientData:
    
 
     def communicateToSensors(self, status, type):
-        print(status)
+        print(status+"aaaaaaa")
         if type == "inValues":
 
-            if status == "1":
+            if str(status) == "1":
                 self.client.publish("actuator_data","wat")
                 self.client.publish("actuator_bathFloat","wat")
-            elif status == "0" :
+            elif str(status) == "0" :
                 self.client.publish("actuator_data","notWat")
                 self.client.publish("actuator_bathFloat","notWat")
 
         elif type == "window":
 
-                if status == "1":
+                if str(status) == "1":
                      self.client.publish("actuator_data","Open")
-                elif status == "0":
+                elif str(status) == "0":
                      self.client.publish("actuator_data","notOpen")
                     
 #/---------------------------------------------------------------------------\
@@ -274,9 +274,9 @@ class MqttClientData:
         self.client.on_connect = self.on_connect
         if type == "check":
             self.client.on_message = self.on_message
-            try:
-                self.client.connect("127.0.0.1", 1883, 60)
-            except Exception as e:
-                
-                print(str(e))
-            self.client.loop_forever()
+        try:
+            self.client.connect("127.0.0.1", 1883, 60)
+        except Exception as e:
+            
+            print(str(e))
+        self.client.loop_forever()
