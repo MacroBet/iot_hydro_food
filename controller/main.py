@@ -126,16 +126,16 @@ def checkCommand(command, client, client1):
                     print("Insert new value\n")
                     continue
 
-    elif command == "!list of commands":
-            listOfcommands()
-    elif command == "!start watering":
-        client.startWatering()
-    elif command == "!stop watering":
-        client.stopWatering()
-    elif command == "!open window":
-        client.openWindow()
-    elif command == "!close window":
-        client.closeWindow()
+    # elif command == "!list of commands":
+    #         listOfcommands()
+    # elif command == "!start watering":
+    #     client.startWatering()
+    # elif command == "!stop watering":
+    #     client.stopWatering()
+    # elif command == "!open window":
+    #     client.openWindow()
+    # elif command == "!close window":
+    #     client.closeWindow()
     elif command == "!exit":
         thread.join()
         thread1.join()
