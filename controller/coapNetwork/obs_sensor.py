@@ -37,14 +37,14 @@ class ObserveSensor:
             self.execute_query(self.address, status, dt, "watering")
             
             print(status)
-            if status == "1":
+            if str(status) == "1":
                 print("uno")
                 self.mqttClient.communicateToSensors(status, "inValues")
 
-            elif status == "0":
+            elif str(status) == "0":
                 self.mqttClient.communicateToSensors(status, "inValues")
 
-            elif status == "2":
+            elif str(status) == "2":
                 self.mqttClient.communicateToSensors(status, "inValues")
 
           
