@@ -254,7 +254,7 @@ class MqttClientData:
 
 #/---------------------------------------------------------------------------\
 
-    mqtt_client = None
+    client = None
 
     def mqtt_client(self, tempMax, tempMin, humMax, humMin, co2Max, co2Min):
         self.db = Database()
@@ -272,7 +272,6 @@ class MqttClientData:
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
-        self.mqtt_client = self.client
         try:
             self.client.connect("127.0.0.1", 1883, 60)
         except Exception as e:
