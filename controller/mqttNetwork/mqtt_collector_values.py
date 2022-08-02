@@ -19,7 +19,6 @@ class MqttClientData:
 
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
-       
       
         if msg.topic == "status_data" :
             self.message = str(msg.payload)
