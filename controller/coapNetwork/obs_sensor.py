@@ -21,8 +21,8 @@ class ObserveSensor:
         self.resource = resource
         self.type = type
         self.start_observing()
-        client = MqttClientData()
-        client.mqtt_client(None, None, None, None, None, None, "communicate")
+        mqtt = MqttClientData()
+        mqtt.mqtt_client(None, None, None, None, None, None, "communicate")
        
 
     def start_observing(self):
@@ -43,13 +43,13 @@ class ObserveSensor:
             if str(status) == "1":
                 print("uno")
                 
-                self.client.communicateToSensors(status, "inValues")
+                self.mqtt.communicateToSensors(status, "inValues")
 
             elif str(status) == "0":
-                self.client.communicateToSensors(status, "inValues")
+                self.mqtt.communicateToSensors(status, "inValues")
 
             elif str(status) == "2":
-                self.client.communicateToSensors(status, "inValues")
+                self.mqtt.communicateToSensors(status, "inValues")
         
 
           
