@@ -20,13 +20,15 @@ class ObserveSensor:
         self.address = source_address
         self.resource = resource
         self.type = type
+        self.mqtt = None
         self.start_observing()
-        mqtt = MqttClientData()
-        mqtt.mqtt_client(None, None, None, None, None, None, "communicate")
        
 
     def start_observing(self):
-        
+         
+        self.mqtt = MqttClientData()
+        self.mqtt.mqtt_client(None, None, None, None, None, None, "communicate")
+       
         self.client = HelperClient(self.address)
         self.client.observe(self.resource, self.observer)
     
@@ -42,7 +44,6 @@ class ObserveSensor:
             
             if str(status) == "1":
                 print("uno")
-                
                 self.mqtt.communicateToSensors(status, "inValues")
 
             elif str(status) == "0":
