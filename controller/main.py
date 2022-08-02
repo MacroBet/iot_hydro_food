@@ -193,7 +193,7 @@ if __name__ == "__main__":
     time.sleep(5)
     
     client = MqttClientData()
-    thread = threading.Thread(target=client.mqtt_client, args=(tempMax, tempMin, humMax, humMin, co2Max, co2Min,), kwargs={})
+    thread = threading.Thread(target=client.mqtt_client, args=(tempMax, tempMin, humMax, humMin, co2Max, co2Min,"check"), kwargs={})
     thread.start()
     client1 = MqttClientBathFloat()
     thread1 = threading.Thread(target=client1.mqtt_client, args=(), kwargs={})
