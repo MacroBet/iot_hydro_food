@@ -14,13 +14,13 @@ from database.dataBase import Database
 class ObserveSensor:
 
 
-    def __init__(self,source_address, resource, type, client):
+    def __init__(self,source_address, resource, type):
         self.db = Database()
         self.connection = self.db.connect_db()
         self.address = source_address
         self.resource = resource
         self.type = type
-        self.mqttClient = client
+        self.mqttClient = MqttClientData.mqtt_client
         self.start_observing()
 
     def start_observing(self):

@@ -25,9 +25,9 @@ ip = "::"
 port = 5683
 
 class CoAPServer(CoAP):
-    def __init__(self, host, port, mqttClient):
+    def __init__(self, host, port):
         CoAP.__init__(self, (host, port), False)
-        self.add_resource("registry", ResExample(mqttClient))
+        self.add_resource("registry", ResExample())
 
 def listOfcommands():
 
@@ -198,7 +198,7 @@ if __name__ == "__main__":
     client1 = MqttClientBathFloat()
     thread1 = threading.Thread(target=client1.mqtt_client, args=(), kwargs={})
     thread1.start()
-    
+
     server = CoAPServer(ip, port, client)
     thread = threading.Thread(target=server.listen, args=(), kwargs={})
     thread.start()

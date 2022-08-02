@@ -18,21 +18,20 @@ class ResExample(Resource):
     valves = 0
     windows = 0
 
-    def __init__(self, mqttClient, name="ResExample"):
+    def __init__(self, name="ResExample"):
         super(ResExample, self).__init__(name)
         self.payload = "Advanced resource"
-        self.mqttClient = mqttClient
 
 
     def render_GET(self, request):
         if request.payload == "valves":
             Addresses.insertNewAddress(request.source, "valves")
             ResExample.valves = 1
-            ob =ObserveSensor(request.source, "obs", 0, self.mqttClient)
+            ob =ObserveSensor(request.source, "obs", 0)
         elif request.payload == "window":
             Addresses.insertNewAddress(request.source, "windows")
             ResExample.windows = 1
-            ob =ObserveSensor(request.source, "window", 1, self.mqttClient)
+            ob =ObserveSensor(request.source, "window", 1)
         return self
 
     def checkpresenceValves():
