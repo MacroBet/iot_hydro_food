@@ -20,32 +20,30 @@ class MqttClientData:
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
        
-        if self.type == "check": 
-            if msg.topic == "status_data" :
-                self.message = str(msg.payload)
-                data = json.loads(msg.payload)
-                node_id = data["node"]
-                temperature = data["temperature"]
-                humidity = data["humidity"]
-                co2 = data["co2"]
-                self.tempIn = temperature
-                self.co2In = co2
-                dt = datetime.now()
-                cursor = self.connection.cursor()
-                sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
-                cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
-                self.connection.commit()
-                self.checkActuatorWatering(temperature, humidity, co2)
-            
-            elif msg.topic == "status_outside" :
-                self.message = str(msg.payload)
-                data = json.loads(msg.payload)
-                node_id = data["node"]
-                tempOut = data["tempOut"]
-                self.checkActuatorWindow(tempOut)
-        elif self.type == "communicate":
-            return
-
+      
+        if msg.topic == "status_data" :
+            self.message = str(msg.payload)
+            data = json.loads(msg.payload)
+            node_id = data["node"]
+            temperature = data["temperature"]
+            humidity = data["humidity"]
+            co2 = data["co2"]
+            self.tempIn = temperature
+            self.co2In = co2
+            dt = datetime.now()
+            cursor = self.connection.cursor()
+            sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
+            cursor.execute(sql, (node_id, dt, temperature, humidity, co2))
+            self.connection.commit()
+            self.checkActuatorWatering(temperature, humidity, co2)
+        
+        elif msg.topic == "status_outside" :
+            self.message = str(msg.payload)
+            data = json.loads(msg.payload)
+            node_id = data["node"]
+            tempOut = data["tempOut"]
+            self.checkActuatorWindow(tempOut)
+   
              
 
 #/----------window methods to open and close the windows--------------\
@@ -275,10 +273,11 @@ class MqttClientData:
         print("\n****** Mqtt client Temperature Humidity Co2 starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
-        self.client.on_message = self.on_message
-        try:
-            self.client.connect("127.0.0.1", 1883, 60)
-        except Exception as e:
-            
-           print(str(e))
-        self.client.loop_forever()
+        if type == "check":
+            self.client.on_message = self.on_message
+            try:
+                self.client.connect("127.0.0.1", 1883, 60)
+            except Exception as e:
+                
+                print(str(e))
+            self.client.loop_forever()
