@@ -199,7 +199,7 @@ if __name__ == "__main__":
     thread1 = threading.Thread(target=client1.mqtt_client, args=(), kwargs={})
     thread1.start()
 
-    server = CoAPServer(ip, port, client)
+    server = CoAPServer(ip, port)
     thread = threading.Thread(target=server.listen, args=(), kwargs={})
     thread.start()
     
