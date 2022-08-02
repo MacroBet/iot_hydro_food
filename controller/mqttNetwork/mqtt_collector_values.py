@@ -20,7 +20,7 @@ class MqttClientData:
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
        
-       if self.type == "check": 
+        if self.type == "check": 
             if msg.topic == "status_data" :
                 self.message = str(msg.payload)
                 data = json.loads(msg.payload)
@@ -43,6 +43,8 @@ class MqttClientData:
                 node_id = data["node"]
                 tempOut = data["tempOut"]
                 self.checkActuatorWindow(tempOut)
+        elif self.type == "communicate":
+            return
 
              
 
