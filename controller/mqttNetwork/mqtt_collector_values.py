@@ -189,7 +189,7 @@ class MqttClientData:
    
 
     def communicateToSensors(self, status, type):
-        print(str(status)+"aaaaaaa")
+
         if type == "inValues":
 
             if str(status) == "1":
@@ -197,7 +197,10 @@ class MqttClientData:
                 self.client.publish("actuator_bathFloat","wat")
             elif str(status) == "0" :
                 self.client.publish("actuator_data","notWat")
-                self.client.publish("actuator_bathFloat","notWat")
+                self.client.publish("actuator_bathFloat","stop")
+            elif str(status) == "2" :
+                self.client.publish("actuator_data","notWat")
+                self.client.publish("actuator_bathFloat","charge")
 
         elif type == "window":
 

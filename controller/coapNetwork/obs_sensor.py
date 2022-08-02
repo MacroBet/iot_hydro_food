@@ -44,7 +44,6 @@ class ObserveSensor:
             print(status)
             
             if str(status) == "1":
-                print("uno")
                 self.mqtt.communicateToSensors(status, "inValues")
 
             elif str(status) == "0":
@@ -59,14 +58,12 @@ class ObserveSensor:
             status = data["open"]
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "window")
-            client = MqttClientData()
-            if status == "1":
-                client.communicateToSensors(status, "window")
+            if str(status) == "1":
+                self.mqtt.communicateToSensors(status, "window")
 
-            elif status == "0":
-                client.communicateToSensors(status, "window")
-
-   
+            elif str(status) == "0":
+                self.mqtt.communicateToSensors(status, "window")
+        
 
     def execute_query(self, add, stat, timestamp, table):
         with self.connection.cursor() as cursor:

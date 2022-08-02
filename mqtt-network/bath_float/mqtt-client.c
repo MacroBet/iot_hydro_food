@@ -139,22 +139,18 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
         LOG_INFO("Start charge\n");
         charge = true;
 
-      } else if(strcmp((const char*) chunk, "notCharge") == 0)  {
+      } else if(strcmp((const char*) chunk, "stop") == 0)  {
         
         LOG_INFO("Stop charge\n");	
         charge = false;
+        watering = false;
 
       }	else if(strcmp((const char*) chunk, "wat") == 0)  {
           
           LOG_INFO("Start watering\n");	
           watering = true;
 
-      }	else if(strcmp((const char*) chunk, "notWat") == 0)  {
-          
-          LOG_INFO("Stop watering\n");	
-          watering = false;
-
-        }	
+      }
     } else {
       LOG_ERR("Topic not valid!\n");
     
@@ -303,7 +299,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         level = level;
       if(watering) {
         varLevel = random_rand();
-        level -= (int) varLevel % 8;
+        level -= (int) varLevel % 10;
       } else
         level = level;
 

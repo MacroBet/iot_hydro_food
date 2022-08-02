@@ -118,7 +118,7 @@ class MqttClientBathFloat:
         if status == "2":
             self.client.publish("actuator_bathFloat","charge")
         elif status == "0" :
-                self.client.publish("actuator_bathFloat","notCharge")
+                self.client.publish("actuator_bathFloat","stop")
 
                     
 #/---------------------------------------------------------------------------\
