@@ -14,12 +14,13 @@ from database.dataBase import Database
 class ObserveSensor:
 
 
-    def __init__(self,source_address, resource, type):
+    def __init__(self,source_address, resource, type, client):
         self.db = Database()
         self.connection = self.db.connect_db()
         self.address = source_address
         self.resource = resource
         self.type = type
+        self.mqttClient = client
         self.start_observing()
 
     def start_observing(self):
@@ -34,16 +35,16 @@ class ObserveSensor:
            
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "watering")
-            client = MqttClientData()
+            
             print(status)
             if status == "1":
-                client.communicateToSensors(client, status, "inValues")
+                self.mqttClient.communicateToSensors(status, "inValues")
 
             elif status == "0":
-                client.communicateToSensors(client, status, "inValues")
+                self.mqttClient.communicateToSensors(status, "inValues")
 
             elif status == "2":
-                client.communicateToSensors(client, status, "inValues")
+                self.mqttClient.communicateToSensors(status, "inValues")
 
           
         elif self.type == 1:

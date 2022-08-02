@@ -18,23 +18,21 @@ class ResExample(Resource):
     valves = 0
     windows = 0
 
-    def __init__(self, name="ResExample", coap_server=None):
-        super(ResExample, self).__init__(name, coap_server, visible=True, observable=True, allow_children=True)
+    def __init__(self, mqttClient, name="ResExample"):
+        super(ResExample, self).__init__(name)
+        self.payload = "Advanced resource"
+        self.mqttClient = mqttClient
 
-        self.payload = "Basic Resource"
-        self.resource_type = "rt1"
-        self.content_type = "text/plain"
-        self.interface_type = "if1"
 
     def render_GET(self, request):
         if request.payload == "valves":
             Addresses.insertNewAddress(request.source, "valves")
             ResExample.valves = 1
-            ob =ObserveSensor(request.source, "obs", 0)
+            ob =ObserveSensor(request.source, "obs", 0, self.mqttClient)
         elif request.payload == "window":
             Addresses.insertNewAddress(request.source, "windows")
             ResExample.windows = 1
-            ob =ObserveSensor(request.source, "window", 1)
+            ob =ObserveSensor(request.source, "window", 1, self.mqttClient)
         return self
 
     def checkpresenceValves():
