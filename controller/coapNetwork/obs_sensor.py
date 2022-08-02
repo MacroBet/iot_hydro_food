@@ -38,6 +38,7 @@ class ObserveSensor:
             
             print(status)
             if status == "1":
+                print("uno")
                 self.mqttClient.communicateToSensors(status, "inValues")
 
             elif status == "0":
