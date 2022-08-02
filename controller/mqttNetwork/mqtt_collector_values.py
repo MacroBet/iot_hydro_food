@@ -269,6 +269,7 @@ class MqttClientData:
         self.tempIn = None
         self.co2In = None
         print("\n****** Mqtt client Temperature Humidity Co2 starting ******")
+        self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         try:
