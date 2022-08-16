@@ -1,17 +1,17 @@
-<mxfile host="app.diagrams.net" modified="2022-08-16T14:15:08.369Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="qUIFswMCljFY5Rgv7XOt" version="16.5.6" type="github">
+<mxfile host="app.diagrams.net" modified="2022-08-16T14:22:30.786Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="gEIWO8d6HnfmrxxbFK6t" version="16.5.6" type="github">
   <diagram id="kgpKYQtTHZ0yAKxKKP6v" name="Page-1">
-    <mxGraphModel dx="2742" dy="3314" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2952" dy="3564" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-10" value="" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="-680" y="-1160" width="665" height="570" as="geometry" />
         </mxCell>
-        <mxCell id="3nuBFxr9cyL0pnOWT2aG-1" value="Telemetrium&lt;ID&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
-          <mxGeometry x="185" y="783" width="100" height="570" as="geometry" />
+        <mxCell id="3nuBFxr9cyL0pnOWT2aG-1" value="Temp-hum-co2&lt;ID&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
+          <mxGeometry x="180" y="783" width="105" height="570" as="geometry" />
         </mxCell>
         <mxCell id="3nuBFxr9cyL0pnOWT2aG-2" value="" style="points=[];perimeter=orthogonalPerimeter;rounded=0;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" vertex="1">
-          <mxGeometry x="45" y="50" width="10" height="420" as="geometry" />
+          <mxGeometry x="48" y="52" width="10" height="420" as="geometry" />
         </mxCell>
         <mxCell id="3nuBFxr9cyL0pnOWT2aG-3" value="measures" style="verticalAlign=bottom;startArrow=oval;endArrow=block;startSize=8;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -180,7 +180,7 @@
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-86" value="" style="group;rotation=90;" parent="1" vertex="1" connectable="0">
           <mxGeometry x="800" y="210" width="80" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="vGAz20Mgz8MmQ9XaY52t-87" value="Watering can" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fff2cc;strokeColor=#d6b656;" parent="vGAz20Mgz8MmQ9XaY52t-86" vertex="1">
+        <mxCell id="vGAz20Mgz8MmQ9XaY52t-87" value="sprinkler" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fff2cc;strokeColor=#d6b656;" parent="vGAz20Mgz8MmQ9XaY52t-86" vertex="1">
           <mxGeometry width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-88" value="O/C" style="labelPosition=center;verticalLabelPosition=middle;align=center;html=1;shape=mxgraph.basic.shaded_button;dx=10;fillColor=#E6E6E6;strokeColor=none;" parent="vGAz20Mgz8MmQ9XaY52t-86" vertex="1">
@@ -189,7 +189,7 @@
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-89" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="800" y="100" width="80" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="vGAz20Mgz8MmQ9XaY52t-90" value="Tap valve" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fff2cc;strokeColor=#d6b656;" parent="vGAz20Mgz8MmQ9XaY52t-89" vertex="1">
+        <mxCell id="vGAz20Mgz8MmQ9XaY52t-90" value="water tank" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fff2cc;strokeColor=#d6b656;" parent="vGAz20Mgz8MmQ9XaY52t-89" vertex="1">
           <mxGeometry width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-91" value="O/C" style="labelPosition=center;verticalLabelPosition=middle;align=center;html=1;shape=mxgraph.basic.shaded_button;dx=10;fillColor=#E6E6E6;strokeColor=none;" parent="vGAz20Mgz8MmQ9XaY52t-89" vertex="1">
@@ -254,10 +254,10 @@
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-145" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=1;fillColor=#3333FF;fontColor=#ffffff;strokeColor=#0000CC;" parent="1" vertex="1">
           <mxGeometry x="1160" y="483" width="40" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="vGAz20Mgz8MmQ9XaY52t-150" value="Telemetrium" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="vGAz20Mgz8MmQ9XaY52t-150" value="temp-hum-co2" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="1380" y="134" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="vGAz20Mgz8MmQ9XaY52t-151" value="Floating" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+        <mxCell id="vGAz20Mgz8MmQ9XaY52t-151" value="bath float" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="1380" y="232" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-154" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=1;fillColor=#66FF66;fontColor=#ffffff;strokeColor=#00CC00;" parent="1" vertex="1">
@@ -371,7 +371,7 @@
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-198" value="&lt;h1&gt;Open Valves flow&lt;/h1&gt;&lt;p&gt;This sensor handle two valves, one to open the irrigation and the other one to refill the lane tank with water and nutrients.&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="840" y="603" width="390" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="vGAz20Mgz8MmQ9XaY52t-199" value="Telemetrium" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
+        <mxCell id="vGAz20Mgz8MmQ9XaY52t-199" value="Temp-hum-co2" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
           <mxGeometry x="844.5" y="773" width="105.5" height="380" as="geometry" />
         </mxCell>
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-200" value="" style="points=[];perimeter=orthogonalPerimeter;rounded=0;shadow=0;strokeWidth=1;" parent="vGAz20Mgz8MmQ9XaY52t-199" vertex="1">
@@ -500,7 +500,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="vGAz20Mgz8MmQ9XaY52t-226" value="Floating" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
+        <mxCell id="vGAz20Mgz8MmQ9XaY52t-226" value="Bath float" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
           <mxGeometry x="1387.5" y="763" width="100" height="570" as="geometry" />
         </mxCell>
         <mxCell id="vGAz20Mgz8MmQ9XaY52t-227" value="" style="points=[];perimeter=orthogonalPerimeter;rounded=0;shadow=0;strokeWidth=1;" parent="vGAz20Mgz8MmQ9XaY52t-226" vertex="1">
