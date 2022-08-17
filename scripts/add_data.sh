@@ -9,4 +9,5 @@ do
     co2 =  $((1400 + $RANDOM % 600))
     mysql -uroot -pPASSWORD test -e "insert into iot.data (id_node,timestamp,temperature,humidity,co2) values ($id_node,$timestamp,$temperature,$humidity,$co2);"
     i=$(($i+1))
-    sleep 6 done
+    sleep 6 
+done
