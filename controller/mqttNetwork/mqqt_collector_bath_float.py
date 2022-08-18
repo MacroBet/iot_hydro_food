@@ -45,6 +45,7 @@ class MqttClientBathFloat:
                 cursor = self.connection.cursor()
                 sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                 cursor.execute(sql, (str(ad), dt, "0"))
+                print("**********************\nCLOSE CHARGE TANK\n**********************\n")
                 print("\nSTATUS = " + status)
                 self.connection.commit()
                 self.communicateToSensors("0")
@@ -64,6 +65,7 @@ class MqttClientBathFloat:
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (str(ad), dt, "2"))
+                    print("**********************\nOPEN CHARGE TANK\n**********************\n")
                     print("\nSTATUS = " + status)
                     self.connection.commit()
                     self.communicateToSensors("2")

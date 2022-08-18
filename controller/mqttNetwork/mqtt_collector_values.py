@@ -81,6 +81,7 @@ class MqttClientData:
                         cursor = self.connection.cursor()
                         sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                         cursor.execute(sql, (str(ad), dt, open))
+                        print("**********************\nOPENING WINDOW\n**********************\n")
                         print("\OPEN = " + open)
                         self.connection.commit()
                         self.communicateToSensors("1", "window")
@@ -97,6 +98,7 @@ class MqttClientData:
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (str(ad), dt, open))
+                    print("**********************\nOPENING WINDOW\n**********************\n")
                     print("\OPEN = " + open)
                     self.connection.commit()
                     self.communicateToSensors("1", "window")
@@ -121,6 +123,7 @@ class MqttClientData:
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (str(ad), dt, "0"))
+                    print("**********************\nSTOP WATERING\n**********************\n")
                     print("\nSTATUS = " + status)
                     self.connection.commit()
                     self.communicateToSensors("0", "inValues")
@@ -144,6 +147,7 @@ class MqttClientData:
                         cursor = self.connection.cursor()
                         sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                         cursor.execute(sql, (str(ad), dt, "1"))
+                        print("**********************\nSTART WATERING\n**********************\n")
                         print("\nSTATUS = " + status)
                         self.connection.commit()
                         self.communicateToSensors(status, "inValues")
@@ -159,6 +163,7 @@ class MqttClientData:
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (str(ad), dt, "1"))
+                    print("**********************\nSTART WATERING\n**********************\n")
                     print("\nSTATUS = " + status)
                     self.connection.commit()
                     self.communicateToSensors(status, "inValues")
