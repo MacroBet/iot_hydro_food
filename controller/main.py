@@ -36,11 +36,6 @@ def listOfcommands():
           "!Check sensors log\n"\
           "!List of commands\n"\
           "!Check bath float level\n"  
-          "!Start watering\n"
-          "!Stop watering\n"
-          "!Open windows\n"
-          "!Close windows\n"
-          "!Charge the tanks\n"
           "!Info commands \n"
           "!Exit\n\n")
 
@@ -125,17 +120,7 @@ def checkCommand(command, client, client1):
                 elif(answer == "no" or answer == "n"):
                     print("Insert new value\n")
                     continue
-
-    # elif command == "!list of commands":
-    #         listOfcommands()
-    # elif command == "!start watering":
-    #     client.startWatering()
-    # elif command == "!stop watering":
-    #     client.stopWatering()
-    # elif command == "!open window":
-    #     client.openWindow()
-    # elif command == "!close window":
-    #     client.closeWindow()
+                
     elif command == "!exit":
         thread.join()
         thread1.join()
