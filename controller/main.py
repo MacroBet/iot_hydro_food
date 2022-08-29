@@ -129,9 +129,9 @@ if __name__ == "__main__":
     thread1 = threading.Thread(target=client1.mqtt_client, args=(), kwargs={})
     thread1.start()
 
-    server = CoAPServer(ip, port)
-    thread2 = threading.Thread(target=server.listen, args=(), kwargs={})
-    thread2.start()
+    # server = CoAPServer(ip, port)
+    # thread2 = threading.Thread(target=server.listen, args=(), kwargs={})
+    # thread2.start()
     
     time.sleep(5)
     
@@ -140,13 +140,14 @@ if __name__ == "__main__":
         while 1:
             command = input("COMMAND>")
             command = command.lower()
+            print(command)
             checkCommand(command, client, client1)
         
     except KeyboardInterrupt:
         thread.join()
         thread1.join()
-        thread2.join()
-        server.close()
+        # thread2.join()
+        # server.close()
         print("SHUTDOWN")
 
         
