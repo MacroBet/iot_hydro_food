@@ -39,7 +39,7 @@ class ObserveSensor:
             status = data["status"]
             lane = data["lane"]
             dt = datetime.now()
-            self.execute_query(self.address, status, dt, "watering",)
+            self.execute_query(self.address, status, dt, "watering",lane)
             
             print(status)
             
