@@ -42,17 +42,25 @@ def checkCommand(command, client, client1):
 
     elif command == "log":
         try:
+            msg= client.message
             print("\nPress ctrl + C to exit \n")
             while True:
-                print(client.message+"\n"+client1.message)
+                time.sleep(1)
+                if(client.message!= msg):
+                    print(client.message+"\n"+client1.message)
+                    msg= client.message
         except KeyboardInterrupt:
          return
 
     elif command == "bath":
         try:
             print("\nPress ctrl + C to exit \n")
+            msg= client1.message
             while True:
-                print(client1.message)
+                time.sleep(1)
+                if(client1.message!= msg):
+                    print(client1.message)
+                    msg= client1.message
         except KeyboardInterrupt:
             return
   
