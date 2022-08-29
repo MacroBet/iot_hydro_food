@@ -286,7 +286,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  
       if(state == STATE_SUBSCRIBED){
         sprintf(pub_topic, "%s", "status_data");
-        if(!started) return;
+        if(!started) continue;
         if(period%10==0) {
           day = !day;  
           LOG_INFO("Switch day-nigth \n");
