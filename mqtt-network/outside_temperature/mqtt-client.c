@@ -266,10 +266,10 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         
         if(day) {
           tempOut += varTempOut;
-          if(tempOut>45) varTempOut=45
+          if(tempOut>45) varTempOut=45;
         } else {
           tempOut -= varTempOut;
-          if(tempOut<-10) varTempOut=-10
+          if(tempOut<-10) varTempOut=-10;
         }
 
         LOG_INFO("New values: %d\n", tempOut);
