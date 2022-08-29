@@ -38,7 +38,7 @@
 #include "sys/etimer.h"
 #include "coap-blocking-api.h"
 #include "random.h"
-#include "dev/leds.h"
+#include "dev/etc/rgb-led/rgb-led.h"
 #include "node-id.h"
 #include "os/dev/serial-line.h"
 #include "dev/button-hal.h"
@@ -94,7 +94,7 @@ PROCESS_THREAD(node, ev, data)
   coap_set_header_uri_path(request, "registry");
   const char msg[] = "window";
   coap_set_payload(request, (uint8_t *)msg, sizeof(msg) - 1);
-  leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+  rgb_led_set(RGB_LED_RED);
   COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
   LOG_INFO("--Registred--\n");
   
@@ -120,12 +120,12 @@ PROCESS_THREAD(node, ev, data)
       
       if(status == 0){
         status = 1;
-        leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+        rgb_led_set(RGB_LED_GREEN);
         res_status.trigger();
 
       } else if (status == 1){
         status = 0;
-        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+        rgb_led_set(RGB_LED_RED);
         res_status.trigger();
       }
       

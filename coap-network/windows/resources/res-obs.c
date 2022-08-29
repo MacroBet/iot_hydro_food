@@ -35,7 +35,7 @@
 #include "../app_var.h"
 #include "coap-engine.h"
 #include "contiki.h"
-#include "dev/leds.h"
+#include "dev/etc/rgb-led/rgb-led.h"
 #include "os/dev/serial-line.h"
 #include "coap-observe.h"
 
@@ -88,12 +88,12 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
 
     if(strncmp(mode, "0", len) == 0) {
          LOG_INFO("close");
-         leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+         rgb_led_set(RGB_LED_RED);
          status = 0;
          
     } else if(strncmp(mode, "1", len) == 0) {
          LOG_INFO("open");
-         leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+         rgb_led_set(RGB_LED_GREEN);
          status = 1;
     } else {
          success = 0;

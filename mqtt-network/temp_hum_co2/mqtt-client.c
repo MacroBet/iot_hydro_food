@@ -38,7 +38,7 @@
 #include "sys/ctimer.h"
 #include "lib/sensors.h"
 #include "dev/button-hal.h"
-#include "dev/leds.h"
+#include "dev/etc/rgb-led/rgb-led.h"
 #include "os/sys/log.h"
 #include "mqtt-client.h"
 #include <sys/node-id.h>
@@ -143,25 +143,25 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
     if(strcmp((const char*) chunk, "wat") == 0) {
 
         LOG_INFO("Start watering\n");
-          leds_single_on(LEDS_GREEN);
+          leds_single_on(RGB_LED_GREEN);
         watering = true;
 
       } else if(strcmp((const char*) chunk, "notWat") == 0)  {
         
         LOG_INFO("Not watering\n");	
-        leds_single_on(LEDS_RED);
+        leds_single_on(RGB_LED_RED);
         watering = false;
   
       }	else if(strcmp((const char*) chunk, "Open") == 0)  {
         
         LOG_INFO("Open windows\n");	
-        leds_single_on(LEDS_GREEN);
+        leds_single_on(RGB_LED_GREEN);
         openW = true;
 
       }	else if(strcmp((const char*) chunk, "notOpen") == 0)  {
         
         LOG_INFO("Not open windows\n");	
-        leds_single_on(LEDS_RED);
+        leds_single_on(RGB_LED_RED);
         openW = false;
         
       } 
@@ -405,7 +405,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       }
 
 			LOG_INFO("New values: %d, %d, %d\n", temperature, humidity, co2);
-      leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      rgb_led_set(RGB_LED_GREEN);
 			sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", 
                                                       node_id, temperature, humidity, co2);
 			
@@ -425,7 +425,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
     if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {
      
-      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      leds_off((RGB_LED_GREEN));
       
       etimer_set(&reset_timer, CLOCK_SECOND);
     }

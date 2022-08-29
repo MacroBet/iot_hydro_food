@@ -38,7 +38,7 @@
 #include "sys/ctimer.h"
 #include "lib/sensors.h"
 #include "dev/button-hal.h"
-#include "dev/leds.h"
+#include "dev/etc/rgb-led/rgb-led.h"
 #include "os/sys/log.h"
 #include "mqtt-client.h"
 #include <sys/node-id.h>
@@ -279,7 +279,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			LOG_INFO("New values: %d\n", tempOut);
 			
 			sprintf(app_buffer, "{\"node\": %d, \"tempOut\": %d}", node_id, tempOut);
-      leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      rgb_led_set(RGB_LED_GREEN);
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
     
@@ -296,7 +296,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
     if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {
      
-      leds_off(LEDS_NUM_TO_MASK(LEDS_GREEN));
+      leds_off((RGB_LED_GREEN));
       
       etimer_set(&reset_timer, CLOCK_SECOND);
     }

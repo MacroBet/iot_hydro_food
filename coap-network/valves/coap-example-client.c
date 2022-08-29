@@ -40,7 +40,7 @@
 #include "random.h"
 #include "node-id.h"
 #include "os/dev/serial-line.h"
-#include "dev/leds.h"
+#include "dev/etc/rgb-led/rgb-led.h"
 #include "dev/button-hal.h"
 
 /* Log configuration */
@@ -95,7 +95,7 @@ PROCESS_THREAD(node, ev, data)
   coap_set_header_uri_path(request, "registry");
   const char msg[] = "valves";
   coap_set_payload(request, (uint8_t *)msg, sizeof(msg) - 1);
-  leds_set(LEDS_NUM_TO_MASK(LEDS_YELLOW));
+  rgb_led_set(LEDS_YELLOW);
   COAP_BLOCKING_REQUEST(&my_server, request, client_chunk_handler);
   LOG_INFO("--Registred--\n");
 
@@ -121,13 +121,13 @@ PROCESS_THREAD(node, ev, data)
       if(status == 0){
         status = 1;
         printf("%d", status);
-        leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+        rgb_led_set(RGB_LED_GREEN);
         res_status.trigger();
 
       } else if (status == 1 || status == 2){
         status = 0;
         printf("%d", status);
-        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+        rgb_led_set(RGB_LED_RED);
         res_status.trigger();
       }
       
@@ -142,7 +142,7 @@ PROCESS_THREAD(node, ev, data)
                BUTTON_HAL_GET_DESCRIPTION(btn));
        
         status = 2;
-        leds_set(LEDS_NUM_TO_MASK(LEDS_BLUE));
+        rgb_led_set(RGB_LED_BLUE);
         res_status.trigger();
 
       }
