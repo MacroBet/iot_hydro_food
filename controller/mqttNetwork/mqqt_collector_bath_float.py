@@ -104,15 +104,13 @@ class MqttClientBathFloat:
     def executeAddress(self, lane, table) :
         cursor = self.connection.cursor()
         print(lane,table)
-        sql = "SELECT address FROM actuator_"+table+ " WHERE lane = %s "
+        sql = "SELECT address FROM actuator_"+table+ " WHERE lane = %s ORDER BY timestamp DESC LIMIT 1"
         cursor.execute(sql, str(lane))
-        result_set = cursor.fetchone()
-        if not result_set :
+        result = cursor.fetchone()
+        if not result :
             return None
         else:
-            for row in result_set:
-                print(row)
-                return row["address"]
+            return result["address"]
 
 
 
