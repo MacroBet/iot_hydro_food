@@ -287,74 +287,73 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  state = STATE_SUBSCRIBED;
 		  }
 			  
-      if(state == STATE_SUBSCRIBED){
+      if(state == STATE_SUBSCRIBED && started){
         rgb_led_set(RGB_LED_GREEN);
         sprintf(pub_topic, "%s", "status_data");
-        if(started){
-          if(period%10==0) {
-            day = !day;  
-            LOG_INFO("Switch day-nigth \n");
-            period = 0;
-          }
-          unsigned short variation= random_rand();
-          if(day && openW) {
-            co2 -= (int) variation % 100;
-            if (watering) {
-              temperature -= (int) variation % 3;
-              humidity += (int) variation % 5;
-            } else {
-              temperature += (int) variation % 4;
-              humidity -= (int) variation % 6;
-            }
-          } 
-          else if(!day && openW) {
-            co2 -= (int) variation % 50;
-            if (watering) {
-              temperature -= (int) variation % 4;
-              humidity += (int) variation % 7;
-            } else {
-              temperature -= (int) variation % 3;
-              humidity -= (int) variation % 3;
-          }
-          } else if(day && !openW) {
-            co2 += (int) variation % 50;
-            if (watering) {
-              temperature -= (int) variation % 2;
-              humidity += (int) variation % 6;
-            } else {
-              temperature += (int) variation % 6;
-              humidity -= (int) variation % 4;
-          }
-          } else if(!day && !openW) {
-            co2 += (int) variation % 100;
-            if (watering) {
-              temperature -= (int) variation % 5;
-              humidity += (int) variation %6;
-            } 
-            else {
-              if(temperature % 2 == 0){
-                temperature -= (int) variation % 2;
-                humidity -= (int) variation % 4;
-              }else {
-                temperature -= 1;
-                humidity -= 1;
-              }
-            }
-          }
-
-          if(temperature>70) temperature=70;
-          if(temperature<-10) temperature=-10;
-          if(humidity>100) humidity= 100;
-          if(humidity<0) humidity= 0;
-        
-          LOG_INFO("New values: %d, %d, %d\n", temperature, humidity, co2);
-          rgb_led_set(RGB_LED_GREEN);
-          sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", node_id, temperature, humidity, co2);
-          
-          mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
-          strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+        if(period%10==0) {
+          day = !day;  
+          LOG_INFO("Switch day-nigth \n");
+          period = 0;
         }
+        unsigned short variation= random_rand();
+        if(day && openW) {
+          co2 -= (int) variation % 100;
+          if (watering) {
+            temperature -= (int) variation % 3;
+            humidity += (int) variation % 5;
+          } else {
+            temperature += (int) variation % 4;
+            humidity -= (int) variation % 6;
+          }
+        } 
+        else if(!day && openW) {
+          co2 -= (int) variation % 50;
+          if (watering) {
+            temperature -= (int) variation % 4;
+            humidity += (int) variation % 7;
+          } else {
+            temperature -= (int) variation % 3;
+            humidity -= (int) variation % 3;
+        }
+        } else if(day && !openW) {
+          co2 += (int) variation % 50;
+          if (watering) {
+            temperature -= (int) variation % 2;
+            humidity += (int) variation % 6;
+          } else {
+            temperature += (int) variation % 6;
+            humidity -= (int) variation % 4;
+        }
+        } else if(!day && !openW) {
+          co2 += (int) variation % 100;
+          if (watering) {
+            temperature -= (int) variation % 5;
+            humidity += (int) variation %6;
+          } 
+          else {
+            if(temperature % 2 == 0){
+              temperature -= (int) variation % 2;
+              humidity -= (int) variation % 4;
+            }else {
+              temperature -= 1;
+              humidity -= 1;
+            }
+          }
+        }
+
+        if(temperature>70) temperature=70;
+        if(temperature<-10) temperature=-10;
+        if(humidity>100) humidity= 100;
+        if(humidity<0) humidity= 0;
       
+        LOG_INFO("New values: %d, %d, %d\n", temperature, humidity, co2);
+        rgb_led_set(RGB_LED_GREEN);
+        sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", node_id, temperature, humidity, co2);
+        
+        mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
+        strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+      
+    
       } else if ( state == STATE_DISCONNECTED ){
         LOG_ERR("Disconnected form MQTT broker\n");	
         rgb_led_set(RGB_LED_RED);
