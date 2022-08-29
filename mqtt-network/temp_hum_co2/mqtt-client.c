@@ -73,6 +73,7 @@ static int co2 = 1400;
 static bool watering = false;
 static bool day = false;
 static bool openW = false;
+static bool started = false;
 unsigned short varTemp;
 unsigned short varHum;
 unsigned short varCo2;
@@ -140,7 +141,13 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
   if(strcmp(topic, "actuator_data") == 0) {
     printf("Received Actuator command\n");
 
-    if(strcmp((const char*) chunk, "wat") == 0) {
+    if(strcmp((const char*) chunk, "start") == 0) {
+
+        LOG_INFO("Start sensor\n");
+          leds_single_on(RGB_LED_GREEN);
+        started = true;
+
+    } else if(strcmp((const char*) chunk, "wat") == 0) {
 
         LOG_INFO("Start watering\n");
           leds_single_on(RGB_LED_GREEN);
@@ -300,118 +307,121 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
-       			 
-		  sprintf(pub_topic, "%s", "status_data");
-
-      if(period%10==0) {
-          
-        if(day == true)
-          day = false;
-        else
-          day = true;
-        LOG_INFO("Switch day-nigth \n");
-        period = 0;
-      }
       
-      if(day && openW) {
+		  sprintf(pub_topic, "%s", "status_data");
+      
+      if(started){
 
-        varCo2 = random_rand();
-        co2 -= (int) varCo2 % 100;
+        if(period%10==0) {
+            
+          if(day == true)
+            day = false;
+          else
+            day = true;
+          LOG_INFO("Switch day-nigth \n");
+          period = 0;
+        }
         
-        if (watering) {
-					
-          varTemp = random_rand();
-          temperature -= (int) varTemp % 3;
-          varHum = random_rand();
-          humidity += (int) varHum % 5;
+        if(day && openW) {
 
-			  } else {
+          varCo2 = random_rand();
+          co2 -= (int) varCo2 % 100;
+          
+          if (watering) {
+            
+            varTemp = random_rand();
+            temperature -= (int) varTemp % 3;
+            varHum = random_rand();
+            humidity += (int) varHum % 5;
 
-          varTemp = random_rand();
-          temperature += (int) varTemp % 4;
-          varHum = random_rand();
-          humidity -= (int) varHum % 6;
-					
-			}
+          } else {
 
-      } else if(!day && openW) {
+            varTemp = random_rand();
+            temperature += (int) varTemp % 4;
+            varHum = random_rand();
+            humidity -= (int) varHum % 6;
+            
+        }
 
-        varCo2 = random_rand();
-        co2 -= (int) varCo2 % 50;
-        
-        if (watering) {
-					
-          varTemp = random_rand();
-          temperature -= (int) varTemp % 4;
-          varHum = random_rand();
-          humidity += (int) varHum % 7;
+        } else if(!day && openW) {
 
-			  } else {
+          varCo2 = random_rand();
+          co2 -= (int) varCo2 % 50;
+          
+          if (watering) {
+            
+            varTemp = random_rand();
+            temperature -= (int) varTemp % 4;
+            varHum = random_rand();
+            humidity += (int) varHum % 7;
 
-          varTemp = random_rand();
-          temperature -= (int) varTemp % 3;
-          varHum = random_rand();
-          humidity -= (int) varHum % 3;
-					
-			}
+          } else {
 
-
-      } else if(day && !openW) {
-
-        varCo2 = random_rand();
-        co2 += (int) varCo2 % 50;
-
-        if (watering) {
-					
-          varTemp = random_rand();
-          temperature -= (int) varTemp % 2;
-          varHum = random_rand();
-          humidity += (int) varHum % 6;
-
-			  } else {
-
-          varTemp = random_rand();
-          temperature += (int) varTemp % 6;
-          varHum = random_rand();
-          humidity -= (int) varHum % 4;
-					
-			}
+            varTemp = random_rand();
+            temperature -= (int) varTemp % 3;
+            varHum = random_rand();
+            humidity -= (int) varHum % 3;
+            
+        }
 
 
-      } else if(!day && !openW) {
+        } else if(day && !openW) {
 
-        varCo2 = random_rand();
-        co2 += (int) varCo2 % 100;
+          varCo2 = random_rand();
+          co2 += (int) varCo2 % 50;
 
-        if (watering) {
-					
-          varTemp = random_rand();
-          temperature -= (int) varTemp % 5;
-          varHum = random_rand();
-          humidity += (int) varHum %6;
-
-			  } else {
-          if(temperature % 2 == 0){
+          if (watering) {
+            
             varTemp = random_rand();
             temperature -= (int) varTemp % 2;
             varHum = random_rand();
+            humidity += (int) varHum % 6;
+
+          } else {
+
+            varTemp = random_rand();
+            temperature += (int) varTemp % 6;
+            varHum = random_rand();
             humidity -= (int) varHum % 4;
-          }else {
-            temperature -= 1;
-            humidity -= 1;
-          }
-			}
+            
+        }
 
-      }
 
-			LOG_INFO("New values: %d, %d, %d\n", temperature, humidity, co2);
-      rgb_led_set(RGB_LED_GREEN);
-			sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", 
-                                                      node_id, temperature, humidity, co2);
-			
-      mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
-			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-      
+        } else if(!day && !openW) {
+
+          varCo2 = random_rand();
+          co2 += (int) varCo2 % 100;
+
+          if (watering) {
+            
+            varTemp = random_rand();
+            temperature -= (int) varTemp % 5;
+            varHum = random_rand();
+            humidity += (int) varHum %6;
+
+          } else {
+            if(temperature % 2 == 0){
+              varTemp = random_rand();
+              temperature -= (int) varTemp % 2;
+              varHum = random_rand();
+              humidity -= (int) varHum % 4;
+            }else {
+              temperature -= 1;
+              humidity -= 1;
+            }
+        }
+
+        }
+
+        LOG_INFO("New values: %d, %d, %d\n", temperature, humidity, co2);
+        rgb_led_set(RGB_LED_GREEN);
+        sprintf(app_buffer, "{\"node\": %d, \"temperature\": %d, \"humidity\": %d, \"co2\": %d}", 
+                                                        node_id, temperature, humidity, co2);
+        
+        mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
+        strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+    }
+
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");	
 		   // Recover from error
@@ -420,7 +430,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   
 		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
     period++;
-
+    
     }
 
     if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {
