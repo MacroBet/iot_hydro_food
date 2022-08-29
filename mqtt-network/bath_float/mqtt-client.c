@@ -123,6 +123,7 @@ static int level = 50;
 static bool charge = false;
 static bool watering = false;
 unsigned short varLevel;
+static bool started = false;
 
 /*---------------------------------------------------------------------------*/
 static void
@@ -131,31 +132,29 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
 {
   printf("Pub Handler: topic='%s' (len=%u), chunk_len=%u\n", topic,
           topic_len, chunk_len);
-
   if(strcmp(topic, "actuator_bathFloat") == 0) {
     printf("Received Actuator command\n");
-    if(strcmp((const char*) chunk, "charge") == 0) {
-
-        LOG_INFO("Start charge\n");
-        charge = true;
-
-      } else if(strcmp((const char*) chunk, "stop") == 0)  {
-        
-        LOG_INFO("Stop charge\n");	
-        charge = false;
-        watering = false;
-
-      }	else if(strcmp((const char*) chunk, "wat") == 0)  {
-          
-          LOG_INFO("Start watering\n");	
-          watering = true;
-
-      }
-    } else {
-      LOG_ERR("Topic not valid!\n");
-    
+    if(strcmp((const char*) chunk, "start") == 0) {
+        LOG_INFO("Start sensor\n");
+        rgb_led_set(RGB_LED_GREEN);
+        started = true;
+    } else if(strcmp((const char*) chunk, "charge") == 0) {
+      LOG_INFO("Start charge\n");
+      charge = true;
     }
-
+    else if(strcmp((const char*) chunk, "stop") == 0)  {
+      LOG_INFO("Stop charge\n");	
+      charge = false;
+      watering = false;
+    }	
+    else if(strcmp((const char*) chunk, "wat") == 0)  {
+      LOG_INFO("Start watering\n");	
+      watering = true;
+    }
+  }
+  else {
+    LOG_ERR("Topic not valid!\n");
+  }
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -247,6 +246,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
   etimer_set(&reset_timer, CLOCK_SECOND);
+  rgb_led_set(RGB_LED_RED);
   /* Main loop */
   while(1) {
 

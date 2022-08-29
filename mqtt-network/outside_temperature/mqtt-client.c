@@ -70,6 +70,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 static int tempOut = 27;
 static int varTempOut = 0;
 static bool day = false;
+static bool started = false;
 /*---------------------------------------------------------------------------*/
 /* Various states */
 static uint8_t state;
@@ -125,11 +126,17 @@ PROCESS(mqtt_client_process, "MQTT outside temperature");
 
 /*---------------------------------------------------------------------------*/
 static void
-pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
-            uint16_t chunk_len)
-{
-  
+pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk, uint16_t chunk_len){
+  if(strcmp(topic, "actuator_outside") == 0) {
+    if(strcmp((const char*) chunk, "start") == 0) {
+        LOG_INFO("Start sensor\n");
+        rgb_led_set(RGB_LED_GREEN);
+        started = true;
+    } 
+  } else {
+    LOG_ERR("Topic not valid!\n");
   }
+}
 
 /*---------------------------------------------------------------------------*/
 static void
@@ -217,48 +224,44 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
   etimer_set(&reset_timer, CLOCK_SECOND);
+  rgb_led_set(RGB_LED_RED);
   /* Main loop */
   while(1) {
 
     PROCESS_YIELD();
 
-    if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || 
-	      ev == PROCESS_EVENT_POLL){
-
-      leds_off(LEDS_ALL);			  
-		  if(state==STATE_INIT){
-			 if(have_connectivity()==true)  
-				 state = STATE_NET_OK;
+    if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || ev == PROCESS_EVENT_POLL){
+  
+      if(state==STATE_INIT && have_connectivity()==true){
+        state = STATE_NET_OK;
 		  } 
 		  
 		  if(state == STATE_NET_OK){
 			  // Connect to MQTT server
 			  printf("Connecting!\n");
-			  
 			  memcpy(broker_address, broker_ip, strlen(broker_ip));
-			  
-			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
-						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
-						   MQTT_CLEAN_SESSION_ON);
+			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT, (PUBLISH_INTERVAL * 3) / CLOCK_SECOND, MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
 		  }
 		  
 		  if(state==STATE_CONNECTED){		
-			  
+			  strcpy(sub_topic,"actuator_outside");
+			  status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
+			  if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
+          LOG_ERR("Tried to subscribe but command queue was full!\n");
+          PROCESS_EXIT();
+			  }
 			  state = STATE_SUBSCRIBED;
 		  }
 
 			  
 		if(state == STATE_SUBSCRIBED){
 			// Publish something
-		  sprintf(pub_topic, "%s", "status_outside");
+		  sprintf(pub_topic, "%s", "actuator_outside");
      
       if(period%10==0) {
         LOG_INFO("Switch day-nigth \n");
-        if(day == true)
-          day = false;
-        else
-          day = true;
+        day = !day;
         
         period = 0;
       }
@@ -279,7 +282,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			LOG_INFO("New values: %d\n", tempOut);
 			
 			sprintf(app_buffer, "{\"node\": %d, \"tempOut\": %d}", node_id, tempOut);
-      rgb_led_set(RGB_LED_GREEN);
       mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
     
