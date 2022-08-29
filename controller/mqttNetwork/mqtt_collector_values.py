@@ -209,9 +209,10 @@ class MqttClientData:
                 self.client.publish("actuator_data","notWat")
                 self.client.publish("actuator_bathFloat","charge")
             elif str(status) == "start":
-                 self.client.publish("actuator_data","start")
-                 self.client.publish("actuator_bathFloat","start")
-                 self.client.publish("actuator_outside","start")
+                print(status+"ciao")
+                self.client.publish("actuator_data","start")
+                self.client.publish("actuator_bathFloat","start")
+                self.client.publish("actuator_outside","start")
 
 
         elif type == "window":
