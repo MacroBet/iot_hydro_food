@@ -32,9 +32,6 @@ def listOfcommands():
 
     print(
         "help \n"\
-        "!Change values sensors Temperature\n"\
-        "!Change values sensors Humidity\n"\
-        "!Change values sensors Co2\n"\
         "activate\n"\
         "log\n"\
         "bath\n"\
@@ -44,31 +41,20 @@ def checkCommand(command, client, client1):
    
     if command == "help":
            showInfo()
+
     elif command == "log":
-        mex = client.message
-        mex1 = client1.message
-        print(client.message+"\n"+mex1)
         try:
+            print("\nPress ctrl + C to exit \n")
             while True:
-                if(mex != client.message):
-                    print("\nPress ctrl + C to exit \n")
-                    print(mex+"\n"+mex1)
-                    mex = client.message
-                    mex1 = client1.message
+                print(client.message+"\n"+client1.message)
         except KeyboardInterrupt:
          return
 
     elif command == "bath":
-        mex = client.message
-        mex1 = client1.message
-        print(client.message+"\n"+mex1)
         try:
+            print("\nPress ctrl + C to exit \n")
             while True:
-                if(mex != client.message):
-                    print("\nPress ctrl + C to exit \n")
-                    print(mex+"\n"+mex1)
-                    mex = client.message
-                    mex1 = client1.message
+                print(client1.message)
         except KeyboardInterrupt:
             return
   
@@ -77,59 +63,7 @@ def checkCommand(command, client, client1):
         client.publish("actuator_bathFloat","start")
         client.publish("actuator_outside","start")
         print("Start command sent")
-
-    elif command == "!change value co2":
-
-        while 1:
-            client.co2Max = input("Insert new Max value for co2: ")
-            client.co2Min = input("Insert new Min value for co2: ")
-            print("New max/min value for co2 are : "+ client.co2Max +", " + client.co2Min)
-            print("Do you want continue with this value[y/n]?")
-            answer = input(">")
-            answer = answer.lower()
-            if(answer == "yes" or answer == "y"):
-                print("Value saved\n")
-                break
-            elif(answer == "no" or answer == "n"):
-                print("Insert new value\n")
-                continue
-
-    elif command == "!change value humidity":
-          
-           while 1:
-            client.co2Max = input("Insert new Max value for humidity: ")
-            client.co2Min = input("Insert new Min value for humidity: ")
-            print("New max/min value for co2 are : "+ client.humMax +", " + client.humMin)
-            print("Do you want continue with this value[y/n]?")
-            answer = input(">")
-            answer = answer.lower()
-            if(answer == "yes" or answer == "y"):
-                print("Value saved\n")
-                break
-            elif(answer == "no" or answer == "n"):
-                print("Insert new value\n")
-                continue
-            else:
-                answer = input(">")
-                answer = answer.lower()
-
-
-    elif command == "!change value temperature":
-            
-            while 1:
-                client.co2Max = input("Insert new Max value for temperature: ")
-                client.co2Min = input("Insert new Min value for temprature: ")
-                print("New max/min value for co2 are : "+ client.tempMax +", " + client.tempMin)
-                print("Do you want continue with this value[y/n]?")
-                answer = input(">")
-                answer = answer.lower()
-                if(answer == "yes" or answer == "y"):
-                    print("Value saved\n")
-                    break
-                elif(answer == "no" or answer == "n"):
-                    print("Insert new value\n")
-                    continue
-                
+       
     elif command == "exit":
         thread.join()
         thread1.join()
