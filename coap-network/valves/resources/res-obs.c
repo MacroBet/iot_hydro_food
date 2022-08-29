@@ -64,61 +64,52 @@ EVENT_RESOURCE(res_status,
          NULL, 
 		 res_event_handler);
 
-static void res_event_handler(void)
-{
-     coap_notify_observers(&res_status);
+static void res_event_handler(void){
+  coap_notify_observers(&res_status);
 }
 
 
-static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
-{
-      coap_set_header_content_format(response, APPLICATION_JSON);
-      sprintf((char *)buffer, "{\"status\": %d, \"lane\": %s}", status, "1");
-      coap_set_payload(response, buffer, strlen((char*)buffer));
-    
+static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset){
+  coap_set_header_content_format(response, APPLICATION_JSON);
+  sprintf((char *)buffer, "{\"status\": %d, \"lane\": %s}", status, "1");
+  coap_set_payload(response, buffer, strlen((char*)buffer));
 }
 
-static void res_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
-{
+static void res_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset){
   size_t len = 0;
   const char *mode = NULL;
-  int success  = 1;
+  int success  = 0;
   LOG_INFO("post");
   if((len = coap_get_post_variable(request, "mode", &mode))) {
     LOG_DBG("mode_valves %s\n", mode);
 
-
+    // 0 => close
+    // 1 => watering 
+    // 2 => recharging
     if(strncmp(mode, "0", len) == 0) {
-        LOG_INFO("0");
-        rgb_led_set(RGB_LED_RED);
-        coap_set_status_code(response,VALID_2_03);
-        status = 0;
-         
+      LOG_INFO("0");
+      rgb_led_set(RGB_LED_RED);
+      coap_set_status_code(response,VALID_2_03);
+      status = 0;
+      success = 1;
     } else if(strncmp(mode, "1", len) == 0) {
-        LOG_INFO("1");
-        rgb_led_set(RGB_LED_GREEN);
-        if(status == 2)
-           coap_set_status_code(response, BAD_REQUEST_4_00);
-        else{
-          coap_set_status_code(response,VALID_2_03);
-          status = 1;
-        }
-    } else if(strncmp(mode, "2", len) == 0) {
-        LOG_INFO("2");
-        rgb_led_set(RGB_LED_BLUE);
-        if(status == 1)
-           coap_set_status_code(response, BAD_REQUEST_4_00);
-        else{
-          coap_set_status_code(response,VALID_2_03);
-          status = 2;
-        }
-        
-
-    } else {
-         success = 0;
+      LOG_INFO("1");
+      rgb_led_set(RGB_LED_GREEN);
+      if(status == 0){
+        coap_set_status_code(response,VALID_2_03);
+        status = 1;
+        success = 1;
+      }
+    } 
+    else if(strncmp(mode, "2", len) == 0) {
+      LOG_INFO("2");
+      rgb_led_set(RGB_LED_BLUE);
+      if(status == 0){
+        coap_set_status_code(response,VALID_2_03);
+        status = 2;
+        success = 1;
+      }
     }
-  } else {
-    success = 0;
   } if(!success) {
     coap_set_status_code(response, BAD_REQUEST_4_00);
   }

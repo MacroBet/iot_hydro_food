@@ -254,55 +254,39 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  state = STATE_SUBSCRIBED;
 		  }
 
-			  
-		if(state == STATE_SUBSCRIBED){
-			// Publish something
-		  sprintf(pub_topic, "%s", "actuator_outside");
-     
-      if(period%10==0) {
-        LOG_INFO("Switch day-nigth \n");
-        day = !day;
+      if(state == STATE_SUBSCRIBED && started){
+        sprintf(pub_topic, "%s", "actuator_outside");
+        if(period%10==0) {
+          LOG_INFO("Switch day-nigth \n");
+          day = !day;
+          period = 0;
+        }
         
-        period = 0;
+        varTempOut = random_rand()%2;
+        
+        if(day) {
+          tempOut += varTempOut;
+          if(tempOut>45) varTempOut=45
+        } else {
+          tempOut -= varTempOut;
+          if(tempOut<-10) varTempOut=-10
+        }
+
+        LOG_INFO("New values: %d\n", tempOut);
+        sprintf(app_buffer, "{\"node\": %d, \"tempOut\": %d}", node_id, tempOut);
+        mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
+        strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+      } else if ( state == STATE_DISCONNECTED ){
+        LOG_ERR("Disconnected form MQTT broker\n");	
+        // Recover from error
       }
-      
-      if(day) {
-
-        varTempOut = random_rand();
-        tempOut += varTempOut % 2;
-       
-
-      } else if(!day) {
-
-        varTempOut = random_rand();
-        tempOut -= varTempOut % 2;
-
-      }
-
-			LOG_INFO("New values: %d\n", tempOut);
-			
-			sprintf(app_buffer, "{\"node\": %d, \"tempOut\": %d}", node_id, tempOut);
-      mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
-			strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-    
-		
-		} else if ( state == STATE_DISCONNECTED ){
-		   LOG_ERR("Disconnected form MQTT broker\n");	
-		   // Recover from error
-		}
-		
-
-		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
-    period++; 
+      etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+      period++; 
     }
 
-    if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {
-     
-      // leds_off((RGB_LED_GREEN));
-      
+    if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {      
       etimer_set(&reset_timer, CLOCK_SECOND);
     }
-
   }
 
   PROCESS_END();

@@ -55,52 +55,51 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
  * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
  */
 EVENT_RESOURCE(res_status,
-         "title=\"Status \" POST mode=0|1;rt=\"status\"",
-         res_get_handler,
-         res_post_handler,
-         NULL,
-         NULL, 
-		 res_event_handler);
+               "title=\"Status \" POST mode=0|1;rt=\"status\"",
+               res_get_handler,
+               res_post_handler,
+               NULL,
+               NULL,
+               res_event_handler);
 
 static void res_event_handler(void)
 {
-     coap_notify_observers(&res_status);
+  coap_notify_observers(&res_status);
 }
-
 
 static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
   coap_set_header_content_format(response, APPLICATION_JSON);
   sprintf((char *)buffer, "{\"open\": %d}", status);
-  coap_set_payload(response, buffer, strlen((char*)buffer));
+  coap_set_payload(response, buffer, strlen((char *)buffer));
 }
 
 static void res_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
   size_t len = 0;
   const char *mode = NULL;
-  int success  = 1;
+  int success = 0;
   LOG_INFO("post");
-  if((len = coap_get_post_variable(request, "mode", &mode))) {
+  if ((len = coap_get_post_variable(request, "mode", &mode))){
     LOG_DBG("mode_windows %s\n", mode);
 
-  //status == 0 (windowws close), status == 1 (windows open)
-
-    if(strncmp(mode, "0", len) == 0) {
-         LOG_INFO("close");
-         rgb_led_set(RGB_LED_RED);
-         status = 0;
-         
-    } else if(strncmp(mode, "1", len) == 0) {
-         LOG_INFO("open");
-         rgb_led_set(RGB_LED_GREEN);
-         status = 1;
-    } else {
-         success = 0;
+    // status == 0 (windows close)
+    if (strncmp(mode, "0", len) == 0){
+      LOG_INFO("close");
+      rgb_led_set(RGB_LED_RED);
+      status = 0;
+      success = 1;
     }
-  } else {
-    success = 0;
-  } if(!success) {
+    // status == 1 (windows open)
+    else if (strncmp(mode, "1", len) == 0){
+      LOG_INFO("open");
+      rgb_led_set(RGB_LED_GREEN);
+      status = 1;
+      success = 1;
+    }
+  }
+  
+  if (!success){
     coap_set_status_code(response, BAD_REQUEST_4_00);
   }
 }
