@@ -256,6 +256,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   while(1) {
 
     PROCESS_YIELD();
+    rgb_led_set(RGB_LED_BLUE);
     if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || ev == PROCESS_EVENT_POLL){
 			 
 		  if(state==STATE_INIT && have_connectivity()==true){
@@ -264,7 +265,8 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  
 		  if(state == STATE_NET_OK){
 			  // Connect to MQTT server
-			  printf("Connecting!\n");
+        printf("Connecting!\n");  
+        rgb_led_set(RGB_LED_YELLOW);
 			  memcpy(broker_address, broker_ip, strlen(broker_ip));
 			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT, (PUBLISH_INTERVAL * 3) / CLOCK_SECOND, MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
@@ -278,6 +280,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  printf("Subscribing!\n");
 			  if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
           LOG_ERR("Tried to subscribe but command queue was full!\n");
+          rgb_led_set(RGB_LED_WHITE);
           PROCESS_EXIT();
 			  }
 			  
@@ -285,6 +288,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  }
 			  
       if(state == STATE_SUBSCRIBED){
+        rgb_led_set(RGB_LED_GREEN);
         sprintf(pub_topic, "%s", "status_data");
         if(started){
           if(period%10==0) {
