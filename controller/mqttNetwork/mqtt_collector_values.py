@@ -147,8 +147,8 @@ class MqttClientData:
                     if success == 1:
                         dt = datetime.now()
                         cursor = self.connection.cursor()
-                        sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                        cursor.execute(sql, (str(ad), dt, "1"))
+                        sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`, `lane`) VALUES (%s, %s, %s, %s)"
+                        cursor.execute(sql, (str(ad), dt, "1","1"))
                         print("**********************\nSTART WATERING\n**********************\n")
                         print("\nSTATUS = " + status)
                         self.connection.commit()
