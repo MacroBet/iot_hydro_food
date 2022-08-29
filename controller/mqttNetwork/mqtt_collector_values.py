@@ -15,6 +15,7 @@ class MqttClientData:
         self.client.subscribe("status_outside")
         self.client.subscribe("actuator_data")
         self.client.subscribe("actuator_bathFloat")
+        self.communicateToSensors("start", "inValues")
 
 
     # The callback for when a PUBLISH message is received from the server.
@@ -55,7 +56,7 @@ class MqttClientData:
                 return
             elif open == "1":
                 open = "0"
-                success = Post.changeStatusWatering(status, ad)
+                success = Post.changeStatusWatering(open, ad)
                 if success == 1:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
@@ -206,6 +207,8 @@ class MqttClientData:
             elif str(status) == "2" :
                 self.client.publish("actuator_data","notWat")
                 self.client.publish("actuator_bathFloat","charge")
+            elif str(status) == "start":
+                 self.client.publish("actuator_data","start")
 
         elif type == "window":
 
