@@ -59,7 +59,7 @@ def checkCommand(command, client, client1):
             return
   
     elif command == "activate":
-        client.communicateToSensor("start","inValues")
+        client.communicateToSensors("start","inValues")
         print("Start command sent")
        
     elif command == "exit":
@@ -140,7 +140,6 @@ if __name__ == "__main__":
         while 1:
             command = input("COMMAND>")
             command = command.lower()
-            print(client)
             checkCommand(command, client, client1)
         
     except KeyboardInterrupt:
