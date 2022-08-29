@@ -12,8 +12,6 @@ from mqttNetwork.mqtt_collector_values import MqttClientData
 from database.dataBase import Database
 
 class ObserveSensor:
-
-
     def __init__(self,source_address, resource, type):
         self.db = Database()
         self.connection = self.db.connect_db()
@@ -25,9 +23,6 @@ class ObserveSensor:
        
 
     def start_observing(self):
-         
-       
-       
         self.client = HelperClient(self.address)
         self.mqtt = MqttClientData()
         self.mqtt.mqtt_client(None, None, None, None, None, None, "communicate")
@@ -35,6 +30,7 @@ class ObserveSensor:
     
     def observer(self, response):
         data = json.loads(response.payload)
+        print("debug", data)
         if self.type == 0:
             status = data["status"]
             lane = data["lane"]

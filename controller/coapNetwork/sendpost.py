@@ -11,8 +11,8 @@ class Post:
     def  changeStatusWatering(status, ad):
         client = HelperClient(ad)
         response = client.post("obs", "mode="+status)
+        print(response.code)
         if response.code == 67:
-            print(response.code)
             return 1
         else:
             return 0
@@ -22,8 +22,8 @@ class Post:
     def  changeStatusWindows(status, ad):
         client = HelperClient(ad)
         response = client.post("window", "mode="+status)
+        print(response.code)
         if response.code == 67:
-            print(response.code)
             return 1
         else:
             return 0
