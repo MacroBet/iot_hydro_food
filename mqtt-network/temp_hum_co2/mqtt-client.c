@@ -135,46 +135,36 @@ static void
 pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
             uint16_t chunk_len)
 {
-  printf("Pub Handler: topic='%s' (len=%u), chunk_len=%u\n", topic,
-          topic_len, chunk_len);
+  printf("Pub Handler: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
 
   if(strcmp(topic, "actuator_data") == 0) {
     printf("Received Actuator command\n");
-
     if(strcmp((const char*) chunk, "start") == 0) {
-
         LOG_INFO("Start sensor\n");
-          leds_single_on(RGB_LED_GREEN);
+        rgb_led_set(RGB_LED_GREEN);
         started = true;
-
-    } else if(strcmp((const char*) chunk, "wat") == 0) {
-
+    } 
+    else if(strcmp((const char*) chunk, "wat") == 0) {
         LOG_INFO("Start watering\n");
-          leds_single_on(RGB_LED_GREEN);
+        rgb_led_set(RGB_LED_BLUE);
         watering = true;
-
-      } else if(strcmp((const char*) chunk, "notWat") == 0)  {
-        
-        LOG_INFO("Not watering\n");	
-        leds_single_on(RGB_LED_RED);
-        watering = false;
-  
-      }	else if(strcmp((const char*) chunk, "Open") == 0)  {
-        
-        LOG_INFO("Open windows\n");	
-        leds_single_on(RGB_LED_GREEN);
-        openW = true;
-
-      }	else if(strcmp((const char*) chunk, "notOpen") == 0)  {
-        
-        LOG_INFO("Not open windows\n");	
-        leds_single_on(RGB_LED_RED);
-        openW = false;
-        
-      } 
-    } else {
-      LOG_ERR("Topic not valid!\n");
-	
+    }
+    else if(strcmp((const char*) chunk, "notWat") == 0)  {    
+      LOG_INFO("Not watering\n");	
+      rgb_led_set(RGB_LED_GREEN);
+      watering = false;
+    }	
+    else if(strcmp((const char*) chunk, "Open") == 0)  {    
+      LOG_INFO("Open windows\n");	
+      rgb_led_set(RGB_LED_YELLOW);
+      openW = true;
+    }	else if(strcmp((const char*) chunk, "notOpen") == 0)  {
+      LOG_INFO("Not open windows\n");	
+      rgb_led_set(RGB_LED_GREEN);
+      openW = false;
+    } 
+  } else {
+    LOG_ERR("Topic not valid!\n");
   }
 }
 /*---------------------------------------------------------------------------*/
@@ -263,17 +253,17 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   // Initialize periodic timer to check the status 
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
   etimer_set(&reset_timer, CLOCK_SECOND);
+  rgb_led_set(RGB_LED_RED);
+
   /* Main loop */
   while(1) {
 
     PROCESS_YIELD();
 
-    if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || 
-	      ev == PROCESS_EVENT_POLL){
+    if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) || ev == PROCESS_EVENT_POLL){
 			 
-		  if(state==STATE_INIT){
-			 if(have_connectivity()==true)  
-				 state = STATE_NET_OK;
+		  if(state==STATE_INIT && have_connectivity()==true){
+        state = STATE_NET_OK;
 		  } 
 		  
 		  if(state == STATE_NET_OK){
@@ -435,7 +425,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
     if(ev == PROCESS_EVENT_TIMER && data == &reset_timer) {
      
-      leds_off((RGB_LED_GREEN));
+      // leds_off((RGB_LED_GREEN));
       
       etimer_set(&reset_timer, CLOCK_SECOND);
     }
