@@ -102,7 +102,7 @@ def start_configuration():
     co2Min = validate(input("TRESHOLD MIN CO2  (default value 1000ppm) : "),1000)
     
     print("You choose these values:\n")
-    print("\nValues for tresholds: \n Max Temperature = {},\n Min Temperature = {},\n Max Humidity = {},\n Min Humidity = {}, \n Max Co2 ={},\n Min Co2 = {}", str(tempMax), str(tempMin),str(humMax), str(humMin),str(co2Max),str(co2Min) )
+    print("\nValues for tresholds: \n Max Temperature = {},\n Min Temperature = {},\n Max Humidity = {},\n Min Humidity = {}, \n Max Co2 ={},\n Min Co2 = {}".format( str(tempMax), str(tempMin),str(humMax), str(humMin),str(co2Max),str(co2Min) ))
     print("\nDo you want to continue with this values [y/n]?")
     
     answer = input(">")
