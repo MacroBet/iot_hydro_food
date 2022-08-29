@@ -99,7 +99,7 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 
 static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
-//static char sub_topic[BUFFER_SIZE];
+static char sub_topic[BUFFER_SIZE];
 
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
