@@ -1,4 +1,5 @@
 
+from dataclasses import field
 from pydoc import cli
 import threading
 import time
@@ -30,20 +31,21 @@ def listOfcommands():
 
     print("AVAILABLE COMMANDS--->\n")
 
-    print("!Change values sensors Temperature\n"\
-          "!Change values sensors Humidity\n"\
-          "!Change values sensors Co2\n"\
-          "!Check sensors log\n"\
-          "!List of commands\n"\
-          "!Check bath float level\n"  
-          "!Info commands \n"
-          "!Exit\n\n")
+    print(
+        "help \n"\
+        "!Change values sensors Temperature\n"\
+        "!Change values sensors Humidity\n"\
+        "!Change values sensors Co2\n"\
+        "activate\n"\
+        "log\n"\
+        "bath\n"\
+        "exit\n\n")
 
 def checkCommand(command, client, client1):
    
-    if command == "!info commands":
+    if command == "help":
            showInfo()
-    elif command == "!check sensors log":
+    elif command == "log":
         mex = client.message
         mex1 = client1.message
         print(client.message+"\n"+mex1)
@@ -57,7 +59,7 @@ def checkCommand(command, client, client1):
         except KeyboardInterrupt:
          return
 
-    elif command == "!check bath float level":
+    elif command == "bath":
         level = client1.message
         print(client1.message)
         try:
@@ -69,6 +71,12 @@ def checkCommand(command, client, client1):
         except KeyboardInterrupt:
          return        
   
+    elif command == "activate":
+        client.publish("actuator_data","start")
+        client.publish("actuator_bathFloat","start")
+        client.publish("actuator_outside","start")
+        print("Start command sent")
+
     elif command == "!change value co2":
 
         while 1:
@@ -121,7 +129,7 @@ def checkCommand(command, client, client1):
                     print("Insert new value\n")
                     continue
                 
-    elif command == "!exit":
+    elif command == "exit":
         thread.join()
         thread1.join()
         thread2.join()
@@ -135,60 +143,54 @@ def checkCommand(command, client, client1):
 
 def showInfo():
 
-    print("check sensors log ---> check message that the sensord send to the application \n"\
+    print("log ---> check message that the sensord send to the application \n"\
           "change value co2 ---> chack only the values of Co2\n"\
           "change value humidity ---> check only the values of humidity\n"\
           "change value temperature ---> check only the values of temperature\n"\
-          "check bath float level ---> check level of the bath float\n"\
-          "list of commands ---> show the commands that can be promted\n")
+          "bath ---> check level of the bath float\n"\
+          "help ---> show the commands that can be promted\n")
 
 
+def validate(field,defaultValue):
+    if(field.isnumeric()):
+        return int(field)
+    return defaultValue
+
+def start_configuration():
+
+    print("Define tresholds for the parameters Temperature, Humidity, Co2 :\n")
+    tempMax = validate(input("TRESHOLD MAX TEMPERATURE  (default value 35C) : "),35)
+    tempMin = validate(input("TRESHOLD MIN TEMPERATURE  (default value 20C) : "),20)
+    humMax = validate(input("TRESHOLD MAX HUMIDITY %  (defalut value 80%) : "),80)
+    humMin = validate(input("TRESHOLD MIN HUMIDITY %  (default value 30%) : "),35)
+    co2Max = validate(input("TRESHOLD MAX CO2  (default value 2000ppm) : "),2000)
+    co2Min = validate(input("TRESHOLD MIN CO2  (default value 1000ppm) : "),1000)
+    
+    print("You choose these values:\n")
+    print("\nValues for tresholds: \n Max Temperature = {},\n Min Temperature = {},\n Max Humidity = {},\n Min Humidity = {}, \n Max Co2 ={},\n Min Co2 = {}", str(tempMax), str(tempMin),str(humMax), str(humMin),str(co2Max),str(co2Min) )
+    print("\nDo you want to continue with this values [y/n]?")
+    
+    answer = input(">")
+    answer = answer.lower()
+    if(answer == "yes" or answer == "y"):
+        return {"tempMax":tempMax,"tempMin":tempMin,"humMax":humMax,"humMin":humMin,"co2Max":co2Max,"co2Min":co2Min}
+    elif(answer == "no" or answer == "n"):
+        return start_configuration()
 
 if __name__ == "__main__":
+    cfg=  {"tempMax":35,"tempMin":20,"humMax":80,"humMin":35,"co2Max":2000,"co2Min":1000}
+    should_configure = input("Welcome to Idrofood simulator 🚀 do you want to configure parameters?").lower()
+    if(should_configure == "yes" or should_configure == "y"):
+        cfg = start_configuration()
 
-    while 1:
-        print("Define tresholds for the parameters Temperature, Humidity, Co2 :\n")
-        tempMax = input("TRESHOLD MAX TEMPERATURE  (default value 35C) : ")
-        if tempMax == "":
-            tempMax =  35 
-        tempMin = input("TRESHOLD MIN TEMPERATURE  (default value 20C) : ")
-        if tempMin == "":
-            tempMin = 20 
-        humMax = input("TRESHOLD MAX HUMIDITY %  (defalut value 80%) : ")
-        if humMax == "":
-            humMax = 80 
-        humMin = input("TRESHOLD MIN HUMIDITY %  (default value 30%) : ")
-        if humMin == "":
-            humMin = 35 
-        co2Max = input("TRESHOLD MAX CO2  (default value 2000ppm) : ")
-        if co2Max == "": 
-            co2Max = 2000
-        co2Min = input("TRESHOLD MIN CO2  (default value 1000ppm) : ")
-        if co2Min == "":
-            co2Min = 1000
-        
-        print("You choose these values:\n")
-        print("\nValues for tresholds: \n Max Temperature = " + str(tempMax) + ",\n Min Temperature = " \
-            + str(tempMin) + " ,\n Max Humidity = " + str(humMax) + ",\n Min Humidity = " + str(humMin) +",\
-                    \n Max Co2 = "+ str(co2Max) +", \n Min Co2 = "+ str(co2Min)\
-                    +"\n\nDo you want to continue with this values [y/n]?")
-        
-        answer = input(">")
-        answer = answer.lower()
-        if(answer == "yes" or answer == "y"):
-            print("\nWelcome\n")
-            break
-        elif(answer == "no" or answer == "n"):
-            print("Insert new value\n")
-            continue
-
+    print("\nWelcome\n")
     listOfcommands()
 
     print("System is going to start----->\n")
     time.sleep(5)
     
     client = MqttClientData()
-    thread = threading.Thread(target=client.mqtt_client, args=(tempMax, tempMin, humMax, humMin, co2Max, co2Min,"check"), kwargs={})
+    thread = threading.Thread(target=client.mqtt_client, args=(cfg.tempMax, cfg.tempMin, cfg.humMax, cfg.humMin, cfg.co2Max, cfg.co2Min,"check"), kwargs={})
     thread.start()
     client1 = MqttClientBathFloat()
     thread1 = threading.Thread(target=client1.mqtt_client, args=(), kwargs={})
