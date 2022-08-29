@@ -38,6 +38,8 @@
 #include "dev/leds.h"
 #include "os/dev/serial-line.h"
 #include "coap-observe.h"
+#include "dev/etc/rgb-led/rgb-led.h"
+
 
 /* Log configuration */
 #include "sys/log.h"
@@ -71,7 +73,7 @@ static void res_event_handler(void)
 static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
       coap_set_header_content_format(response, APPLICATION_JSON);
-      sprintf((char *)buffer, "{\"status\": %d, \"lane\": %d}", status, "1");
+      sprintf((char *)buffer, "{\"status\": %d, \"lane\": %s}", status, "1");
       coap_set_payload(response, buffer, strlen((char*)buffer));
     
 }
@@ -88,13 +90,13 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
 
     if(strncmp(mode, "0", len) == 0) {
         LOG_INFO("0");
-        leds_set(LEDS_NUM_TO_MASK(LEDS_RED));
+        rgb_led_set(RGB_LED_RED);
         coap_set_status_code(response,VALID_2_03);
         status = 0;
          
     } else if(strncmp(mode, "1", len) == 0) {
         LOG_INFO("1");
-        leds_set(LEDS_NUM_TO_MASK(LEDS_GREEN));
+        rgb_led_set(RGB_LED_GREEN);
         if(status == 2)
            coap_set_status_code(response, BAD_REQUEST_4_00);
         else{
@@ -103,7 +105,7 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
         }
     } else if(strncmp(mode, "2", len) == 0) {
         LOG_INFO("2");
-        leds_set(LEDS_NUM_TO_MASK(LEDS_BLUE));
+        rgb_led_set(RGB_LED_BLUE);
         if(status == 1)
            coap_set_status_code(response, BAD_REQUEST_4_00);
         else{
