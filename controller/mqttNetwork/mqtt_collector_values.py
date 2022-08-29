@@ -11,7 +11,6 @@ class MqttClientData:
 
     def on_connect(self, client, userdata, flags, rc):
         print("****** Connected with result code "+str(rc) + " ******\n")
-        self.client.subscribe("status_data")
         self.client.subscribe("status_outside")
         self.client.subscribe("actuator_data")
         self.client.subscribe("actuator_bathFloat")
@@ -209,13 +208,18 @@ class MqttClientData:
                 self.client.publish("actuator_bathFloat","charge")
             elif str(status) == "start":
                  self.client.publish("actuator_data","start")
+                 self.client.publish("actuator_bathFloat","start")
+                 self.client.publish("status_outside", "start")
+
 
         elif type == "window":
 
-                if str(status) == "1":
-                     self.client.publish("actuator_data","Open")
-                elif str(status) == "0":
-                     self.client.publish("actuator_data","notOpen")
+            if str(status) == "1":
+                    self.client.publish("actuator_data","Open")
+            elif str(status) == "0":
+                    self.client.publish("actuator_data","notOpen")
+           
+
                     
 #/---------------------------------------------------------------------------\
 
