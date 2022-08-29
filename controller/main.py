@@ -59,9 +59,7 @@ def checkCommand(command, client, client1):
             return
   
     elif command == "activate":
-        client.client.publish("actuator_data","start")
-        client.client.publish("actuator_bathFloat","start")
-        client.client.publish("actuator_outside","start")
+        client.communicateToSensor("start","inValues")
         print("Start command sent")
        
     elif command == "exit":
