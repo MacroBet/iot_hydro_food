@@ -59,16 +59,18 @@ def checkCommand(command, client, client1):
          return
 
     elif command == "bath":
-        level = client1.message
-        print(client1.message)
+        mex = client.message
+        mex1 = client1.message
+        print(client.message+"\n"+mex1)
         try:
             while True:
-                if(level != client1.message):
+                if(mex != client.message):
                     print("\nPress ctrl + C to exit \n")
-                    print(client1.message)
-                    level = client1.message
+                    print(mex+"\n"+mex1)
+                    mex = client.message
+                    mex1 = client1.message
         except KeyboardInterrupt:
-         return        
+            return
   
     elif command == "activate":
         client.publish("actuator_data","start")
