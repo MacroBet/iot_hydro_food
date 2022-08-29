@@ -13,9 +13,9 @@ class MqttClientData:
         print("****** Connected with result code "+str(rc) + " ******\n")
         self.client.subscribe("status_data")
         self.client.subscribe("status_outside")
-        self.client.subscribe("actuator_outside")
+        # self.client.subscribe("actuator_outside")
         self.client.subscribe("actuator_data")
-        self.client.subscribe("actuator_bathFloat")
+        # self.client.subscribe("actuator_bathFloat")
         self.communicateToSensors("start", "inValues")
 
 
@@ -210,10 +210,13 @@ class MqttClientData:
                 self.client.publish("actuator_bathFloat","charge")
             elif str(status) == "start":
                 print(status+"ciao")
-                self.client.publish("actuator_data","start")
-                self.client.publish("actuator_bathFloat","start")
-                self.client.publish("actuator_outside","start")
-
+                try:
+                    self.client.publish("actuator_data","start")
+                    self.client.publish("actuator_bathFloat","start")
+                    self.client.publish("actuator_outside","start")
+                    print("tutto ok")
+                except:
+                    print("ko")
 
         elif type == "window":
 
