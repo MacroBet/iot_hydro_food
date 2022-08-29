@@ -357,6 +357,8 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
       
       } else if ( state == STATE_DISCONNECTED ){
         LOG_ERR("Disconnected form MQTT broker\n");	
+        rgb_led_set(RGB_LED_RED);
+        started= false;
         // Recover from error
       }
     
