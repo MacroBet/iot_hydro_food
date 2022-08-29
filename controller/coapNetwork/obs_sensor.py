@@ -37,9 +37,9 @@ class ObserveSensor:
         data = json.loads(response.payload)
         if self.type == 0:
             status = data["status"]
-           
+            lane = data["lane"]
             dt = datetime.now()
-            self.execute_query(self.address, status, dt, "watering")
+            self.execute_query(self.address, status, dt, "watering", lane)
             
             print(status)
             
@@ -57,7 +57,7 @@ class ObserveSensor:
         elif self.type == 1:
             status = data["open"]
             dt = datetime.now()
-            self.execute_query(self.address, status, dt, "window")
+            self.execute_query(self.address, status, dt, "window", 0)
             if str(status) == "1":
                 self.mqtt.communicateToSensors(status, "window")
 
@@ -65,10 +65,15 @@ class ObserveSensor:
                 self.mqtt.communicateToSensors(status, "window")
         
 
-    def execute_query(self, add, stat, timestamp, table):
+    def execute_query(self, add, stat, timestamp, table, lane):
         with self.connection.cursor() as cursor:
             cursor = self.connection.cursor()
-            sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-            cursor.execute(sql, (str(add), timestamp, stat))
-            self.connection.commit()
+            if table == "watering":
+                sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`, `lane`) VALUES (%s, %s, %s, %s)"
+                cursor.execute(sql, (str(add), timestamp, stat, lane))
+                self.connection.commit()
+            else:
+                sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                cursor.execute(sql, (str(add), timestamp, stat))
+                self.connection.commit()
         
