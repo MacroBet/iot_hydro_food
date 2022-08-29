@@ -140,6 +140,7 @@ if __name__ == "__main__":
         while 1:
             command = input("COMMAND>")
             command = command.lower()
+            print(client)
             checkCommand(command, client, client1)
         
     except KeyboardInterrupt:
