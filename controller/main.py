@@ -138,7 +138,7 @@ if __name__ == "__main__":
     thread2 = threading.Thread(target=server.listen, args=(), kwargs={})
     thread2.start()
     
-    time.sleep(5)
+    time.sleep(20)
     
     print("System is running--->\n ")
     try:

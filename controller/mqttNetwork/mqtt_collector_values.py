@@ -16,7 +16,7 @@ class MqttClientData:
         self.client.subscribe("actuator_outside")
         self.client.subscribe("actuator_data")
         self.client.subscribe("actuator_bathFloat")
-        self.communicateToSensors("start", "inValues")
+        #self.communicateToSensors("start", "inValues")
 
 
     # The callback for when a PUBLISH message is received from the server.
@@ -57,7 +57,7 @@ class MqttClientData:
                 return
             elif open == "1":
                 open = "0"
-                success = Post.changeStatusWatering(open, ad)
+                success = Post.changeStatusWindows(open, ad)
                 if success == 1:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
@@ -77,7 +77,7 @@ class MqttClientData:
             if open is not None:
                 if open == "0":
                     open = "1"
-                    success = Post.changeStatusWatering(open, ad)
+                    success = Post.changeStatusWindows(open, ad)
                     if success == 1:
                         dt = datetime.now()
                         cursor = self.connection.cursor()
@@ -94,7 +94,7 @@ class MqttClientData:
 
             elif open is None:
                 open = "1"
-                success = Post.changeStatusWatering(open, ad)
+                success = Post.changeStatusWindows(open, ad)
                 if success == 1:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
@@ -114,7 +114,8 @@ class MqttClientData:
     def stopWatering(self):
 
         for ad in Addresses.adValves :
-            status = self.executeLastState(ad, "watering")
+            status = self.executeLastState(ad, "watering", "status")
+            lane = self.executeLastState(ad, "watering", "lane")
             if status is None:
                 return
             elif status == "1":
@@ -124,7 +125,7 @@ class MqttClientData:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`, `lane`) VALUES (%s, %s, %s, %s)"
-                    cursor.execute(sql, (str(ad), dt, "0", "1"))
+                    cursor.execute(sql, (str(ad), dt, "0", lane))
                     print("**********************\nSTOP WATERING\n**********************\n")
                     print("\nSTATUS = " + status)
                     self.connection.commit()
@@ -139,7 +140,8 @@ class MqttClientData:
     def startWatering(self):
 
         for ad in Addresses.adValves :
-            status = self.executeLastState(ad, "watering")
+            status = self.executeLastState(ad, "watering", "status")
+            lane = self.executeLastState(ad, "watering", "lane")
             if status is not None:
                 if status == "0":
                     status = "1"
@@ -148,7 +150,7 @@ class MqttClientData:
                         dt = datetime.now()
                         cursor = self.connection.cursor()
                         sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`, `lane`) VALUES (%s, %s, %s, %s)"
-                        cursor.execute(sql, (str(ad), dt, "1","1"))
+                        cursor.execute(sql, (str(ad), dt, "1",lane))
                         print("**********************\nSTART WATERING\n**********************\n")
                         print("\nSTATUS = " + status)
                         self.connection.commit()
@@ -163,8 +165,8 @@ class MqttClientData:
                 if success == 1:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
-                    sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                    cursor.execute(sql, (str(ad), dt, "1"))
+                    sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`, `lane`) VALUES (%s, %s, %s, %s)"
+                    cursor.execute(sql, (str(ad), dt, "1",lane))
                     print("**********************\nSTART WATERING\n**********************\n")
                     print("\nSTATUS = " + status)
                     self.connection.commit()
@@ -177,7 +179,7 @@ class MqttClientData:
 #/----------methods to retrive last state of the actuator--------------\
 
 
-    def executeLastState(self, address, table) :
+    def executeLastState(self, address, table, column) :
         cursor = self.connection.cursor()
         sql = "SELECT status FROM actuator_"+table+ " WHERE address = %s ORDER BY timestamp DESC LIMIT 1"
         cursor.execute(sql, str(address))
@@ -186,7 +188,7 @@ class MqttClientData:
             return None
         else:
             for row in result_set:
-                return row["status"]
+                return row[column]
 
 
 #/---------------------------------------------------------------------------\

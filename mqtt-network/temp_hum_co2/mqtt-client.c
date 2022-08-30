@@ -295,45 +295,45 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           LOG_INFO("Switch day-nigth \n");
           period = 0;
         }
-        unsigned short variation= random_rand();
+        //unsigned short variation= random_rand();
         if(day && openW) {
-          co2 -= (int) variation % 100;
+          co2 -= 100;//(int) variation % 100;
           if (watering) {
-            temperature -= (int) variation % 3;
-            humidity += (int) variation % 5;
+            temperature -= 2;//(int) variation % 3;
+            humidity += 3;//(int) variation % 5;
           } else {
-            temperature += (int) variation % 4;
-            humidity -= (int) variation % 6;
+            temperature += 3;//(int) variation % 4;
+            humidity -= 5;//(int) variation % 6;
           }
         } 
         else if(!day && openW) {
-          co2 -= (int) variation % 50;
+          co2 -= 100;//(int) variation % 50;
           if (watering) {
-            temperature -= (int) variation % 4;
-            humidity += (int) variation % 7;
+            temperature -= 4;//(int) variation % 4;
+            humidity += 5;//(int) variation % 7;
           } else {
-            temperature -= (int) variation % 3;
-            humidity -= (int) variation % 3;
+            temperature -= 2;//(int) variation % 3;
+            humidity -= 3;//(int) variation % 3;
         }
         } else if(day && !openW) {
-          co2 += (int) variation % 50;
+          co2 += 100;//(int) variation % 50;
           if (watering) {
-            temperature -= (int) variation % 2;
-            humidity += (int) variation % 6;
+            temperature -= 2;//(int) variation % 2;
+            humidity += 4;//(int) variation % 6;
           } else {
-            temperature += (int) variation % 6;
-            humidity -= (int) variation % 4;
+            temperature += 4;//(int) variation % 6;
+            humidity -= 3;//(int) variation % 4;
         }
         } else if(!day && !openW) {
-          co2 += (int) variation % 100;
+          co2 += 100;//(int) variation % 100;
           if (watering) {
-            temperature -= (int) variation % 5;
-            humidity += (int) variation %6;
+            temperature -= 3;//(int) variation % 5;
+            humidity += 4;//(int) variation %6;
           } 
           else {
             if(temperature % 2 == 0){
-              temperature -= (int) variation % 2;
-              humidity -= (int) variation % 4;
+              temperature -= 2;//(int) variation % 2;
+              humidity -= 3;//(int) variation % 4;
             }else {
               temperature -= 1;
               humidity -= 1;
