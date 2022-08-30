@@ -30,14 +30,11 @@ class ObserveSensor:
     
     def observer(self, response):
         data = json.loads(response.payload)
-        print("debug", data)
         if self.type == 0:
             status = data["status"]
             lane = data["lane"]
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "watering",lane)
-            
-            print(status)
             
             if str(status) == "1":
                 self.mqtt.communicateToSensors(status, "inValues")

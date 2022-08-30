@@ -152,9 +152,9 @@ if __name__ == "__main__":
                     print(command)
                     checkCommand(command, client, client1)
             else:
-                print(ResExample.valves)
+                
                 print("Controller is wating for all the sensors\n\n ")
-                time.sleep(3)
+                time.sleep(5)
 
         
     except KeyboardInterrupt:
