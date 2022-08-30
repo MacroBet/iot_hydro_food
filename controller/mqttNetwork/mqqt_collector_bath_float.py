@@ -36,8 +36,8 @@ class MqttClientBathFloat:
     def closeCharge(self, lane):
 
         
-        status = self.executeLastState(lane, "watering")
-        ad = self.executeAddress(lane, "watering")
+        status = self.executeLastState(lane, "watering", "status")
+        ad = self.executeLastState(lane, "watering", "address")
         if status is None:
             return
         elif status == "2":
@@ -57,9 +57,8 @@ class MqttClientBathFloat:
 
     def openCharge(self, lane):
 
-     
-        status = self.executeLastState(lane, "watering")
-        ad = self.executeAddress(lane, "watering")
+        status = self.executeLastState(lane, "watering", "status")
+        ad = self.executeLastState(lane, "watering", "address")
         if status is not None:
             if status == "0":
                 status = "2"
@@ -90,7 +89,7 @@ class MqttClientBathFloat:
 #/----------methods to retrive last state and address of the actuator--------------\
 
 
-    def executeLastState(self, lane, table) :
+    def executeLastState(self, lane, table, column) :
         cursor = self.connection.cursor()
         sql = "SELECT status FROM actuator_"+table+ " WHERE lane = %s ORDER BY timestamp DESC LIMIT 1"
         cursor.execute(sql, str(lane))
@@ -99,18 +98,18 @@ class MqttClientBathFloat:
             return None
         else:
             for row in result_set:
-                return row["status"]
+                return row[column]
     
-    def executeAddress(self, lane, table) :
-        cursor = self.connection.cursor()
-        print(lane,table)
-        sql = "SELECT address FROM actuator_"+table+ " WHERE lane = %s ORDER BY timestamp DESC LIMIT 1"
-        cursor.execute(sql, str(lane))
-        result = cursor.fetchone()
-        if not result :
-            return None
-        else:
-            return result["address"]
+    # def executeAddress(self, lane, table) :
+    #     cursor = self.connection.cursor()
+    #     print(lane,table)
+    #     sql = "SELECT address FROM actuator_"+table+ " WHERE lane = %s ORDER BY timestamp DESC LIMIT 1"
+    #     cursor.execute(sql, str(lane))
+    #     result = cursor.fetchone()
+    #     if not result :
+    #         return None
+    #     else:
+    #         return result["address"]
 
 
 

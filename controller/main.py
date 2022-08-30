@@ -140,13 +140,21 @@ if __name__ == "__main__":
     
     time.sleep(20)
     
-    print("System is running--->\n ")
+    
     try:
         while 1:
-            command = input("COMMAND>")
-            command = command.lower()
-            print(command)
-            checkCommand(command, client, client1)
+            if ResExample.windows == 1 and ResExample.valves == 1:
+                
+                    print("System is running--->\n\n ")
+                    print("Use command 'activate' to start sensor node\n\n ")
+                    command = input("COMMAND>")
+                    command = command.lower()
+                    print(command)
+                    checkCommand(command, client, client1)
+            else:
+                print("Controller is wating for all the sensors\n\n ")
+                time.sleep(3)
+
         
     except KeyboardInterrupt:
         thread.join()
