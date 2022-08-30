@@ -30,12 +30,13 @@ class ObserveSensor:
     
     def observer(self, response):
         data = json.loads(response.payload)
+        
         if self.type == 0:
             status = data["status"]
             lane = data["lane"]
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "watering",lane)
-            
+            print("****** Value valves changed ******", data)
             if str(status) == "1":
                 self.mqtt.communicateToSensors(status, "inValues")
 
@@ -51,6 +52,7 @@ class ObserveSensor:
             status = data["open"]
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "window", 0)
+            print("****** Value windows changed ******", data)
             if str(status) == "1":
                 self.mqtt.communicateToSensors(status, "window")
 
