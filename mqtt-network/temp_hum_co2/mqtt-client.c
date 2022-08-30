@@ -311,7 +311,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
             temperature -= diff;//(int) variation % 3;
             humidity += diff2;//(int) variation % 5;
           } else {
-            temperature += diff1;//(int) variation % 4;
+            temperature += diff;//(int) variation % 4;
             humidity -= diff2;//(int) variation % 6;
           }
         } 
