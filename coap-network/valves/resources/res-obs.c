@@ -88,7 +88,7 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
     // 2 => recharging
     if(strncmp(mode, "0", len) == 0) {
       LOG_INFO("0");
-      rgb_led_set(RGB_LED_RED);
+      rgb_led_set(RGB_LED_YELLOW);
       coap_set_status_code(response,VALID_2_03);
       status = 0;
       success = 1;
