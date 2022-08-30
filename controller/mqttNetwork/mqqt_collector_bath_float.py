@@ -91,7 +91,7 @@ class MqttClientBathFloat:
 
     def executeLastState(self, lane, table, column) :
         cursor = self.connection.cursor()
-        sql = "SELECT status FROM actuator_"+table+ " WHERE lane = %s ORDER BY timestamp DESC LIMIT 1"
+        sql = "SELECT * FROM actuator_"+table+ " WHERE lane = %s ORDER BY timestamp DESC LIMIT 1"
         cursor.execute(sql, str(lane))
         result_set = cursor.fetchall()
         if not result_set :
