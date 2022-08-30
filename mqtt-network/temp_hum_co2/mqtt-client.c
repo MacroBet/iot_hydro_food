@@ -74,6 +74,8 @@ static bool watering = false;
 static bool day = false;
 static bool openW = false;
 static bool started = false;
+static int diff = 0;
+static int diff2 = 0;
 
 /*---------------------------------------------------------------------------*/
 /* Various states */
