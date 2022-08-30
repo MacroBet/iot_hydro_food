@@ -24,7 +24,6 @@ class ResExample(Resource):
 
 
     def render_GET(self, request):
-        print("debug", request.payload)
         print("\nCOMMAND>")
         if request.payload == "valves":
             Addresses.insertNewAddress(request.source, "valves")

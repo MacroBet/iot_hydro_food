@@ -143,7 +143,7 @@ if __name__ == "__main__":
     
     try:
         while 1:
-            if ResExample.windows == 1 and ResExample.valves == 1:
+            if ResExample.valves == 1:
                 
                     print("System is running--->\n\n ")
                     print("Use command 'activate' to start sensor node\n\n ")
