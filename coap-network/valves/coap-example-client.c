@@ -119,8 +119,7 @@ PROCESS_THREAD(node, ev, data)
     } else if(ev == button_hal_release_event) {
       
       if(btn->press_duration_seconds > 2 && status == 0) {
-        printf("%s pressed for more than 5 secs. Do custom action\n",
-               BUTTON_HAL_GET_DESCRIPTION(btn));
+       
         status = 2;
         rgb_led_set(RGB_LED_BLUE);
         res_status.trigger();
@@ -133,7 +132,7 @@ PROCESS_THREAD(node, ev, data)
       } else if (status == 1 || status == 2){
         status = 0;
         printf("%d", status);
-        rgb_led_set(RGB_LED_RED);
+        rgb_led_set(RGB_LED_YELLOW);
         res_status.trigger();
       }
       
