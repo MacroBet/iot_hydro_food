@@ -181,7 +181,7 @@ class MqttClientData:
 
     def executeLastState(self, address, table, column) :
         cursor = self.connection.cursor()
-        sql = "SELECT status FROM actuator_"+table+ " WHERE address = %s ORDER BY timestamp DESC LIMIT 1"
+        sql = "SELECT * FROM actuator_"+table+ " WHERE address = %s ORDER BY timestamp DESC LIMIT 1"
         cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
         if not result_set :
