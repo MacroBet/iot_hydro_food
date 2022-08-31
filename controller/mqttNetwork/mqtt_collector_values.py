@@ -111,12 +111,9 @@ class MqttClientData:
 #/----------watering methods to open and close the watering valves--------------\
     
     def stopWatering(self):
-
         for ad in Addresses.adValves :
             status = self.executeLastState(ad, "watering", "status")
-            if status is None:
-                return
-            elif status == "1":
+            if status == "1":
                 status = "0"
                 success = Post.changeStatusWatering(status, ad)
                 if success == 1:
@@ -128,35 +125,12 @@ class MqttClientData:
                     print("\nSTATUS = " + status)
                     self.connection.commit()
                     self.communicateToSensors("0", "inValues")
-                else:
-                    return
-            else:
-                return
-           
-
     
     def startWatering(self):
 
         for ad in Addresses.adValves :
             status = self.executeLastState(ad, "watering", "status")
-            if status is not None:
-                if status == "0":
-                    status = "1"
-                    success = Post.changeStatusWatering(status, ad)
-                    if success == 1:
-                        dt = datetime.now()
-                        cursor = self.connection.cursor()
-                        sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                        cursor.execute(sql, (str(ad), dt, "1"))
-                        print("**********************\nSTART WATERING\n**********************\n")
-                        print("\nSTATUS = " + status)
-                        self.connection.commit()
-                        self.communicateToSensors(status, "inValues")
-                    else:
-                        return
-                if status == "2" or status == "1":
-                    return
-            else:
+            if status is  None:
                 status = "1"
                 success = Post.changeStatusWatering(status, ad)
                 if success == 1:
@@ -168,8 +142,19 @@ class MqttClientData:
                     print("\nSTATUS = " + status)
                     self.connection.commit()
                     self.communicateToSensors(status, "inValues")
-                else:
-                    return
+            if status == "0":
+                status = "1"
+                success = Post.changeStatusWatering(status, ad)
+                if success == 1:
+                    dt = datetime.now()
+                    cursor = self.connection.cursor()
+                    sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
+                    cursor.execute(sql, (str(ad), dt, "1"))
+                    print("**********************\nSTART WATERING\n**********************\n")
+                    print("\nSTATUS = " + status)
+                    self.connection.commit()
+                    self.communicateToSensors(status, "inValues")
+
 
 #/---------------------------------------------------------------------------\
 
@@ -227,53 +212,39 @@ class MqttClientData:
 
 #/----------methods to check if actuator must be enabled--------------\
 
-
     def shouldOpenWatering(self, t, h, t_max, h_max, h_min):
-        return int(h) < int(h_min) and (int(t) > int(t_max) and int(h) < int(h_max))
-    
+        if(t>t_max and h<h_max): return True  
+        if(h<h_min): return True 
+        return False
 
     def checkActuatorWatering(self, temp, hum, co2):
-        wat = 0
-        if self.shouldOpenWatering(temp, hum, self.tempMax, self.humMax, self.humMin) :
-            wat = 1
+        if self.shouldOpenWatering(int(temp), int(hum), self.tempMax, self.humMax, self.humMin) :
             self.startWatering()
-        elif temp < ((self.tempMin + self.tempMax)/2)+3 and hum >= ((self.humMax*60)/100) :
-            wat = 0
-            self.stopWatering()
-        elif temp < self.tempMin+2:
-            wat = 0
-        if wat == 1:
-            self.startWatering
         else:
             self.stopWatering()
 
 
-
     def checkActuatorWindow(self, tempOut):
-
         open = 0
         close = 0
-     
-        if self.co2In is not None and self.tempIn is not None:
+        if self.co2In is None or self.tempIn is  None: return
             
-            if self.tempIn > self.tempMax and tempOut < self.tempIn:
-                open = 1
-            elif self.tempIn > (self.tempMin + 5) and tempOut < self.tempIn:
-                close = 1
+        if self.tempIn > self.tempMax and tempOut < self.tempIn:
+            open = 1
+        elif self.tempIn > (self.tempMin + 5) and tempOut < self.tempIn:
+            close = 1
 
-            elif self.co2In > (self.co2Max - 100):
-                open = 1
-            elif self.co2In < (self.co2Min + 100):
-                close = 1
+        if self.co2In > (self.co2Max - 100):
+            open = 1
+        elif self.co2In < (self.co2Min + 100):
+            close = 1
 
-            if open == 1 and close == 1 :  
-                self.openWindow()
-            elif open == 1 and close == 0:
-                self.openWindow()
-            elif open == 0 and close == 1:
-                self.closeWindow()
-            else:
-                return
+        if open == 1 :  
+            self.openWindow()
+
+        elif close == 1:
+            self.closeWindow()
+
 
 #/---------------------------------------------------------------------------\
 
