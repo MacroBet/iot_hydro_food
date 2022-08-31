@@ -16,7 +16,6 @@ class MqttClientData:
         self.client.subscribe("actuator_outside")
         self.client.subscribe("actuator_data")
         self.client.subscribe("actuator_bathFloat")
-        #self.communicateToSensors("start", "inValues")
 
 
     # The callback for when a PUBLISH message is received from the server.
