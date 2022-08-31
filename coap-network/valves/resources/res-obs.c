@@ -71,7 +71,7 @@ static void res_event_handler(void){
 
 static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset){
   coap_set_header_content_format(response, APPLICATION_JSON);
-  sprintf((char *)buffer, "{\"status\": %d, \"lane\": %s}", status, "1");
+  sprintf((char *)buffer, "{\"status\": %d}", status);
   coap_set_payload(response, buffer, strlen((char*)buffer));
 }
 
