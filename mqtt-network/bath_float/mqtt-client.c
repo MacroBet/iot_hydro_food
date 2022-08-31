@@ -283,7 +283,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         
         LOG_INFO("New values: %d\n", level);
         rgb_led_set(RGB_LED_GREEN);
-        sprintf(app_buffer, "{\"node\": %d, \"lane\": %s, \"level\": %d}", node_id, "1",level);
+        sprintf(app_buffer, "{\"node\": %d, \"level\": %d}", node_id,level);
         
         mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
         strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);

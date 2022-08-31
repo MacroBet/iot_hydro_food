@@ -15,70 +15,72 @@ class MqttClientBathFloat:
         self.client.subscribe("status_bathFloat")
         self.client.subscribe("actuator_bathFloat")
 
+    def update_watering_status(self, ad, status):
+        dt = datetime.now()
+        cursor = self.connection.cursor()
+        sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s, %s)"
+        cursor.execute(sql, (str(ad), dt, status))
+        print("\nSTATUS = " + status)
+        self.connection.commit()
+
+    def update_bath_float_level(self, node_id, level):
+        dt = datetime.now()
+        cursor = self.connection.cursor()
+        sql = "INSERT INTO `bath_float` (`node_id`, `timestamp`, `level`) VALUES (%s, %s, %s)"
+        cursor.execute(sql, (node_id, dt, level))
+        self.connection.commit()
+
+
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
         if msg.topic == "status_bathFloat":
             self.message = str(msg.payload)
             data = json.loads(msg.payload)
             node_id = data["node"]
-            lane = data["lane"]
             level = data["level"]
-            dt = datetime.now()
-            print(data)
-            cursor = self.connection.cursor()
-            sql = "INSERT INTO `bath_float` (`node_id`, `timestamp`, `level`, `lane`) VALUES (%s, %s, %s, %s)"
-            cursor.execute(sql, (node_id, dt, level, lane))
-            self.connection.commit()
-            self.checkActuatorLevel(level, lane)
+            self.update_bath_float_level(node_id,level)
+            self.checkActuatorLevel(level)
         else:
             return
 
 #/----------methods to open/close the charge valve--------------\
     
-    def closeCharge(self, lane):
-
-        
-        status = self.executeLastState(lane, "watering", "status")
-        ad = self.executeLastState(lane, "watering", "address")
-        if status is None:
-            return
-        elif status == "2":
-            status = "0"
-            sleep(2)
-            success = Post.changeStatusWatering(status, ad)
-            if success == 1:
-                dt = datetime.now()
-                cursor = self.connection.cursor()
-                sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`, `lane`) VALUES (%s, %s, %s, %s)"
-                cursor.execute(sql, (str(ad), dt, "0", lane))
-                print("**********************\nCLOSE CHARGE TANK\n**********************\n")
-                print("\nSTATUS = " + status)
-                self.connection.commit()
-                self.communicateToSensors("0")
-        else:
-            return
+    def closeCharge(self):
+        for ad in Addresses.adWindows :
+            status = self.executeLastState(ad, "watering", "status")
+            if status == "2":
+                status = "0"
+                sleep(2)
+                success = Post.changeStatusWatering(status, ad)
+                if success == 1:
+                    self.update_watering_status(str(ad),"0")
+                    print("**********************\nCLOSE CHARGE TANK\n**********************\n")
+                    print("\nSTATUS = " + status)
+                    self.connection.commit()
+                    self.communicateToSensors("0")
+            else:
+                return
 
 
     def openCharge(self, lane):
 
         status = self.executeLastState(lane, "watering", "status")
         ad = self.executeLastState(lane, "watering", "address")
-        if status is not None:
-            if status == "0":
-                status = "2"
-                success = Post.changeStatusWatering(status, ad)
-                if success == 1:
-                    dt = datetime.now()
-                    cursor = self.connection.cursor()
-                    sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`, `lane`) VALUES (%s, %s, %s, %s)"
-                    cursor.execute(sql, (str(ad), dt, "2", lane))
-                    print("**********************\nOPEN CHARGE TANK\n**********************\n")
-                    print("\nSTATUS = " + status)
-                    self.connection.commit()
-                    self.communicateToSensors("2")
-            if status == "2" or status == "1":
-                return
-        else:
+
+        if status == "0":
+            status = "2"
+            success = Post.changeStatusWatering(status, ad)
+            if success == 1:
+                dt = datetime.now()
+                cursor = self.connection.cursor()
+                sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`, `lane`) VALUES (%s, %s, %s, %s)"
+                cursor.execute(sql, (str(ad), dt, "2", lane))
+                print("**********************\nOPEN CHARGE TANK\n**********************\n")
+                print("\nSTATUS = " + status)
+                self.connection.commit()
+                self.communicateToSensors("2")
+
+        if status is None:
             status = "2"
             success = Post.changeStatusWatering(status, ad)
             if success == 1:
@@ -95,17 +97,16 @@ class MqttClientBathFloat:
 #/----------methods to retrive last state and address of the actuator--------------\
 
 
-    def executeLastState(self, lane, table, column) :
+    def executeLastState(self, address, table, column) :
         cursor = self.connection.cursor()
-        sql = "SELECT * FROM actuator_"+table+ " WHERE lane = %s ORDER BY timestamp DESC LIMIT 1"
-        cursor.execute(sql, str(lane))
+        sql = "SELECT * FROM actuator_"+table+ " WHERE address = %s ORDER BY timestamp DESC LIMIT 1"
+        cursor.execute(sql, str(address))
         result_set = cursor.fetchall()
         if not result_set :
             return None
         else:
             for row in result_set:
                 return row[column]
-    
     # def executeAddress(self, lane, table) :
     #     cursor = self.connection.cursor()
     #     print(lane,table)
