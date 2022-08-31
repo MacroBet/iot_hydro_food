@@ -11,11 +11,11 @@ class MqttClientData:
 
     def on_connect(self, client, userdata, flags, rc):
         print("****** Connected with result code "+str(rc) + " ******\n")
-        self.client.subscribe("status_data")
-        self.client.subscribe("status_outside")
-        self.client.subscribe("actuator_outside")
-        self.client.subscribe("actuator_data")
-        self.client.subscribe("actuator_bathFloat")
+        self.client.subscribe("status_data") # temp in
+        self.client.subscribe("status_outside") # temp out 
+        self.client.subscribe("actuator_outside") # notify window opening to external temp sensor
+        self.client.subscribe("actuator_data") # notify window opening to internal temp sensor
+        self.client.subscribe("actuator_bathFloat") # bathfloat
 
 
     # The callback for when a PUBLISH message is received from the server.
