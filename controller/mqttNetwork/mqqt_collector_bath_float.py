@@ -23,6 +23,7 @@ class MqttClientBathFloat:
             lane = data["lane"]
             level = data["level"]
             dt = datetime.now()
+            print(data)
             cursor = self.connection.cursor()
             sql = "INSERT INTO `bath_float` (`node_id`, `timestamp`, `level`, `lane`) VALUES (%s, %s, %s, %s)"
             cursor.execute(sql, (node_id, dt, level, lane))
