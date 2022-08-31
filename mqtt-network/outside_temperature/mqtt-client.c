@@ -281,6 +281,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         rgb_led_set(RGB_LED_RED);
         started= false;
         // Recover from error
+        state = STATE_INIT;
       }
       etimer_set(&periodic_timer, PUBLISH_INTERVAL);
       period++; 
