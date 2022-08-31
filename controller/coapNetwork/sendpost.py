@@ -9,6 +9,8 @@ from coapthon.server.coap import CoAP
 class Post:
 
     def  changeStatusWatering(status, ad):
+        print("status",status)
+        print("ad",ad)
         client = HelperClient(ad)
         response = client.post("obs", "mode="+status)
         print(response.code)
