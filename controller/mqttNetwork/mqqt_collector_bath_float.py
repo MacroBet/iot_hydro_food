@@ -18,7 +18,7 @@ class MqttClientBathFloat:
     def update_watering_status(self, ad, status):
         dt = datetime.now()
         cursor = self.connection.cursor()
-        sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s, %s)"
+        sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
         cursor.execute(sql, (str(ad), dt, status))
         print("\nSTATUS = " + status)
         self.connection.commit()
