@@ -1,3 +1,4 @@
+from time import sleep
 import paho.mqtt.client as mqtt
 from datetime import datetime
 from database.dataBase import Database
@@ -43,6 +44,7 @@ class MqttClientBathFloat:
             return
         elif status == "2":
             status = "0"
+            sleep(2)
             Post.changeStatusWatering(status, ad)
             dt = datetime.now()
             cursor = self.connection.cursor()
