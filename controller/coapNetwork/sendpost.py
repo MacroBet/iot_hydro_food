@@ -8,22 +8,26 @@ from coapthon.server.coap import CoAP
 
 class Post:
 
-    def  changeStatusWatering(status, ad):
-        print("status",status)
+    clients = {} # ad[0] => client
+    def getClient(ad):
+        address= ad[0]
         print("ad",ad)
-        client = HelperClient(ad)
-        response = client.post("obs", "mode="+status)
+        if(not Post.clients.has_key()):
+            newClient = HelperClient(ad)
+            Post.clients[address]= newClient
+        client = Post.clients[address]
+        return client
+
+    def changeStatusWatering(status, ad):
+        response = Post.getClient(ad).post("obs", "mode="+status)
         print(response.code)
         if response.code == 67:
             return 1
         else:
             return 0
 
-
-
     def  changeStatusWindows(status, ad):
-        client = HelperClient(ad)
-        response = client.post("window", "mode="+status)
+        response = Post.getClient(ad).post("window", "mode="+status)
         print(response.code)
         if response.code == 67:
             return 1
