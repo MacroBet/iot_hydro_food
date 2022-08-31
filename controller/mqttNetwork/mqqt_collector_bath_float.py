@@ -103,11 +103,11 @@ class MqttClientBathFloat:
 #/----------methods to check level of the bath float--------------\
 
       
-    def checkActuatorLevel(self, level, lane):
+    def checkActuatorLevel(self, level):
         if level < 20:
-            self.openCharge(lane)
+            self.openCharge()
         elif level > 80:
-            self.closeCharge(lane)
+            self.closeCharge()
         else:
             print("level not in threshold")
             return 
