@@ -10,7 +10,7 @@ class Post:
 
     clients = {} # ad[0] => client
     def getClient(ad):
-        address= ad[0]
+        address= ''.join(ad[0])
         print("ad",ad)
         if(address not in Post.clients):
             newClient = HelperClient(ad)
