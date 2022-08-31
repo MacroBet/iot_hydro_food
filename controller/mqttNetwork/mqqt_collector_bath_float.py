@@ -125,7 +125,7 @@ class MqttClientBathFloat:
         elif level > 80:
             self.closeCharge(lane)
         else:
-            print("ddsads")
+            print("level not in threshold")
             return 
 
 #/---------------------------------------------------------------------------\
