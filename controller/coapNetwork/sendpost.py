@@ -12,7 +12,7 @@ class Post:
     def getClient(ad):
         address= ad[0]
         print("ad",ad)
-        if(not Post.clients.has_key()):
+        if(address not in Post.clients):
             newClient = HelperClient(ad)
             Post.clients[address]= newClient
         client = Post.clients[address]
