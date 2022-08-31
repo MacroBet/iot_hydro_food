@@ -11,7 +11,6 @@ class Post:
     clients = {} # ad[0] => client
     def getClient(ad):
         address= ''.join(ad[0])
-        print("ad",ad)
         if(address not in Post.clients):
             newClient = HelperClient(ad)
             Post.clients[address]= newClient
@@ -20,7 +19,7 @@ class Post:
 
     def changeStatusWatering(status, ad):
         response = Post.getClient(ad).post("obs", "mode="+status)
-        print(response.code)
+     
         if response.code == 67:
             return 1
         else:
@@ -28,7 +27,7 @@ class Post:
 
     def  changeStatusWindows(status, ad):
         response = Post.getClient(ad).post("window", "mode="+status)
-        print(response.code)
+
         if response.code == 67:
             return 1
         else:

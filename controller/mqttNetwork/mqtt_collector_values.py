@@ -113,6 +113,9 @@ class MqttClientData:
     def stopWatering(self):
         for ad in Addresses.adValves :
             status = self.executeLastState(ad, "watering", "status")
+            manual = self.executeLastState(ad, "watering", "manual")
+            if manual=='1' and status != '0':
+                return
             if status == "1":
                 status = "0"
                 success = Post.changeStatusWatering(status, ad)
@@ -129,7 +132,10 @@ class MqttClientData:
     def startWatering(self):
 
         for ad in Addresses.adValves :
+            manual = self.executeLastState(ad, "watering", "manual")
             status = self.executeLastState(ad, "watering", "status")
+            if manual=='1' and status != '0':
+                return
             if status is  None:
                 status = "1"
                 success = Post.changeStatusWatering(status, ad)
@@ -218,6 +224,7 @@ class MqttClientData:
         return False
 
     def checkActuatorWatering(self, temp, hum, co2):
+        
         if self.shouldOpenWatering(int(temp), int(hum), self.tempMax, self.humMax, self.humMin) :
             self.startWatering()
         else:

@@ -63,8 +63,8 @@ class ObserveSensor:
         with self.connection.cursor() as cursor:
             cursor = self.connection.cursor()
             if table == "watering":
-                sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                cursor.execute(sql, (str(add), timestamp, stat))
+                sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`, `manual`) VALUES (%s, %s, %s, %s)"
+                cursor.execute(sql, (str(add), timestamp, stat, "1"))
                 self.connection.commit()
             else:
                 sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
