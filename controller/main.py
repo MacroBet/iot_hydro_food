@@ -159,7 +159,7 @@ def start_configuration():
         return start_configuration()
 
 if __name__ == "__main__":
-    cfg=  {"tempMax":35,"tempMin":20,"humMax":80,"humMin":35,"co2Max":2000,"co2Min":1000}
+    cfg=  {"tempMax":35,"tempMin":20,"humMax":80,"humMin":35,"co2Max":1800,"co2Min":1200}
     should_configure = input("Welcome to Idrofood simulator 🚀 \nDo you want to configure parameters? (y/n)").lower()
     if(should_configure == "yes" or should_configure == "y"):
         cfg = start_configuration()
