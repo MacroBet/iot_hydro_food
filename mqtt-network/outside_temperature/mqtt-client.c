@@ -255,7 +255,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  }
 
       if(state == STATE_SUBSCRIBED && started){
-        sprintf(pub_topic, "%s", "actuator_outside");
+        sprintf(pub_topic, "%s", "status_outside");
         if(period%10==0) {
           LOG_INFO("Switch day-nigth \n");
           day = !day;
