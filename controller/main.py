@@ -42,6 +42,8 @@ def listOfcommands():
         "exit\n\n")
 
 def extractValuesFromData(msg,msg1):
+    print("msg",msg)
+    print("msg1",msg1)
     data = json.loads(msg) if msg else None
     data1 = json.loads(msg1) if msg1 else None
     
