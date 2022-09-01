@@ -78,13 +78,15 @@ class MqttClientData:
         for ad in Addresses.adWindows:
             open = self.executeLastState(ad,"window", "status")
             manual = self.executeLastState(ad, "window", "manual")
-            print("!!!!!!tring open"+ open)
+            
             if manual=='1' and open != '0':
                 return
+            print("!!!!!!tring open"+ open)
             if open is not None:
                 if open == "0":
                     open = "1"
                     success = Post.changeStatusWindows(open, ad)
+                    print("!!!!!!tring success"+ success)
                     if success == 1:
                         dt = datetime.now()
                         cursor = self.connection.cursor()
