@@ -105,7 +105,7 @@ def checkCommand(command, client, client1):
                 print("\nPress ctrl + C to exit \n")
 
                     
-                time.sleep(1)
+                time.sleep(0.5)
 
 
         except KeyboardInterrupt:
