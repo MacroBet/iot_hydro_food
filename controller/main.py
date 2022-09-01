@@ -94,8 +94,8 @@ def checkCommand(command, client, client1):
             while True:
                 ad = Addresses.adValves[0]
                 ad1 = Addresses.adWindows[0]
-                statWat = client1.executeLastState(ad, "watering", "status") if ad  else "0"
-                statWind = client1.executeLastState(ad1, "watering", "status") if ad1 else "0"
+                statWat = client.executeLastState(ad, "watering", "status") if ad  else "0"
+                statWind = client.executeLastState(ad1, "window", "status") if ad1 else "0"
 
 
                 data = extractValuesFromData(client.message,client1.message)
