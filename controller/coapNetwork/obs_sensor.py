@@ -50,7 +50,7 @@ class ObserveSensor:
         elif self.type == 1:
             status = data["open"]
             dt = datetime.now()
-            self.execute_query(self.address, status, dt, "window", 0)
+            self.execute_query(self.address, status, dt, "window")
             print("\n****** Value windows changed ******", data)
             if str(status) == "1":
                 self.mqtt.communicateToSensors(status, "window")
@@ -60,14 +60,10 @@ class ObserveSensor:
         
 
     def execute_query(self, add, stat, timestamp, table):
+        
         with self.connection.cursor() as cursor:
             cursor = self.connection.cursor()
-            if table == "watering":
-                sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`, `manual`) VALUES (%s, %s, %s, %s)"
-                cursor.execute(sql, (str(add), timestamp, stat, "1"))
-                self.connection.commit()
-            else:
-                sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                cursor.execute(sql, (str(add), timestamp, stat))
-                self.connection.commit()
-        
+            sql = "INSERT INTO actuator_" + table + "(`address`, `timestamp`, `status`, `manual`) VALUES (%s, %s, %s, %s)"
+            cursor.execute(sql, (str(add), timestamp, stat, "1"))
+            self.connection.commit()
+           

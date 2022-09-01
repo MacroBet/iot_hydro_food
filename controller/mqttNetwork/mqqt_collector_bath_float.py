@@ -48,6 +48,9 @@ class MqttClientBathFloat:
     def closeCharge(self):
         for ad in Addresses.adValves :
             status = self.executeLastState(ad, "watering", "status")
+            manual = self.executeLastState(ad, "watering", "manual")
+            if manual=='1' and status != '0':
+                return
             if status == "2":
                 status = "0"
                 sleep(2)
@@ -65,7 +68,9 @@ class MqttClientBathFloat:
     def openCharge(self):
         for ad in Addresses.adValves :
             status = self.executeLastState(ad, "watering", "status")
-            
+            manual = self.executeLastState(ad, "watering", "manual")
+            if manual=='1' and status != '0':
+                return
             if status == "0":
                 status = "2"
                 success = Post.changeStatusWatering(status, ad)

@@ -51,10 +51,11 @@ class MqttClientData:
     def closeWindow(self):
         
         for ad in Addresses.adWindows :
-            open = self.executeLastState(ad, "window")
-            if open is None:
+            open = self.executeLastState(ad, "window", "status", "status")
+            manual = self.executeLastState(ad, "window", "manual")
+            if manual=='1' and open != '0':
                 return
-            elif open == "1":
+            if open == "1":
                 open = "0"
                 success = Post.changeStatusWindows(open, ad)
                 if success == 1:
@@ -65,14 +66,16 @@ class MqttClientData:
                     print("\OPEN = " + open)
                     self.connection.commit()
                     self.communicateToSensors("0", "window")
-                else:
-                    return
+               
          
 
     def openWindow(self):
 
         for ad in Addresses.adWindows:
-            open = self.executeLastState(ad,"window")
+            open = self.executeLastState(ad,"window", "status")
+            manual = self.executeLastState(ad, "window", "manual")
+            if manual=='1' and open != '0':
+                return
             if open is not None:
                 if open == "0":
                     open = "1"
@@ -86,11 +89,7 @@ class MqttClientData:
                         print("\OPEN = " + open)
                         self.connection.commit()
                         self.communicateToSensors("1", "window")
-                    else:
-                        return
-                elif open == "1":
-                    return
-
+                    
             elif open is None:
                 open = "1"
                 success = Post.changeStatusWindows(open, ad)
@@ -103,8 +102,7 @@ class MqttClientData:
                     print("\OPEN = " + open)
                     self.connection.commit()
                     self.communicateToSensors("1", "window")
-                else:
-                    return
+              
 
 #/---------------------------------------------------------------------------\
 
