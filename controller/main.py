@@ -78,8 +78,8 @@ def checkCommand(command, client, client1):
         try:
             msg= client.message
             msg1 = client1.message
-            data = json.loads(msg.payload)
-            data1 = json.loads(msg1.payload)
+            data = json.loads(msg)
+            data1 = json.loads(msg1)
             
             level = data1["level"]
             humidity = data["humidity"]
@@ -96,8 +96,8 @@ def checkCommand(command, client, client1):
                 if(client.message!= msg):
                     msg= client.message
                     msg1= client1.message
-                    data = json.loads(msg.payload)
-                    data1 = json.loads(msg1.payload)
+                    data = json.loads(msg)
+                    data1 = json.loads(msg1)
                     
                     temperature = data["temperature"]
                     humidity = data["humidity"]
