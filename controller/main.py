@@ -41,6 +41,18 @@ def listOfcommands():
         "sim\n"\
         "exit\n\n")
 
+def extractValuesFromData(msg,msg1):
+    data = json.loads(msg) if msg else None
+    data1 = json.loads(msg1) if msg1 else None
+    
+    level = data1["level"] if data1 else 50
+    humidity = data["humidity"] if data else 50
+    temperature = data["temperature"] if data else 30
+    co2 = data["co2"] if data else 1400
+
+    return [temperature,humidity,co2,level]
+            
+
 def checkCommand(command, client, client1):
    
     if command == "help":
@@ -76,36 +88,20 @@ def checkCommand(command, client, client1):
     elif command == "sim":
         
         try:
-            msg= client.message
-            msg1 = client1.message
-            data = json.loads(msg)
-            data1 = json.loads(msg1)
-            
-            level = data1["level"]
-            humidity = data["humidity"]
-            temperature = data["temperature"]
-            co2 = data["co2"]
-            
-            ad = Addresses.adValves[0]
-            ad1 = Addresses.adWindows[0]
-            statWat = client1.executeLastState(ad, "watering", "status") if ad  else "0"
-            statWind = client1.executeLastState(ad1, "watering", "status") if ad1 else "0"
-            print("\nPress ctrl + C to exit \n")
-            
+            data = extractValuesFromData(client.message,client1.message)
             while True:
-                if(client.message!= msg):
-                    msg= client.message
-                    msg1= client1.message
-                    data = json.loads(msg)
-                    data1 = json.loads(msg1)
-                    
-                    temperature = data["temperature"]
-                    humidity = data["humidity"]
-                    co2 = data["co2"]
-                    level = data1["level"]
+                ad = Addresses.adValves[0]
+                ad1 = Addresses.adWindows[0]
+                statWat = client1.executeLastState(ad, "watering", "status") if ad  else "0"
+                statWind = client1.executeLastState(ad1, "watering", "status") if ad1 else "0"
 
-                    os.system('cls' if os.name == 'nt' else 'clear')
-                    print(pa.greenhouse[statWat][statWind].format(temperature,10,humidity,co2,level))
+
+                data = extractValuesFromData(client.message,client1.message)
+        
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print(pa.greenhouse[statWat][statWind].format(data[0],10,data[1],data[2],data[3]))
+                print("\nPress ctrl + C to exit \n")
+
                     
                 time.sleep(1)
 
