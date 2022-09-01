@@ -238,6 +238,9 @@ class MqttClientData:
         openTemp = 0
         openCo2 = 0
 
+        if self.tempIn == None or self.tempOut == None or self.co2In == None:
+            print("NOOOOOOO")
+            return
         if self.tempIn > self.tempMax and tempOut < self.tempIn:
             openTemp = 1
         elif self.tempIn > (self.tempMin + 5) and tempOut < self.tempIn:
