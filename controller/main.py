@@ -41,18 +41,15 @@ def listOfcommands():
         "sim\n"\
         "exit\n\n")
 
-def extractValuesFromData(msg,msg1):
-    print("msg",msg)
-    print("msg1",msg1)
-    data = json.loads(msg) if msg else None
-    data1 = json.loads(msg1) if msg1 else None
+def extractValuesFromClient(client,client1):
     
-    level = data1["level"] if data1 else 50
-    humidity = data["humidity"] if data else 50
-    temperature = data["temperature"] if data else 30
-    co2 = data["co2"] if data else 1400
+    level = client1.levIn if client1.levIn  else 50
+    humidity = client.humIn if client.humIn else 50
+    temperature = client.tempIn if client.tempIn else 30
+    co2 = client.co2In if client.co2In else 1400
+    tempOut = client.tempOut if client.tempOut else 30
 
-    return [temperature,humidity,co2,level]
+    return [temperature,tempOut,humidity,co2,level]
             
 
 def checkCommand(command, client, client1):
@@ -90,7 +87,7 @@ def checkCommand(command, client, client1):
     elif command == "sim":
         
         try:
-            data = extractValuesFromData(client.message,client1.message)
+            data = extractValuesFromClient(client,client1)
             while True:
                 ad = Addresses.adValves[0]
                 ad1 = Addresses.adWindows[0]
@@ -98,10 +95,10 @@ def checkCommand(command, client, client1):
                 statWind = client.executeLastState(ad1, "window", "status") if ad1 else "0"
 
 
-                data = extractValuesFromData(client.message,client1.message)
+                data = extractValuesFromClient(client,client1)
         
                 os.system('cls' if os.name == 'nt' else 'clear')
-                print(pa.greenhouse[statWat][statWind].format(data[0],10,data[1],data[2],data[3]))
+                print(pa.greenhouse[statWat][statWind].format(data[0],data[1],data[2],data[3],data[4]))
                 print("\nPress ctrl + C to exit \n")
 
                     

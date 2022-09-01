@@ -30,6 +30,7 @@ class MqttClientData:
             co2 = data["co2"]
             self.tempIn = temperature
             self.co2In = co2
+            self.humIn = humidity
             dt = datetime.now()
             cursor = self.connection.cursor()
             sql = "INSERT INTO `data` (`id_node`, `timestamp`, `temperature`, `humidity`, `co2`) VALUES (%s, %s, %s, %s, %s)"
@@ -42,6 +43,7 @@ class MqttClientData:
             data = json.loads(msg.payload)
             node_id = data["node"]
             tempOut = data["tempOut"]
+            self.tempOut = None
             self.checkActuatorWindow(tempOut)
    
              
@@ -259,6 +261,7 @@ class MqttClientData:
         self.db = Database()
         self.connection = self.db.connect_db()
         self.message = ""
+        self.data= {}
         self.tempMax = tempMax
         self.tempMin = tempMin
         self.humMax = humMax
@@ -266,7 +269,9 @@ class MqttClientData:
         self.co2Max = co2Max
         self.co2Min = co2Min
         self.tempIn = None
+        self.tempOut = None
         self.co2In = None
+        self.humIn = None
         self.type = type
         if type == "check":
             print("\n****** Mqtt client Temperature Humidity Co2 starting ******")

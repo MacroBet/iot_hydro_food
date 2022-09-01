@@ -38,6 +38,7 @@ class MqttClientBathFloat:
             data = json.loads(msg.payload)
             node_id = data["node"]
             level = data["level"]
+            self.levIn = level
             self.update_bath_float_level(node_id,level)
             self.checkActuatorLevel(level)
         else:
@@ -136,6 +137,7 @@ class MqttClientBathFloat:
         self.connection = self.db.connect_db()
         self.message = ""
         self.level = 80
+        self.levIn = None
         print("\n****** Mqtt client bath float starting ******")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
