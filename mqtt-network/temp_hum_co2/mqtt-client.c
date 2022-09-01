@@ -306,7 +306,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           diff2 = 2;
         }
         if(day && openW) {
-          co2 -= 100;//(int) variation % 100;
+          co2 -= 200;//(int) variation % 100;
           if (watering) {
             temperature -= diff;//(int) variation % 3;
             humidity += diff2;//(int) variation % 5;
@@ -316,7 +316,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
           }
         } 
         else if(!day && openW) {
-          co2 -= 100;//(int) variation % 50;
+          co2 -= 200;//(int) variation % 50;
           if (watering) {
             temperature -= diff;//(int) variation % 4;
             humidity += diff2;//(int) variation % 7;
@@ -325,7 +325,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
             humidity -= diff2;//(int) variation % 3;
         }
         } else if(day && !openW) {
-          co2 += 100;//(int) variation % 50;
+          co2 += 200;//(int) variation % 50;
           if (watering) {
             temperature -= diff;//(int) variation % 2;
             humidity += diff2;//(int) variation % 6;
@@ -334,7 +334,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
             humidity -= diff2;//(int) variation % 4;
         }
         } else if(!day && !openW) {
-          co2 += 100;//(int) variation % 100;
+          co2 += 200;//(int) variation % 100;
           if (watering) {
             temperature -= diff;//(int) variation % 5;
             humidity += diff2;//(int) variation %6;

@@ -39,7 +39,7 @@ class MqttClientData:
             self.checkActuatorWatering(temperature, humidity, co2)
         
         elif msg.topic == "status_outside" :
-            self.message = msg.payload
+            self.message1 = msg.payload
             data = json.loads(msg.payload)
             node_id = data["node"]
             tempOut = data["tempOut"]
@@ -252,7 +252,7 @@ class MqttClientData:
         if openTemp == 1 and openCo2 == 1 :  
             self.openWindow()
         elif openTemp == 0 and openCo2 == 1:
-            self.closeWindow()
+            self.openWindow()
         elif openTemp == 1 and openCo2 == 0:
             self.openWindow()
         elif openTemp == 0 and openCo2 == 0:
@@ -267,6 +267,7 @@ class MqttClientData:
         self.db = Database()
         self.connection = self.db.connect_db()
         self.message = ""
+        self.message1 = ""
         self.data= {}
         self.tempMax = tempMax
         self.tempMin = tempMin

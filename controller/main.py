@@ -64,7 +64,7 @@ def checkCommand(command, client, client1):
             while True:
                 time.sleep(1)
                 if(str(client.message)!= msg):
-                    print(str(client.message)+"\n"+str(client1.message))
+                    print(str(client.message)+"\n"+str(client1.message)+"\n"+str(client.message1))
                     msg= str(client.message)
         except KeyboardInterrupt:
          return
