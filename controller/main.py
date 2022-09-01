@@ -1,7 +1,9 @@
 
+import json
 from pydoc import cli
 import threading
 import time
+from controller.coapNetwork.addresses import Addresses
 from mqttNetwork.mqtt_collector_values import MqttClientData
 from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 import paho.mqtt.client as mqtt
@@ -14,7 +16,10 @@ from coapthon.client.helperclient import HelperClient
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
 from coapNetwork.resExample import ResExample
+import pixel_art as pa
 import time
+import os
+
 
 
 
@@ -33,6 +38,7 @@ def listOfcommands():
         "activate\n"\
         "log\n"\
         "bath\n"\
+        "sim\n"\
         "exit\n\n")
 
 def checkCommand(command, client, client1):
@@ -66,6 +72,47 @@ def checkCommand(command, client, client1):
   
     elif command == "activate":
         client.communicateToSensors("start","inValues")
+    
+    elif command == "sim":
+        
+        try:
+            msg= client.message
+            msg1 = client1.message
+            data = json.loads(msg.payload)
+            data1 = json.loads(msg1.payload)
+            
+            level = data1["level"]
+            humidity = data["humidity"]
+            temperature = data["temperature"]
+            co2 = data["co2"]
+            
+            ad = Addresses.adValves[0]
+            ad1 = Addresses.adWindows[0]
+            statWat = client1.executeLastState(ad, "watering", "status") if ad  else "0"
+            statWind = client1.executeLastState(ad1, "watering", "status") if ad1 else "0"
+            print("\nPress ctrl + C to exit \n")
+            
+            while True:
+                if(client.message!= msg):
+                    msg= client.message
+                    msg1= client1.message
+                    data = json.loads(msg.payload)
+                    data1 = json.loads(msg1.payload)
+                    
+                    temperature = data["temperature"]
+                    humidity = data["humidity"]
+                    co2 = data["co2"]
+                    level = data1["level"]
+
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    print(pa.greenhouse[statWat][statWind].format(temperature,10,humidity,co2,level))
+                    
+                time.sleep(1)
+
+
+        except KeyboardInterrupt:
+            return
+
        
     elif command == "exit":
         thread.join()
@@ -86,6 +133,7 @@ def showInfo():
           "change value humidity ---> check only the values of humidity\n"\
           "change value temperature ---> check only the values of temperature\n"\
           "bath ---> check level of the bath float\n"\
+          "sim ---> show simulation of the greenhouse\n"\
           "help ---> show the commands that can be promted\n")
 
 
@@ -140,7 +188,7 @@ if __name__ == "__main__":
     
     time.sleep(20)
     
-    
+
     try:
         while 1:
             if ResExample.valves == 1 and ResExample.windows == 1:
@@ -163,6 +211,4 @@ if __name__ == "__main__":
         thread2.join()
         server.close()
         print("SHUTDOWN")
-
-        
 
