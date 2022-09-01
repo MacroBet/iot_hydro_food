@@ -3,7 +3,7 @@ import json
 from pydoc import cli
 import threading
 import time
-from controller.coapNetwork.addresses import Addresses
+from coapNetwork.addresses import Addresses
 from mqttNetwork.mqtt_collector_values import MqttClientData
 from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 import paho.mqtt.client as mqtt
