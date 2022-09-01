@@ -54,6 +54,7 @@ class MqttClientData:
         
         for ad in Addresses.adWindows :
             open = self.executeLastState(ad, "window", "status")
+            print("!!!!!!tring close"+ open)
             manual = self.executeLastState(ad, "window", "manual")
             if manual=='1' and open != '0':
                 return
@@ -64,8 +65,9 @@ class MqttClientData:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                    cursor.execute(sql, (str(ad), dt, "0"))
-                    print("\OPEN = " + open)
+                    cursor.execute(sql, (str(ad), dt, open))
+                    print("**********************\CLOSE WINDOWS\n**********************\n")
+                    print("\CLOSE = " + open)
                     self.connection.commit()
                     self.communicateToSensors("0", "window")
                
@@ -87,7 +89,7 @@ class MqttClientData:
                         cursor = self.connection.cursor()
                         sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                         cursor.execute(sql, (str(ad), dt, open))
-                        print("**********************\nOPENING WINDOW\n**********************\n")
+                        print("**********************\nOPENING WINDOWS\n**********************\n")
                         print("\OPEN = " + open)
                         self.connection.commit()
                         self.communicateToSensors("1", "window")

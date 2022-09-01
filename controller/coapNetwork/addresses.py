@@ -13,7 +13,7 @@ class Addresses:
             Addresses.adValves.append(source)
         elif str == "windows":
              Addresses.adWindows.append(source)
-             print(Addresses.adWindows[0])
+             
     
     def constructAddress():
         if Addresses.address is not None:
