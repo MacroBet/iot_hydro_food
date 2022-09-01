@@ -53,7 +53,7 @@ class MqttClientData:
     def closeWindow(self):
         
         for ad in Addresses.adWindows :
-            open = self.executeLastState(ad, "window", "status", "status")
+            open = self.executeLastState(ad, "window", "status")
             manual = self.executeLastState(ad, "window", "manual")
             if manual=='1' and open != '0':
                 return
