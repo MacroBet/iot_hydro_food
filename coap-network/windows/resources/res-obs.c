@@ -86,6 +86,7 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
     // status == 0 (windows close)
     if (strncmp(mode, "0", len) == 0){
       LOG_INFO("close");
+      coap_set_status_code(response,VALID_2_03);
       rgb_led_set(RGB_LED_RED);
       status = 0;
       success = 1;
@@ -93,6 +94,7 @@ static void res_post_handler(coap_message_t *request, coap_message_t *response, 
     // status == 1 (windows open)
     else if (strncmp(mode, "1", len) == 0){
       LOG_INFO("open");
+      coap_set_status_code(response,VALID_2_03);
       rgb_led_set(RGB_LED_GREEN);
       status = 1;
       success = 1;
