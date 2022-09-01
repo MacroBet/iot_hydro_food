@@ -86,7 +86,7 @@ class MqttClientData:
                 if open == "0":
                     open = "1"
                     success = Post.changeStatusWindows(open, ad)
-                    print("!!!!!!tring success"+ success)
+                    print("!!!!!!tring success"+ str(success))
                     if success == 1:
                         dt = datetime.now()
                         cursor = self.connection.cursor()
