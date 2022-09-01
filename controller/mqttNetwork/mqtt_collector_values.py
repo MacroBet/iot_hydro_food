@@ -78,6 +78,7 @@ class MqttClientData:
         for ad in Addresses.adWindows:
             open = self.executeLastState(ad,"window", "status")
             manual = self.executeLastState(ad, "window", "manual")
+            print("!!!!!!tring open"+ open)
             if manual=='1' and open != '0':
                 return
             if open is not None:
@@ -237,8 +238,6 @@ class MqttClientData:
         openTemp = 0
         openCo2 = 0
 
-        if self.co2In is None or self.tempIn is  None: return
-            
         if self.tempIn > self.tempMax and tempOut < self.tempIn:
             openTemp = 1
         elif self.tempIn > (self.tempMin + 5) and tempOut < self.tempIn:
@@ -250,12 +249,16 @@ class MqttClientData:
             openCo2 = 0
 
         if openTemp == 1 and openCo2 == 1 :  
+            print("CASO 1")
             self.openWindow()
         elif openTemp == 0 and openCo2 == 1:
+            print("CASO 2")
             self.openWindow()
         elif openTemp == 1 and openCo2 == 0:
+            print("CASO 3")
             self.openWindow()
         elif openTemp == 0 and openCo2 == 0:
+            print("CASO 4")
             self.closeWindow()
 
 
