@@ -34,7 +34,7 @@ class MqttClientBathFloat:
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
         if msg.topic == "status_bathFloat":
-            self.message = str(msg.payload)
+            self.message = msg.payload
             data = json.loads(msg.payload)
             node_id = data["node"]
             level = data["level"]

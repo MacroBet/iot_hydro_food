@@ -62,13 +62,13 @@ def checkCommand(command, client, client1):
 
     elif command == "log":
         try:
-            msg= client.message
+            msg= str(client.message)
             print("\nPress ctrl + C to exit \n")
             while True:
                 time.sleep(1)
-                if(client.message!= msg):
-                    print(client.message+"\n"+client1.message)
-                    msg= client.message
+                if(str(client.message)!= msg):
+                    print(str(client.message)+"\n"+str(client1.message))
+                    msg= str(client.message)
         except KeyboardInterrupt:
          return
 

@@ -22,7 +22,7 @@ class MqttClientData:
     def on_message(self, client, userdata, msg):
       
         if msg.topic == "status_data" :
-            self.message = str(msg.payload)
+            self.message = msg.payload
             data = json.loads(msg.payload)
             node_id = data["node"]
             temperature = data["temperature"]
@@ -38,7 +38,7 @@ class MqttClientData:
             self.checkActuatorWatering(temperature, humidity, co2)
         
         elif msg.topic == "status_outside" :
-            self.message = str(msg.payload)
+            self.message = msg.payload
             data = json.loads(msg.payload)
             node_id = data["node"]
             tempOut = data["tempOut"]
