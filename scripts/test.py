@@ -13,7 +13,7 @@ def loop() :
 
 
 if __name__ == "__main__":
-   
+    count = 0
     # t = threading.Event()
     # thread = threading.Thread(target=loop, kwargs={})
     # thread.start()
