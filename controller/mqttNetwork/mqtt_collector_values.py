@@ -68,6 +68,7 @@ class MqttClientData:
                     print("\n🚫🚫🚫🚫 CLOSE WINDOWS 🚫🚫🚫🚫\n")
                     
                     self.connection.commit()
+                    self.stateWind = open
                     self.communicateToSensors("0", "window")
                
          
@@ -91,6 +92,7 @@ class MqttClientData:
                         cursor.execute(sql, (str(ad), dt, open))
                         print("\n💨💨💨💨 OPENING WINDOWS 💨💨💨💨\n")
                         self.connection.commit()
+                        self.stateWind = open
                         self.communicateToSensors("1", "window")
                     
             elif open is None:
@@ -103,6 +105,7 @@ class MqttClientData:
                     cursor.execute(sql, (str(ad), dt, open))
                     print("\n💨💨💨💨 OPENING WINDOW 💨💨💨💨\n")
                     self.connection.commit()
+                    self.stateWind = open
                     self.communicateToSensors("1", "window")
               
 
@@ -123,10 +126,11 @@ class MqttClientData:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                    cursor.execute(sql, (str(ad), dt, "0"))
+                    cursor.execute(sql, (str(ad), dt, status))
                     print("\n🚫🚫🚫🚫 STOP WATERING 🚫🚫🚫🚫\n")
                     
                     self.connection.commit()
+                    self.stateWat = status
                     self.communicateToSensors("0", "inValues")
     
     def startWatering(self):
@@ -143,10 +147,11 @@ class MqttClientData:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                    cursor.execute(sql, (str(ad), dt, "1"))
+                    cursor.execute(sql, (str(ad), dt, status))
                     print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
          
                     self.connection.commit()
+                    self.stateWat = status
                     self.communicateToSensors(status, "inValues")
             if status == "0":
                 status = "1"
@@ -155,10 +160,11 @@ class MqttClientData:
                     dt = datetime.now()
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
-                    cursor.execute(sql, (str(ad), dt, "1"))
+                    cursor.execute(sql, (str(ad), dt, status))
                     print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
                 
                     self.connection.commit()
+                    self.stateWat = status
                     self.communicateToSensors(status, "inValues")
 
 
@@ -281,6 +287,8 @@ class MqttClientData:
         self.tempOut = None
         self.co2In = None
         self.humIn = None
+        self.stateWat = None
+        self.stateWind = None
         self.type = type
         if type == "check":
             print("\n💦  💨  🌡  Mqtt client Temperature Humidity Co2 starting 💦  💨  🌡")

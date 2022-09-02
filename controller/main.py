@@ -94,17 +94,12 @@ def checkCommand(command, client, client1):
         
         try:
             data = extractValuesFromClient(client,client1)
-            ad = Addresses.adValves[0]
-            ad1 = Addresses.adWindows[0]
+           
             while True:
                 
-               
-                statWat = client.executeLastState(ad, "watering", "status") if ad  else "0"
-                statWind = client.executeLastState(ad1, "window", "status") if ad1 else "0"
-
-
+                statWat = client.statWat
+                statWind = client.statWind
                 data = extractValuesFromClient(client,client1)
-        
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(pa.greenhouse[statWat][statWind].format(data[0],data[1],data[2],data[3],data[4]))
                 print("\nPress ctrl + C to exit \n")
