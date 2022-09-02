@@ -68,7 +68,6 @@ class MqttClientData:
                     print("\n🚫🚫🚫🚫 CLOSE WINDOWS 🚫🚫🚫🚫\n")
                     
                     self.connection.commit()
-                    self.stateWind = open
                     self.communicateToSensors("0", "window")
                
          
@@ -92,7 +91,6 @@ class MqttClientData:
                         cursor.execute(sql, (str(ad), dt, open))
                         print("\n💨💨💨💨 OPENING WINDOWS 💨💨💨💨\n")
                         self.connection.commit()
-                        self.stateWind = open
                         self.communicateToSensors("1", "window")
                     
             elif open is None:
@@ -105,7 +103,6 @@ class MqttClientData:
                     cursor.execute(sql, (str(ad), dt, open))
                     print("\n💨💨💨💨 OPENING WINDOW 💨💨💨💨\n")
                     self.connection.commit()
-                    self.stateWind = open
                     self.communicateToSensors("1", "window")
               
 
@@ -130,7 +127,6 @@ class MqttClientData:
                     print("\n🚫🚫🚫🚫 STOP WATERING 🚫🚫🚫🚫\n")
                     
                     self.connection.commit()
-                    self.stateWat = status
                     self.communicateToSensors("0", "inValues")
     
     def startWatering(self):
@@ -151,7 +147,6 @@ class MqttClientData:
                     print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
          
                     self.connection.commit()
-                    self.stateWat = status
                     self.communicateToSensors(status, "inValues")
             if status == "0":
                 status = "1"
@@ -164,7 +159,6 @@ class MqttClientData:
                     print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
                 
                     self.connection.commit()
-                    self.stateWat = status
                     self.communicateToSensors(status, "inValues")
 
 
@@ -196,15 +190,19 @@ class MqttClientData:
         if type == "inValues":
 
             if str(status) == "1":
+                self.stateWat = 1
                 self.client.publish("actuator_data","wat")
                 self.client.publish("actuator_bathFloat","wat")
             elif str(status) == "0" :
+                self.stateWat = 0
                 self.client.publish("actuator_data","notWat")
                 self.client.publish("actuator_bathFloat","stop")
             elif str(status) == "2" :
+                self.stateWat = 2
                 self.client.publish("actuator_data","notWat")
                 self.client.publish("actuator_bathFloat","charge")
             elif str(status) == "start":
+                self.stateWat = 0
                 self.client.publish("actuator_data","start")
                 self.client.publish("actuator_bathFloat","start")
                 self.client.publish("actuator_outside","start")
@@ -213,9 +211,11 @@ class MqttClientData:
         elif type == "window":
 
             if str(status) == "1":
-                    self.client.publish("actuator_data","Open")
+                self.stateWind = 1
+                self.client.publish("actuator_data","Open")
             elif str(status) == "0":
-                    self.client.publish("actuator_data","notOpen")
+                self.stateWind = 0
+                self.client.publish("actuator_data","notOpen")
            
 
                     
