@@ -6,8 +6,9 @@ from time import sleep
 
 
 def loop() :
-  print("1")
-  sleep(2)
+  while(1):
+    print("1")
+    sleep(2)
 
 
 if __name__ == "__main__":
