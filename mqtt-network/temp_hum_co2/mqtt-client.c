@@ -145,24 +145,24 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
     } 
     else if(strcmp((const char*) chunk, "wat") == 0) {
         LOG_INFO("Start watering\n");
-        if(start)
+        if(started)
           rgb_led_set(RGB_LED_BLUE);
         watering = true;
     }
     else if(strcmp((const char*) chunk, "notWat") == 0)  {    
       LOG_INFO("Not watering\n");	
-      if(start)
+      if(started)
         rgb_led_set(RGB_LED_GREEN);
       watering = false;
     }	
     else if(strcmp((const char*) chunk, "Open") == 0)  {    
       LOG_INFO("Open windows\n");	
-      if(start)
+      if(started)
         rgb_led_set(RGB_LED_YELLOW);
       openW = true;
     }	else if(strcmp((const char*) chunk, "notOpen") == 0)  {
       LOG_INFO("Not open windows\n");	
-      if(start)
+      if(started)
         rgb_led_set(RGB_LED_GREEN);
       openW = false;
     } 
