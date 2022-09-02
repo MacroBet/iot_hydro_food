@@ -98,8 +98,8 @@ def checkCommand(command, client, client1):
             
             while True:
                 
-                statWat = globalStatus.statusValve
-                statWind = globalStatus.statusWindow
+                statWat = str(globalStatus.statusValve)
+                statWind = str(globalStatus.statusWindow)
                 data = extractValuesFromClient(client,client1)
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(pa.greenhouse[statWat][statWind].format(data[0],data[1],data[2],data[3],data[4]))
