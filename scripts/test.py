@@ -13,11 +13,10 @@ def loop() :
 
 if __name__ == "__main__":
    
-
+    t = threading.Event()
     thread = threading.Thread(target=loop, kwargs={})
     thread.start()
 
     sleep(8)
-    print("shutdown")
-    thread.join()
+    
     sys.exit()
