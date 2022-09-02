@@ -11,7 +11,7 @@ from coapNetwork.sendpost import Post
 class MqttClientBathFloat:
 
     def on_connect(self, client, userdata, flags, rc):
-        print("****** Connected with result code "+str(rc) + " ******\n")
+        #print("****** Connected with result code "+str(rc) + " ******\n")
         self.client.subscribe("status_bathFloat")
         self.client.subscribe("actuator_bathFloat")
 
@@ -58,12 +58,13 @@ class MqttClientBathFloat:
                 success = Post.changeStatusWatering(status, ad)
                 if success == 1:
                     self.update_watering_status(str(ad),"0")
-                    print("**********************\nCLOSE CHARGE TANK\n**********************\n")
+                    print("🚫🚫🚫🚫🚫🚫🚫🚫🚫\nCLOSE CHARGE TANK\n🚫🚫🚫🚫🚫🚫🚫🚫🚫\n")
                     print("\nSTATUS = " + status)
                     self.connection.commit()
                     self.communicateToSensors("0")
             else:
                 return
+
 
 
     def openCharge(self):
@@ -77,7 +78,7 @@ class MqttClientBathFloat:
                 success = Post.changeStatusWatering(status, ad)
                 if success == 1:
                     self.update_watering_status(ad, status)
-                    print("**********************\nOPEN CHARGE TANK\n**********************\n")
+                    print("🛁🛁🛁🛁🛁🛁🛁🛁🛁\nOPEN CHARGE TANK\n🛁🛁🛁🛁🛁🛁🛁🛁🛁\n")
                     self.communicateToSensors("2")
 
             if status is None:
@@ -85,7 +86,7 @@ class MqttClientBathFloat:
                 success = Post.changeStatusWatering(status, ad)
                 if success == 1:
                     self.update_watering_status(ad, status)
-                    print("**********************\nOPEN CHARGE TANK\n**********************\n")
+                    print("🛁🛁🛁🛁🛁🛁🛁🛁🛁\nOPEN CHARGE TANK\n🛁🛁🛁🛁🛁🛁🛁🛁🛁\n")
                     self.communicateToSensors("2")
 
 #/---------------------------------------------------------------------------\
@@ -138,7 +139,7 @@ class MqttClientBathFloat:
         self.message = ""
         self.level = 80
         self.levIn = None
-        print("\n****** Mqtt client bath float starting ******")
+        print("\n🛁🛁🛁🛁🛁🛁 Mqtt client bath float starting 🛁🛁🛁🛁🛁🛁")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message

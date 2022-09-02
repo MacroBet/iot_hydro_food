@@ -182,14 +182,16 @@ if __name__ == "__main__":
     thread2.start()
     
     time.sleep(20)
-    
+    start = 0
 
     try:
         while 1:
             if ResExample.valves == 1 and ResExample.windows == 1:
-                
+
                     print("System is running--->\n\n ")
-                    print("Use command 'activate' to start sensor node\n\n ")
+                    if start == 0:
+                        print("Use command 'activate' to start sensor node\n\n ")
+                        start = 1
                     command = input("COMMAND>")
                     command = command.lower()
                     print(command)
