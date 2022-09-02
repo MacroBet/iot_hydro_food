@@ -24,4 +24,4 @@ if __name__ == "__main__":
       count += 1
       if count == 3:
     
-        os.exit(0)
+        os._exit(0)
