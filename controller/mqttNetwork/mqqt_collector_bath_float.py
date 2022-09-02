@@ -59,7 +59,6 @@ class MqttClientBathFloat:
                 if success == 1:
                     self.update_watering_status(str(ad),"0")
                     print("\n🚫🚫🚫🚫 CLOSE CHARGE TANK 🚫🚫🚫🚫\n")
-                    print("COMMAND>")
                     self.connection.commit()
                     self.communicateToSensors("0")
             else:
@@ -79,7 +78,6 @@ class MqttClientBathFloat:
                 if success == 1:
                     self.update_watering_status(ad, status)
                     print("\n🛁🛁🛁🛁 OPEN CHARGE TANK 🛁🛁🛁🛁\n")
-                    print("COMMAND>")
                     self.communicateToSensors("2")
 
             if status is None:
@@ -88,7 +86,6 @@ class MqttClientBathFloat:
                 if success == 1:
                     self.update_watering_status(ad, status)
                     print("\n🛁🛁🛁🛁 OPEN CHARGE TANK 🛁🛁🛁🛁\n")
-                    print("COMMAND>")
                     self.communicateToSensors("2")
 
 #/---------------------------------------------------------------------------\
