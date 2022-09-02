@@ -125,10 +125,10 @@ def checkCommand(command, client, client1):
         client.co2Min = cfg["co2Min"]
 
     elif command == "exit":
-        thread.join()
-        thread1.join()
-        server.close()
-        thread2.join()
+        # thread.join()
+        # thread1.join()
+        # server.close()
+        # thread2.join()
         print("SHUTDOWN")
         os._exit(0)
     else:
@@ -221,7 +221,7 @@ if __name__ == "__main__":
                         start = 1
                     command = input("COMMAND>")
                     command = command.lower()
-                    print(command)
+                    
                     checkCommand(command, client, client1)
             else:
  
@@ -230,10 +230,10 @@ if __name__ == "__main__":
 
         
     except KeyboardInterrupt:
-        thread.join()
-        thread1.join()
-        server.close()
-        thread2.join()
+        # thread.join()
+        # thread1.join()
+        # server.close()
+        # thread2.join()
         print("SHUTDOWN")
         os._exit(0)
 
