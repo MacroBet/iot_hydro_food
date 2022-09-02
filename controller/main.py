@@ -3,7 +3,7 @@ import json
 from pydoc import cli
 import threading
 import time
-import sys
+import os
 from coapNetwork.addresses import Addresses
 from mqttNetwork.mqtt_collector_values import MqttClientData
 from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
@@ -127,10 +127,10 @@ def checkCommand(command, client, client1):
     elif command == "exit":
         thread.join()
         thread1.join()
-        thread2.join()
         server.close()
+        thread2.join()
         print("SHUTDOWN")
-        sys.exit()
+        os._exit(0)
     else:
         print("Command not found")
         listOfcommands()
@@ -232,9 +232,10 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         thread.join()
         thread1.join()
-        thread2.join()
         server.close()
+        thread2.join()
         print("SHUTDOWN")
+        os._exit(0)
 
 
 
