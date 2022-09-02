@@ -214,8 +214,9 @@ if __name__ == "__main__":
         while 1:
             if ResExample.valves == 1 and ResExample.windows == 1:
 
-                    print("🖥 🖥  System is running  🖥 🖥\n\n ")
+                   
                     if start == 0:
+                        print("\n🖥  🖥  System is running  🖥  🖥\n\n ")
                         print("Use command 'activate' to start sensor node\n\n ")
                         start = 1
                     command = input("COMMAND>")
@@ -223,9 +224,8 @@ if __name__ == "__main__":
                     print(command)
                     checkCommand(command, client, client1)
             else:
-            
  
-                print("\n⌛️⌛️⌛️ Controller is wating for all the sensors ⌛️⌛️⌛️\n ")
+                print("\n⌛️ ⌛️ ⌛️ Controller is wating for all the sensors ⌛️ ⌛️ ⌛️\n ")
                 time.sleep(5)
 
         
