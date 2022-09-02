@@ -20,7 +20,7 @@ if __name__ == "__main__":
     while(1):
       print("1")
       sleep(1)
-      count += count
+      count += 1
       if count == 3:
     
         sys.exit()
