@@ -94,11 +94,11 @@ def checkCommand(command, client, client1):
         
         try:
             data = extractValuesFromClient(client,client1)
-           
+            
             while True:
                 
-                statWat = client.stateWat
-                statWind = client.stateWind
+                statWat = client.stateWat if client.stateWat == None  else client.stateWat
+                statWind = client.stateWat if client.stateWat == None  else client.stateWat
                 data = extractValuesFromClient(client,client1)
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(pa.greenhouse[statWat][statWind].format(data[0],data[1],data[2],data[3],data[4]))
