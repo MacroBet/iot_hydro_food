@@ -7,7 +7,7 @@ from time import sleep
 
 def loop() :
   print("1")
-  sleep(5)
+  sleep(2)
 
 
 if __name__ == "__main__":
@@ -17,5 +17,6 @@ if __name__ == "__main__":
     thread.start()
 
     sleep(8)
+    print("shutdown")
     thread.join()
     sys.exit()
