@@ -139,7 +139,7 @@ class MqttClientBathFloat:
         self.message = ""
         self.level = 80
         self.levIn = None
-        print("\n🛁🛁🛁🛁🛁🛁 Mqtt client bath float starting 🛁🛁🛁🛁🛁🛁")
+        print("\n🛁 🛁 🛁 Mqtt client bath float starting 🛁 🛁 🛁")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message

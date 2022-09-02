@@ -35,7 +35,7 @@ class ObserveSensor:
             status = data["status"]
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "watering")
-            print("\n****** Value valves changed ******", data)
+            print("\n****** Value valves changed ******\n", data)
             if str(status) == "1":
                 self.mqtt.communicateToSensors(status, "inValues")
 
@@ -51,7 +51,7 @@ class ObserveSensor:
             status = data["open"]
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "window")
-            print("\n****** Value windows changed ******", data)
+            print("\n****** Value windows changed ******\n", data)
             if str(status) == "1":
                 self.mqtt.communicateToSensors(status, "window")
 
