@@ -15,13 +15,9 @@ def loop() :
 
 if __name__ == "__main__":
     count = 0
-    # t = threading.Event()
-    # thread = threading.Thread(target=loop, kwargs={})
-    # thread.start()
-    while(1):
-      print("1")
-      sleep(1)
-      count += 1
-      if count == 3:
-    
-        os._exit(0)
+    t = threading.Event()
+    thread = threading.Thread(target=loop, kwargs={})
+    thread.start()
+   
+    sleep(6)
+    os._exit(0)
