@@ -17,6 +17,7 @@ from coapthon.client.helperclient import HelperClient
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
 from coapNetwork.resExample import ResExample
+from globaStatus import globalStatus
 import pixel_art as pa
 import time
 import os
@@ -97,8 +98,8 @@ def checkCommand(command, client, client1):
             
             while True:
                 
-                statWat = str(client.stateWat) if client.stateWat is not None  else '0'
-                statWind = str(client.stateWind) if client.stateWind is not None  else '0'
+                statWat = globalStatus.statusValve
+                statWind = globalStatus.statusWindow
                 data = extractValuesFromClient(client,client1)
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(pa.greenhouse[statWat][statWind].format(data[0],data[1],data[2],data[3],data[4]))

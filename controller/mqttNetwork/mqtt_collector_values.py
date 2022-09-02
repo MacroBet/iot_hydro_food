@@ -1,3 +1,4 @@
+import imp
 import paho.mqtt.client as mqtt
 from datetime import datetime
 from database.dataBase import Database
@@ -5,6 +6,7 @@ import json
 from pydoc import cli
 from coapNetwork.addresses import Addresses
 from coapNetwork.sendpost import Post
+from globaStatus import globalStatus
 
 class MqttClientData:
 
@@ -190,19 +192,19 @@ class MqttClientData:
         if type == "inValues":
 
             if str(status) == "1":
-                self.stateWat = 1
+                globalStatus.setStatusValve(1)
                 self.client.publish("actuator_data","wat")
                 self.client.publish("actuator_bathFloat","wat")
             elif str(status) == "0" :
-                self.stateWat = 0
+                globalStatus.setStatusValve(0)
                 self.client.publish("actuator_data","notWat")
                 self.client.publish("actuator_bathFloat","stop")
             elif str(status) == "2" :
-                self.stateWat = 2
+                globalStatus.setStatusValve(2)
                 self.client.publish("actuator_data","notWat")
                 self.client.publish("actuator_bathFloat","charge")
             elif str(status) == "start":
-                self.stateWat = 0
+                globalStatus.setStatusValve(0)
                 self.client.publish("actuator_data","start")
                 self.client.publish("actuator_bathFloat","start")
                 self.client.publish("actuator_outside","start")
@@ -211,10 +213,10 @@ class MqttClientData:
         elif type == "window":
 
             if str(status) == "1":
-                self.stateWind = 1
+                globalStatus.setStatusWindow(1)
                 self.client.publish("actuator_data","Open")
             elif str(status) == "0":
-                self.stateWind = 0
+                globalStatus.setStatusWindow(0)
                 self.client.publish("actuator_data","notOpen")
            
 
@@ -287,8 +289,6 @@ class MqttClientData:
         self.tempOut = None
         self.co2In = None
         self.humIn = None
-        self.stateWat = None
-        self.stateWind = None
         self.type = type
         if type == "check":
             print("\n💦  💨  🌡  Mqtt client Temperature Humidity Co2 starting 💦  💨  🌡")
