@@ -97,8 +97,8 @@ def checkCommand(command, client, client1):
             
             while True:
                 
-                statWat = str(client.stateWat) if str(client.stateWat) is not None  else '0'
-                statWind = str(client.stateWind) if str(client.stateWind) is not None  else '0'
+                statWat = str(client.stateWat) if client.stateWat is not None  else '0'
+                statWind = str(client.stateWind) if client.stateWind is not None  else '0'
                 data = extractValuesFromClient(client,client1)
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(pa.greenhouse[statWat][statWind].format(data[0],data[1],data[2],data[3],data[4]))
