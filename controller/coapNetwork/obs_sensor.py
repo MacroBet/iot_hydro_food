@@ -43,7 +43,7 @@ class ObserveSensor:
                 self.mqtt.communicateToSensors(status, "inValues")
 
             elif str(status) == "0":
-                print("\n🚫🚫🚫🚫 CLOSE VALVES 🚫🚫🚫🚫\n")
+                print("\n🚫🚫🚫🚫 VALVES DEFAULT STATE 🚫🚫🚫🚫\n")
                 globalStatus.setStatusValve(0)
                 self.mqtt.communicateToSensors(status, "inValues")
 
@@ -64,7 +64,7 @@ class ObserveSensor:
                 self.mqtt.communicateToSensors(status, "window")
 
             elif str(status) == "0":
-                print("\n🚫🚫🚫🚫 CLOSE WINDOWS 🚫🚫🚫🚫\n")
+                print("\n🚫🚫🚫🚫 WINDOWS DEFAULT STATE 🚫🚫🚫🚫\n")
                 globalStatus.setStatusWindow(0)
                 self.mqtt.communicateToSensors(status, "window")
         
