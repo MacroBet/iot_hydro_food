@@ -32,4 +32,4 @@ def start_configuration():
 
 cfg = []
 cfg.append(start_configuration())
-print(cfg["tempMax"])
+print(cfg[0])
