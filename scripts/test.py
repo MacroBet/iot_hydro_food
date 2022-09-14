@@ -34,6 +34,8 @@ def start_configuration():
         
       else:
           print("Please press: y/n?")
+          answer = input(">")
+          answer = answer.lower()
 
     
 
