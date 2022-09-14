@@ -118,6 +118,7 @@ def checkCommand(command, client, client1):
         
         globalStatus.chageVal = 1
         cfg = start_configuration()
+        print(cfg["tempMax"])
         client.tempMax = cfg["tempMax"]   
         client.tempMin = cfg["tempMin"]
         client.humMax = cfg["humMax"]
