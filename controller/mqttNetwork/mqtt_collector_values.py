@@ -6,7 +6,7 @@ import json
 from pydoc import cli
 from coapNetwork.addresses import Addresses
 from coapNetwork.sendpost import Post
-from globaStatus import globalStatus
+from globalStatus import globalStatus
 
 class MqttClientData:
 
@@ -67,7 +67,7 @@ class MqttClientData:
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (str(ad), dt, open))
-                    print("\n🚫🚫🚫🚫 CLOSE WINDOWS 🚫🚫🚫🚫\n")
+                    if globalStatus.chageVal == 0: print("\n🚫🚫🚫🚫 CLOSE WINDOWS 🚫🚫🚫🚫\n")
                     
                     self.connection.commit()
                     self.communicateToSensors("0", "window")
@@ -91,7 +91,7 @@ class MqttClientData:
                         cursor = self.connection.cursor()
                         sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                         cursor.execute(sql, (str(ad), dt, open))
-                        print("\n💨💨💨💨 OPENING WINDOWS 💨💨💨💨\n")
+                        if globalStatus.chageVal == 0: print("\n💨💨💨💨 OPENING WINDOWS 💨💨💨💨\n")
                         self.connection.commit()
                         self.communicateToSensors("1", "window")
                     
@@ -103,7 +103,7 @@ class MqttClientData:
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_window` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (str(ad), dt, open))
-                    print("\n💨💨💨💨 OPENING WINDOW 💨💨💨💨\n")
+                    if globalStatus.chageVal == 0: print("\n💨💨💨💨 OPENING WINDOW 💨💨💨💨\n")
                     self.connection.commit()
                     self.communicateToSensors("1", "window")
               
@@ -126,7 +126,7 @@ class MqttClientData:
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (str(ad), dt, status))
-                    print("\n🚫🚫🚫🚫 STOP WATERING 🚫🚫🚫🚫\n")
+                    if globalStatus.chageVal == 0: print("\n🚫🚫🚫🚫 STOP WATERING 🚫🚫🚫🚫\n")
                     
                     self.connection.commit()
                     self.communicateToSensors("0", "inValues")
@@ -146,7 +146,7 @@ class MqttClientData:
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (str(ad), dt, status))
-                    print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
+                    if globalStatus.chageVal == 0: print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
          
                     self.connection.commit()
                     self.communicateToSensors(status, "inValues")
@@ -158,7 +158,7 @@ class MqttClientData:
                     cursor = self.connection.cursor()
                     sql = "INSERT INTO `actuator_watering` (`address`, `timestamp`, `status`) VALUES (%s, %s, %s)"
                     cursor.execute(sql, (str(ad), dt, status))
-                    print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
+                    if globalStatus.chageVal == 0: print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
                 
                     self.connection.commit()
                     self.communicateToSensors(status, "inValues")

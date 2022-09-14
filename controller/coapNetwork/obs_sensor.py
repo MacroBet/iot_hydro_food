@@ -10,9 +10,10 @@ from coapthon.utils import parse_uri
 from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 from mqttNetwork.mqtt_collector_values import MqttClientData
 from database.dataBase import Database
-from globaStatus import globalStatus
+from globalStatus import globalStatus
 
 class ObserveSensor:
+
     def __init__(self,source_address, resource, type):
         self.db = Database()
         self.connection = self.db.connect_db()
@@ -38,17 +39,17 @@ class ObserveSensor:
             self.execute_query(self.address, status, dt, "watering")
             
             if str(status) == "1":
-                print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
+                if globalStatus.chageVal == 0: print("\n💦💦💦💦 START WATERING 💦💦💦💦\n")
                 globalStatus.setStatusValve(1)
                 self.mqtt.communicateToSensors(status, "inValues")
 
             elif str(status) == "0":
-                print("\n🚫🚫🚫🚫 VALVES DEFAULT STATE 🚫🚫🚫🚫\n")
+                if globalStatus.chageVal == 0: print("\n🚫🚫🚫🚫 VALVES DEFAULT STATE 🚫🚫🚫🚫\n")
                 globalStatus.setStatusValve(0)
                 self.mqtt.communicateToSensors(status, "inValues")
 
             elif str(status) == "2":
-                print("\n🛁🛁🛁🛁 OPEN CHARGE TANK 🛁🛁🛁🛁\n")
+                if globalStatus.chageVal == 0: print("\n🛁🛁🛁🛁 OPEN CHARGE TANK 🛁🛁🛁🛁\n")
                 globalStatus.setStatusValve(2)
                 self.mqtt.communicateToSensors(status, "inValues")
         
@@ -59,12 +60,12 @@ class ObserveSensor:
             dt = datetime.now()
             self.execute_query(self.address, status, dt, "window")
             if str(status) == "1":
-                print("\n💨💨💨💨 OPENING WINDOW 💨💨💨💨\n")
+                if globalStatus.chageVal == 0: print("\n💨💨💨💨 OPENING WINDOW 💨💨💨💨\n")
                 globalStatus.setStatusWindow(1)
                 self.mqtt.communicateToSensors(status, "window")
 
             elif str(status) == "0":
-                print("\n🚫🚫🚫🚫 WINDOWS DEFAULT STATE 🚫🚫🚫🚫\n")
+                if globalStatus.chageVal == 0: print("\n🚫🚫🚫🚫 WINDOWS DEFAULT STATE 🚫🚫🚫🚫\n")
                 globalStatus.setStatusWindow(0)
                 self.mqtt.communicateToSensors(status, "window")
         

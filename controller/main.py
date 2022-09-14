@@ -5,6 +5,7 @@ import threading
 import time
 import os
 from coapNetwork.addresses import Addresses
+from coapNetwork.obs_sensor import ObserveSensor
 from mqttNetwork.mqtt_collector_values import MqttClientData
 from mqttNetwork.mqqt_collector_bath_float import MqttClientBathFloat
 import paho.mqtt.client as mqtt
@@ -17,7 +18,7 @@ from coapthon.client.helperclient import HelperClient
 from coapthon.server.coap import CoAP
 from coapthon.resources.resource import Resource
 from coapNetwork.resExample import ResExample
-from globaStatus import globalStatus
+from globalStatus import globalStatus
 import pixel_art as pa
 import time
 import os
@@ -114,7 +115,8 @@ def checkCommand(command, client, client1):
             return
 
     elif command == "change val":
-
+        
+        globalStatus.chageVal = 1
         cfg = start_configuration()
         client.tempMax = cfg["tempMax"]   
         client.tempMin = cfg["tempMin"]
@@ -122,6 +124,7 @@ def checkCommand(command, client, client1):
         client.humMin = cfg["humMin"]
         client.co2Max = cfg["co2Max"]
         client.co2Min = cfg["co2Min"]
+        globalStatus.chageVal = 0
 
     elif command == "exit":
         # thread.join()

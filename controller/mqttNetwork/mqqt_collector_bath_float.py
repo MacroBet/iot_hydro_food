@@ -6,7 +6,7 @@ import json
 from pydoc import cli
 from coapNetwork.addresses import Addresses
 from coapNetwork.sendpost import Post
-
+from globalStatus import globalStatus
 
 class MqttClientBathFloat:
 
@@ -58,7 +58,7 @@ class MqttClientBathFloat:
                 success = Post.changeStatusWatering(status, ad)
                 if success == 1:
                     self.update_watering_status(str(ad),"0")
-                    print("\n🚫🚫🚫🚫 CLOSE CHARGE TANK 🚫🚫🚫🚫\n")
+                    if globalStatus.chageVal == 0: print("\n🚫🚫🚫🚫 CLOSE CHARGE TANK 🚫🚫🚫🚫\n")
                     self.connection.commit()
                     self.communicateToSensors("0")
             else:
@@ -77,7 +77,7 @@ class MqttClientBathFloat:
                 success = Post.changeStatusWatering(status, ad)
                 if success == 1:
                     self.update_watering_status(ad, status)
-                    print("\n🛁🛁🛁🛁 OPEN CHARGE TANK 🛁🛁🛁🛁\n")
+                    if globalStatus.chageVal == 0: print("\n🛁🛁🛁🛁 OPEN CHARGE TANK 🛁🛁🛁🛁\n")
                     self.communicateToSensors("2")
 
             if status is None:
@@ -85,7 +85,7 @@ class MqttClientBathFloat:
                 success = Post.changeStatusWatering(status, ad)
                 if success == 1:
                     self.update_watering_status(ad, status)
-                    print("\n🛁🛁🛁🛁 OPEN CHARGE TANK 🛁🛁🛁🛁\n")
+                    if globalStatus.chageVal == 0: print("\n🛁🛁🛁🛁 OPEN CHARGE TANK 🛁🛁🛁🛁\n")
                     self.communicateToSensors("2")
 
 #/---------------------------------------------------------------------------\
