@@ -25,14 +25,17 @@ def start_configuration():
     
     answer = input(">")
     answer = answer.lower()
-    if(answer == "yes" or answer == "y"):
-        return {"tempMax":tempMax,"tempMin":tempMin,"humMax":humMax,"humMin":humMin,"co2Max":co2Max,"co2Min":co2Min}
-    elif(answer == "no" or answer == "n"):
-        return start_configuration()
+    while 1:
+      if(answer == "yes" or answer == "y"):
+          return {"tempMax":tempMax,"tempMin":tempMin,"humMax":humMax,"humMin":humMin,"co2Max":co2Max,"co2Min":co2Min}
 
-def printer(data):
-    for element in data:
-        print(element[0])
+      elif(answer == "no" or answer == "n"):
+          return start_configuration()
+        
+      else:
+          print("Please press: y/n?")
+
+    
 
 cfg = start_configuration()
-print(cfg)
+print(cfg["tempMax"])
