@@ -30,6 +30,6 @@ def start_configuration():
     elif(answer == "no" or answer == "n"):
         return start_configuration()
 
-cfg = None
+cfg = []
 cfg.append(start_configuration())
 print(cfg["tempMax"])
