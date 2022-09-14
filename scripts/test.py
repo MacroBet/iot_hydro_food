@@ -9,7 +9,7 @@ def validate(field,defaultValue):
     if(field.isnumeric()):
         return int(field)
     return defaultValue
-    
+
 def start_configuration():
     print("Define tresholds for the parameters Temperature, Humidity, Co2 :\n")
     tempMax = validate(input("TRESHOLD MAX TEMPERATURE  (default value 35C) : "),35)
@@ -26,10 +26,10 @@ def start_configuration():
     answer = input(">")
     answer = answer.lower()
     if(answer == "yes" or answer == "y"):
-       return {tempMax,tempMin,humMax,humMin,co2Max,co2Min}
+        return {"tempMax":tempMax,"tempMin":tempMin,"humMax":humMax,"humMin":humMin,"co2Max":co2Max,"co2Min":co2Min}
     elif(answer == "no" or answer == "n"):
         return start_configuration()
 
-
-cfg = start_configuration()
-print(cfg[0])
+cfg = None
+cfg.append(start_configuration())
+print(cfg["tempMax"])
