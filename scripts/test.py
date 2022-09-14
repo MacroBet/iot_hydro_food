@@ -30,6 +30,7 @@ def start_configuration():
     elif(answer == "no" or answer == "n"):
         return start_configuration()
 
-cfg = []
-cfg.append(start_configuration())
-print(cfg[0])
+cfg = start_configuration()
+cfg.sort()
+temp = cfg[0]
+print(temp)
