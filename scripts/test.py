@@ -30,7 +30,9 @@ def start_configuration():
     elif(answer == "no" or answer == "n"):
         return start_configuration()
 
+def printer(data):
+    for element in data:
+        print(element[0])
+
 cfg = start_configuration()
-cfg.sort()
-temp = cfg[0]
-print(temp)
+print(cfg)
