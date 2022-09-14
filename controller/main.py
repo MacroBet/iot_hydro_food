@@ -118,7 +118,7 @@ def checkCommand(command, client, client1):
         
         globalStatus.chageVal = 1
         cfg = start_configuration()
-        print(cfg["tempMax"])
+       
         client.tempMax = cfg["tempMax"]   
         client.tempMin = cfg["tempMin"]
         client.humMax = cfg["humMax"]
@@ -174,10 +174,16 @@ def start_configuration():
     
     answer = input(">")
     answer = answer.lower()
-    if(answer == "yes" or answer == "y"):
-        return {tempMax,tempMin,humMax,humMin,co2Max,co2Min}
-    elif(answer == "no" or answer == "n"):
-        return start_configuration()
+    while 1:
+        if(answer == "yes" or answer == "y"):
+            return {"tempMax":tempMax,"tempMin":tempMin,"humMax":humMax,"humMin":humMin,"co2Max":co2Max,"co2Min":co2Min}
+        elif(answer == "no" or answer == "n"):
+            return start_configuration()
+        else:
+            print("Please press: y/n?")
+            answer = input(">")
+            answer = answer.lower()
+
 
 
 
