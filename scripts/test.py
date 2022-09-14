@@ -26,10 +26,10 @@ def start_configuration():
     answer = input(">")
     answer = answer.lower()
     if(answer == "yes" or answer == "y"):
-        return {"tempMax":tempMax,"tempMin":tempMin,"humMax":humMax,"humMin":humMin,"co2Max":co2Max,"co2Min":co2Min}
+       return {tempMax,tempMin,humMax,humMin,co2Max,co2Min}
     elif(answer == "no" or answer == "n"):
         return start_configuration()
 
 
 cfg = start_configuration()
-print(cfg["tempMax"])
+print(cfg[0])
