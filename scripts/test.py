@@ -4,9 +4,12 @@ import sys
 import os
 import threading
 from time import sleep
-from wsgiref import validate
 
-
+def validate(field,defaultValue):
+    if(field.isnumeric()):
+        return int(field)
+    return defaultValue
+    
 def start_configuration():
     print("Define tresholds for the parameters Temperature, Humidity, Co2 :\n")
     tempMax = validate(input("TRESHOLD MAX TEMPERATURE  (default value 35C) : "),35)
